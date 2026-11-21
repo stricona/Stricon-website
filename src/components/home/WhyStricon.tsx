@@ -40,7 +40,7 @@ const advantageDescriptions: Record<string, string> = {
   "Value added services":
     "Quick Response Team support, reviews & audits, and operational technology deployment across client sites.",
   "Statutory compliance":
-    "Strict 100% adherence to PSARA standards, labor regulations, documentation, and regular statutory audits.",
+    "Strict adherence to PSARA standards, labor regulations, documentation, and regular statutory audits.",
   "Customer satisfaction":
     "Dedicated CRM backend support and client management reviews committed to consistently meeting expectations.",
   "All people solutions under one roof":

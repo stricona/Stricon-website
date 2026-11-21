@@ -39,7 +39,7 @@ export const homeContent: HomeContent = {
       "PSARA Licensed Provider",
       "Self-Delivery Model",
       "Trained In-House Teams",
-      "100% Statutory Compliance",
+      "Statutory compliance",
     ],
     founderLine:
       "Led by Managing Director R Vishnu Murthy, a veteran with deep domain experience in facility management and security operations.",

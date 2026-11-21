@@ -8,6 +8,16 @@ export const whatsappUrl = `https://wa.me/91${company.contact.whatsapp}?text=${e
   "Hello STRICON, I would like to enquire about your services."
 )}`;
 
+export function quoteHref(slug?: string): string {
+  if (!slug) return "/contact";
+  return `/contact?service=${encodeURIComponent(slug)}`;
+}
+
+export function whatsappUrlForService(title: string): string {
+  const text = `Hello STRICON, I would like to enquire about ${title}.`;
+  return `https://wa.me/91${company.contact.whatsapp}?text=${encodeURIComponent(text)}`;
+}
+
 export const siteConfig = {
   name: company.brandName,
   legalName: company.legalName,
@@ -17,6 +27,8 @@ export const siteConfig = {
   locale: "en-IN",
   phoneHref,
   whatsappUrl,
+  quoteHref,
+  whatsappUrlForService,
   links: {
     website: company.contact.website,
     email: company.contact.email,

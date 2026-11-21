@@ -3,9 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ChevronDown } from "lucide-react";
 import { NavLink } from "@/types/navigation";
 import { ThemeToggle } from "./ThemeToggle";
+import { services, serviceCategories } from "@/data/services";
+import { ServiceGroupCategory } from "@/types/service";
 import { cn } from "@/lib/utils";
 
 interface MobileMenuProps {
@@ -13,17 +15,27 @@ interface MobileMenuProps {
   cta: NavLink;
 }
 
+const categoryOrder: ServiceGroupCategory[] = [
+  "security",
+  "facility",
+  "manpower",
+];
+
 export function MobileMenu({ items, cta }: MobileMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
   const [prevPathname, setPrevPathname] = useState(pathname);
+  const [servicesExpanded, setServicesExpanded] = useState(() =>
+    pathname.startsWith("/services")
+  );
   const menuRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
 
-  // Automatically reset menu open state on route navigation
+  // Automatically reset menu open state & sync services expansion on route navigation
   if (prevPathname !== pathname) {
     setPrevPathname(pathname);
     setIsOpen(false);
+    setServicesExpanded(pathname.startsWith("/services"));
   }
 
   // Lock body scroll when open
@@ -74,7 +86,6 @@ export function MobileMenu({ items, cta }: MobileMenuProps) {
 
     document.addEventListener("keydown", handleKeyDown);
 
-    // Initial focus on first interactive element inside menu
     const timer = setTimeout(() => {
       const firstInteractive = menuRef.current?.querySelector<HTMLElement>(
         'a[href], button:not([disabled])'
@@ -95,7 +106,7 @@ export function MobileMenu({ items, cta }: MobileMenuProps) {
         ref={triggerRef}
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="p-2 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-foreground)] hover:border-[var(--color-primary)] transition-colors"
+        className="p-2 rounded-lg border border-[var(--border)] bg-[var(--surface)] text-[var(--foreground)] hover:border-[var(--primary)] transition-colors focus-visible:outline-2"
         aria-expanded={isOpen}
         aria-controls="mobile-menu-panel"
         aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
@@ -118,11 +129,11 @@ export function MobileMenu({ items, cta }: MobileMenuProps) {
           <div
             ref={menuRef}
             id="mobile-menu-panel"
-            className="w-full max-w-xs h-full bg-[var(--color-surface)] border-l border-[var(--color-border)] p-6 flex flex-col justify-between shadow-2xl overflow-y-auto"
+            className="w-full max-w-xs h-full bg-[var(--surface)] border-l border-[var(--border)] p-6 flex flex-col justify-between shadow-2xl overflow-y-auto"
           >
             <div>
-              <div className="flex items-center justify-between pb-4 border-b border-[var(--color-border)]">
-                <span className="font-heading font-semibold text-lg text-[var(--color-foreground)]">
+              <div className="flex items-center justify-between pb-4 border-b border-[var(--border)]">
+                <span className="font-heading font-semibold text-lg text-[var(--foreground)]">
                   Menu
                 </span>
                 <button
@@ -131,19 +142,111 @@ export function MobileMenu({ items, cta }: MobileMenuProps) {
                     setIsOpen(false);
                     triggerRef.current?.focus();
                   }}
-                  className="p-2 rounded-md text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)]"
+                  className="p-2 rounded-lg text-[var(--muted-foreground)] hover:text-[var(--foreground)] focus-visible:outline-2"
                   aria-label="Close menu"
                 >
                   <X className="h-5 w-5" />
                 </button>
               </div>
 
-              <nav aria-label="Mobile Navigation Links" className="mt-6 flex flex-col gap-2">
+              <nav aria-label="Mobile Navigation Links" className="mt-6 flex flex-col gap-1.5">
                 {items.map((item) => {
+                  const isServices = item.href === "/services";
                   const isActive =
                     item.href === "/"
                       ? pathname === "/"
                       : pathname === item.href || pathname.startsWith(`${item.href}/`);
+
+                  if (isServices) {
+                    return (
+                      <div key={item.href} className="flex flex-col">
+                        <div
+                          className={cn(
+                            "flex items-center justify-between rounded-lg px-4 py-2.5 transition-colors",
+                            isActive
+                              ? "bg-[var(--primary)]/10 text-[var(--primary)] font-semibold"
+                              : "text-[var(--foreground)] hover:bg-[var(--background)]"
+                          )}
+                        >
+                          <Link
+                            href="/services"
+                            onClick={() => setIsOpen(false)}
+                            className="flex-1 focus-visible:outline-2"
+                            aria-current={isActive ? "page" : undefined}
+                          >
+                            {item.title}
+                          </Link>
+                          <button
+                            type="button"
+                            onClick={() => setServicesExpanded((prev) => !prev)}
+                            aria-expanded={servicesExpanded}
+                            aria-controls="mobile-services-accordion"
+                            aria-label="Toggle services list"
+                            className="p-1 text-inherit focus-visible:outline-2 rounded"
+                          >
+                            <ChevronDown
+                              className={cn(
+                                "h-4 w-4 transition-transform duration-200",
+                                servicesExpanded && "rotate-180"
+                              )}
+                            />
+                          </button>
+                        </div>
+
+                        {/* Services Accordion Panel */}
+                        {servicesExpanded && (
+                          <div
+                            id="mobile-services-accordion"
+                            className="ml-3 mt-1.5 pl-3 border-l-2 border-[var(--border)] space-y-3 py-2 text-xs"
+                          >
+                            <Link
+                              href="/services"
+                              onClick={() => setIsOpen(false)}
+                              className="block font-semibold text-[var(--primary)] py-1"
+                            >
+                              All Services Overview →
+                            </Link>
+
+                            {categoryOrder.map((catKey) => {
+                              const catMeta = serviceCategories[catKey];
+                              const catServices = services.filter(
+                                (s) => s.category === catKey
+                              );
+
+                              return (
+                                <div key={catKey} className="space-y-1">
+                                  <p className="font-bold text-[10px] uppercase tracking-wider text-[var(--secondary)]">
+                                    {catMeta.name}
+                                  </p>
+                                  <ul className="space-y-1">
+                                    {catServices.map((s) => {
+                                      const isCurr = pathname === `/services/${s.slug}`;
+                                      return (
+                                        <li key={s.slug}>
+                                          <Link
+                                            href={`/services/${s.slug}`}
+                                            onClick={() => setIsOpen(false)}
+                                            className={cn(
+                                              "block py-1 rounded px-2 transition-colors",
+                                              isCurr
+                                                ? "bg-[var(--primary)] text-white font-medium"
+                                                : "text-[var(--foreground)] hover:text-[var(--primary)]"
+                                            )}
+                                          >
+                                            {s.title}
+                                          </Link>
+                                        </li>
+                                      );
+                                    })}
+                                  </ul>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  }
 
                   return (
                     <Link
@@ -151,10 +254,10 @@ export function MobileMenu({ items, cta }: MobileMenuProps) {
                       href={item.href}
                       onClick={() => setIsOpen(false)}
                       className={cn(
-                        "px-4 py-3 rounded-md text-base font-medium transition-colors",
+                        "px-4 py-2.5 rounded-lg text-sm font-medium transition-colors focus-visible:outline-2",
                         isActive
-                          ? "bg-[var(--color-primary)]/10 text-[var(--color-primary)] font-semibold"
-                          : "text-[var(--color-foreground)] hover:bg-[var(--color-background)] hover:text-[var(--color-primary)]"
+                          ? "bg-[var(--primary)]/10 text-[var(--primary)] font-semibold"
+                          : "text-[var(--foreground)] hover:bg-[var(--background)] hover:text-[var(--primary)]"
                       )}
                       aria-current={isActive ? "page" : undefined}
                     >
@@ -165,11 +268,11 @@ export function MobileMenu({ items, cta }: MobileMenuProps) {
               </nav>
             </div>
 
-            <div className="pt-6 border-t border-[var(--color-border)] flex flex-col gap-4">
+            <div className="pt-6 border-t border-[var(--border)] flex flex-col gap-4">
               <Link
                 href={cta.href}
                 onClick={() => setIsOpen(false)}
-                className="w-full text-center px-4 py-3 rounded-md font-semibold text-sm bg-[var(--color-accent-gold)] text-[var(--color-accent-gold-foreground)] hover:opacity-95 transition-opacity shadow-xs"
+                className="w-full text-center px-4 py-3 rounded-lg font-semibold text-sm bg-[var(--accent-gold)] text-[var(--accent-gold-foreground)] hover:opacity-95 transition-opacity shadow-xs focus-visible:outline-2"
               >
                 {cta.title}
               </Link>

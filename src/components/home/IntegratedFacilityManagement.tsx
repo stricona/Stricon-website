@@ -1,7 +1,7 @@
 import { CheckCircle2, Layers, ArrowRight } from "lucide-react";
 import { Container, ButtonLink, Reveal } from "@/components/common";
 import { profile } from "@/data/profile";
-import { services } from "@/data/services";
+import { integratedServices } from "@/data/services";
 
 export function IntegratedFacilityManagement() {
   return (
@@ -50,26 +50,21 @@ export function IntegratedFacilityManagement() {
             </Reveal>
           </div>
 
-          {/* Right Column: 2-column checklist of all 9 disciplines */}
+          {/* Right Column: 2-column checklist of all 16 integrated services */}
           <div className="lg:col-span-6">
             <Reveal delay={0.2}>
               <div className="rounded-2xl border border-[var(--border)] bg-[var(--background)] p-6 sm:p-8 shadow-xs">
                 <h3 className="font-heading text-lg font-bold text-[var(--foreground)] mb-4 pb-3 border-b border-[var(--border)]">
-                  Modular Services Available for Integration
+                  All 16 Integrated Facility & Security Capabilities
                 </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {services.map((s) => (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {integratedServices.map((serviceName) => (
                     <div
-                      key={s.slug}
-                      className="flex items-start gap-3 rounded-lg border border-[var(--border)] bg-[var(--surface)] p-3 text-xs sm:text-sm font-medium text-[var(--foreground)] shadow-2xs hover:border-[var(--primary)]/40 transition-colors"
+                      key={serviceName}
+                      className="flex items-center gap-2.5 rounded-lg border border-[var(--border)] bg-[var(--surface)] p-3 text-xs sm:text-sm font-medium text-[var(--foreground)] shadow-2xs hover:border-[var(--primary)]/40 transition-colors"
                     >
-                      <CheckCircle2 className="h-4 w-4 shrink-0 text-[var(--secondary)] mt-0.5" />
-                      <div>
-                        <p className="font-semibold">{s.title}</p>
-                        <p className="text-[11px] text-[var(--muted-foreground)] mt-0.5 line-clamp-1">
-                          {s.includedServices.slice(0, 2).join(", ")}
-                        </p>
-                      </div>
+                      <CheckCircle2 className="h-4 w-4 shrink-0 text-[var(--secondary)]" />
+                      <span>{serviceName}</span>
                     </div>
                   ))}
                 </div>

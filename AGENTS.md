@@ -168,3 +168,42 @@ Original files reside in `public/images/logo/`:
 - If all `src` values are `null` in production, the entire `GallerySection` must render `null` and remain hidden.
 - In development, renders labeled neutral placeholders with category badges. Recommended asset dimensions: 1600px wide WebP/JPG.
 
+---
+
+## 8. Phase 3: Services & Navigation Standards
+
+### Service Data Model (`src/data/services.ts`)
+- 9 Canonical Slugs:
+  - `security-services` (category: "security")
+  - `housekeeping-janitorial`, `technical-services`, `pest-control-disinfection`, `horticulture-services`, `specialized-cleaning`, `food-vending-supplies` (category: "facility")
+  - `support-staff-services`, `manpower-management` (category: "manpower")
+- Fields per service:
+  - `slug`: unique URL identifier
+  - `title`: display name
+  - `category`: `"security" | "facility" | "manpower"`
+  - `icon`: Lucide icon component name
+  - `shortSummary`: one-sentence concise summary
+  - `intro`: two-sentence standardized factual intro
+  - `includes`: string[] of specific offerings (empty array if profile lists no sub-items; hides "What's included")
+  - `relatedSlugs`: 3 related service slugs for cross-linking
+  - `image`: string | null (path `public/images/services/{slug}.jpg`), null by default
+  - `faqs`: `{ q: string; a: string }[]`, empty array by default (hides FAQ section when empty)
+  - `seoDescription`: under 160 characters for metadata
+- Helpers: `getServiceBySlug`, `getServicesByCategory`, `getRelatedServices`, `getAdjacentServices`.
+- Integrated Services: `integratedServices` array of all 16 integrated facility capabilities from profile.
+
+### Shared Service Components (`src/components/services`)
+- `ServiceCard`: Unified card extracted for use across Home and Services pages (icon tile, title, summary, tags, arrow link).
+- `Breadcrumbs`: Accessible navigation with BreadcrumbList JSON-LD.
+- `PageHero`: Compact page header with breadcrumbs and optional action/right-slot elements.
+- `QuoteCard`: Direct consultation card linking to `/contact?service=slug`, phone, and prefilled WhatsApp.
+- `ServiceSidebar`: Desktop sticky sidebar grouping all 9 services by category with active state highlight.
+- `ServiceNav`: Previous and next service navigation cards at bottom of detail pages.
+
+### Navigation & Linking Rules
+- Header: Desktop dropdown disclosure pattern with keyboard navigation and mouse hover/click; mobile expandable accordion under Services link.
+- Active states: Services menu link marked active on `/services` and `/services/[slug]`.
+- Contact pre-selection: Links with `?service=<slug>` echo the service title under H1 within `<Suspense>`.
+- Automated link crawler: Maintained in `scripts/check-links.mjs` and runnable via `npm run check:links`.
+
+

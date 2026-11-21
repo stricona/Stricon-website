@@ -95,30 +95,30 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Column 3: Services (Key Offerings) */}
+          {/* Column 3: Services (All 9 Offerings) */}
           <div>
             <h2 className="font-heading font-semibold text-sm tracking-wider uppercase text-[var(--color-foreground)] mb-4">
               Services
             </h2>
-            <ul className="flex flex-col gap-2.5">
-              {services.slice(0, 5).map((service) => (
+            <ul className="flex flex-col gap-2">
+              <li>
+                <Link
+                  href="/services"
+                  className="text-sm font-semibold text-[var(--color-primary)] hover:underline"
+                >
+                  All Services
+                </Link>
+              </li>
+              {services.map((service) => (
                 <li key={service.slug}>
                   <Link
                     href={`/services/${service.slug}`}
-                    className="text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] transition-colors"
+                    className="text-xs sm:text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] transition-colors"
                   >
                     {service.title}
                   </Link>
                 </li>
               ))}
-              <li>
-                <Link
-                  href="/services"
-                  className="text-sm font-medium text-[var(--color-secondary)] hover:underline"
-                >
-                  View all 9 service categories &rarr;
-                </Link>
-              </li>
             </ul>
           </div>
 
