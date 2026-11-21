@@ -1,22 +1,56 @@
 import type { Metadata } from "next";
 import { siteConfig } from "@/config/site";
+import { MotionProvider } from "@/components/common";
+import {
+  Hero,
+  ClientsMarquee,
+  ServicesGrid,
+  IntegratedFacilityManagement,
+  WhyStricon,
+  IndustriesServed,
+  HiringAndTraining,
+  GallerySection,
+  FinalCta,
+} from "@/components/home";
 
 export const metadata: Metadata = {
-  title: "Home",
-  description: `${siteConfig.legalName} - Facility Management & Security Services Provider in Hyderabad with valid PSARA Licence.`,
+  title: "Facility Management & Security Services in Hyderabad | STRICON",
+  description: `${siteConfig.legalName} - Facility Management & Security Services Provider in Hyderabad with valid PSARA Licence. Self-delivery model with trained in-house teams.`,
+  alternates: {
+    canonical: siteConfig.url,
+  },
+  openGraph: {
+    title: "Facility Management & Security Services in Hyderabad | STRICON",
+    description: `${siteConfig.legalName} - Facility Management & Security Services Provider in Hyderabad with valid PSARA Licence.`,
+    url: siteConfig.url,
+    siteName: siteConfig.name,
+    locale: siteConfig.locale,
+    type: "website",
+    images: [
+      {
+        url: siteConfig.ogImage,
+        width: 1200,
+        height: 630,
+        alt: `${siteConfig.name} Security & Facility Services`,
+      },
+    ],
+  },
 };
 
 export default function HomePage() {
   return (
-    <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
-      <div className="max-w-3xl">
-        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-[var(--color-foreground)] tracking-tight">
-          Facility Management & Security Services
-        </h1>
-        <p className="mt-4 text-lg text-[var(--color-muted-foreground)] leading-relaxed">
-          Welcome to {siteConfig.legalName}. Professional facility management and security solutions in Hyderabad.
-        </p>
+    <MotionProvider>
+      <div className="flex flex-col w-full">
+        <Hero />
+        <ClientsMarquee />
+        <ServicesGrid />
+        <IntegratedFacilityManagement />
+        <WhyStricon />
+        <IndustriesServed />
+        <HiringAndTraining />
+        <GallerySection />
+        <FinalCta />
       </div>
-    </div>
+    </MotionProvider>
   );
 }

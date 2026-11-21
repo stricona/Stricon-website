@@ -11,6 +11,8 @@
   --secondary-foreground: #FFFFFF;
   --accent-gold: #E4B94F;
   --accent-gold-foreground: #29283A;
+  --logo-surface: #FFFFFF;
+  --logo-surface-foreground: #29283A;
   --border: #E7E5DE;
 }
 
@@ -25,6 +27,8 @@
   --secondary-foreground: #14141F;
   --accent-gold: #E4B94F;
   --accent-gold-foreground: #29283A;
+  --logo-surface: #FFFFFF;
+  --logo-surface-foreground: #29283A;
   --border: #383747;
 }
 
@@ -39,6 +43,8 @@
   --color-secondary-foreground: var(--secondary-foreground);
   --color-accent-gold: var(--accent-gold);
   --color-accent-gold-foreground: var(--accent-gold-foreground);
+  --color-logo-surface: var(--logo-surface);
+  --color-logo-surface-foreground: var(--logo-surface-foreground);
   --color-border: var(--border);
 
   --font-sans: var(--font-inter);
@@ -80,6 +86,37 @@
   outline-offset: 2px;
 }
 
+/* Marquee animations */
+@keyframes marquee-scroll-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marquee-scroll-right {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.animate-marquee-left {
+  animation: marquee-scroll-left 45s linear infinite;
+}
+
+.animate-marquee-right {
+  animation: marquee-scroll-right 45s linear infinite;
+}
+
+.pause-animation {
+  animation-play-state: paused !important;
+}
+
 /* Respect user's motion preferences */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -89,5 +126,11 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+
+  .animate-marquee-left,
+  .animate-marquee-right {
+    animation: none !important;
+    transform: none !important;
   }
 }

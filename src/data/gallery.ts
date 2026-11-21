@@ -1,0 +1,68 @@
+import { GalleryItem } from "@/types/gallery";
+
+export const galleryItems: GalleryItem[] = [
+  {
+    id: "gallery-1",
+    title: "Corporate Security Deployment",
+    category: "Security deployments",
+    src: null,
+    alt: "Trained security personnel stationed at enterprise entrance",
+    description: "Trained on-site guarding and access management.",
+  },
+  {
+    id: "gallery-2",
+    title: "Access Control & Gate Operations",
+    category: "Security deployments",
+    src: null,
+    alt: "Security guards managing visitor screening and access control",
+    description: "Gatehouse operations and perimeter protection.",
+  },
+  {
+    id: "gallery-3",
+    title: "Corporate Floor Maintenance",
+    category: "Housekeeping",
+    src: null,
+    alt: "Housekeeping staff maintaining corporate office floor hygiene",
+    description: "Daily office cleaning and sanitisation.",
+  },
+  {
+    id: "gallery-4",
+    title: "Industrial Deep Cleaning",
+    category: "Housekeeping",
+    src: null,
+    alt: "Mechanised floor scrubbing and deep cleaning",
+    description: "Mechanised cleaning with standard commercial equipment.",
+  },
+  {
+    id: "gallery-5",
+    title: "Facility Operations & Monitoring",
+    category: "Facility operations",
+    src: null,
+    alt: "Facility team coordinating daily building management operations",
+    description: "End-to-end building administration and support.",
+  },
+  {
+    id: "gallery-6",
+    title: "Pantry & Hospitality Services",
+    category: "Facility operations",
+    src: null,
+    alt: "Corporate pantry team managing hospitality and refreshment services",
+    description: "Corporate cafeteria and beverage service support.",
+  },
+  {
+    id: "gallery-7",
+    title: "Security Guard Induction Training",
+    category: "Training sessions",
+    src: null,
+    alt: "Security personnel attending structured classroom induction",
+    description: "Classroom instruction on protocols and compliance.",
+  },
+  {
+    id: "gallery-8",
+    title: "Emergency Evacuation Drill",
+    category: "Training sessions",
+    src: null,
+    alt: "Field training for emergency response and evacuation",
+    description: "On-ground drills for safety and fire prevention.",
+  },
+];

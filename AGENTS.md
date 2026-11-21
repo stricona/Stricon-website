@@ -130,4 +130,41 @@ Original files reside in `public/images/logo/`:
   - Visible focus indicators (`:focus-visible`).
   - Respect `prefers-reduced-motion`.
 - **Theme Support**: `next-themes` with `attribute="class"`, default light, no hydration mismatch (`mounted` check in toggle, `suppressHydrationWarning` on `<html>`).
-- **Dependencies**: Keep lean. Do NOT install framer-motion, react-hook-form, zod, or shadcn/ui until instructed in later phases.
+- **Dependencies**: Keep lean. In Phase 2, `motion` (imported from `motion/react`) is installed. Do NOT install react-hook-form, zod, or shadcn/ui until instructed in later phases.
+
+---
+
+## 7. Phase 2: Home Page Standards
+
+### Tokens & Surface Containers
+- `--logo-surface`: `#FFFFFF` in both light and dark themes.
+- `--logo-surface-foreground`: `#29283A` in both light and dark themes.
+- All client logos and company emblem cards MUST be mounted inside a `--logo-surface` container to preserve logo contrast and integrity regardless of active site theme.
+
+### Animation & Motion Guidelines
+- Animation library: `motion` (imported from `motion/react`).
+- Wrap animated pages with `<MotionProvider>` (`<MotionConfig reducedMotion="user">`).
+- Animate ONLY opacity and transform (`y: 16` to `y: 0`, `opacity: 0` to `opacity: 1`). No layout-shifting properties.
+- Duration between 0.4s and 0.6s with gentle easing (`easeOut`). No bouncing, spring overshoots, or parallax.
+- Respect `prefers-reduced-motion` everywhere.
+
+### Marquee Component Standards (`ClientsMarquee`)
+- Two horizontal rows moving in opposite directions (row 1 left, row 2 right).
+- 45s linear infinite loop using pure CSS keyframes (`translateX(0)` to `translateX(-50%)`).
+- Seamless duplication with `aria-hidden="true"` on duplicate elements.
+- Pause on hover and focus via CSS `.pause-animation` and `group-hover:[animation-play-state:paused]`.
+- An explicit, accessible Pause/Play button with `aria-pressed` and dynamic `aria-label`.
+- Edge fade masks on left and right borders with CSS gradients.
+- Static grid fallback on reduced motion.
+
+### Client Logos (Slide 7 Extraction)
+- Client logos extracted directly from Slide 7 of `docs/STRICON_Profile.pptx`.
+- Stored as WebP/PNG in `public/images/clients/<kebab-case>.png`.
+- 17 approved enterprise clients with `displayApproved: true`.
+- **Special Rule**: "Crown Brewing" MUST remain `displayApproved: false` until explicit stakeholder confirmation.
+
+### Gallery Standards
+- Data in `src/data/gallery.ts` (typed in `src/types/gallery.ts`).
+- If all `src` values are `null` in production, the entire `GallerySection` must render `null` and remain hidden.
+- In development, renders labeled neutral placeholders with category badges. Recommended asset dimensions: 1600px wide WebP/JPG.
+
