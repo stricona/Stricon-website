@@ -17,9 +17,7 @@ export async function generateMetadata({ params }: ServicePageProps): Promise<Me
   const service = getServiceBySlug(slug);
 
   if (!service) {
-    return {
-      title: "Service Not Found",
-    };
+    notFound();
   }
 
   return {
