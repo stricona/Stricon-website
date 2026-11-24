@@ -1,1 +1,74 @@
-[]
+[
+  {
+    "id": "security/corporate-security-team",
+    "src": "/images/gallery/security/corporate-security-team.webp",
+    "width": 1376,
+    "height": 768,
+    "alt": "STRICON corporate security officers stationed at modern entrance lobby",
+    "caption": "Corporate security deployment and access control",
+    "category": "security",
+    "featured": true,
+    "order": 1,
+    "blurDataURL": "data:image/webp;base64,UklGRj4AAABXRUJQVlA4IDIAAADQAQCdASoKAAYABUB8JYwAAup3rNDIAAD4YRVxCJ6zdaKYvGXyn3/vXYYU0esu6hQAAA=="
+  },
+  {
+    "id": "security/security-operations-squad",
+    "src": "/images/gallery/security/security-operations-squad.webp",
+    "width": 1000,
+    "height": 667,
+    "alt": "STRICON security squad on operational duty",
+    "caption": "On-site security personnel maintaining perimeter safety",
+    "category": "security",
+    "featured": false,
+    "order": 2,
+    "blurDataURL": "data:image/webp;base64,UklGRo4AAABXRUJQVlA4WAoAAAAQAAAACQAABgAAQUxQSD8AAAABYFNbe5O305sADOCgGmBqMwpjgy0oAAthbkkAERExAQCzyPnftXB+wk23BUAv9VFKYNJa63MFFv1VGSj92wEAVlA4ICgAAACQAQCdASoKAAcABUB8JZwAAlx/6sAA/ujwUoP9PElfObT1pj+KlgAA"
+  },
+  {
+    "id": "housekeeping/corporate-housekeeping-lobby",
+    "src": "/images/gallery/housekeeping/corporate-housekeeping-lobby.webp",
+    "width": 1376,
+    "height": 768,
+    "alt": "STRICON commercial housekeeping staff maintaining corporate office floor",
+    "caption": "Commercial housekeeping and specialized floor maintenance",
+    "category": "housekeeping",
+    "featured": true,
+    "order": 3,
+    "blurDataURL": "data:image/webp;base64,UklGRkAAAABXRUJQVlA4IDQAAADQAQCdASoKAAYABUB8JYwAAl3CVvVJgAD2ETR5Mwe/wc0aPhRCbUXk1B5igkTbBXgzcAAA"
+  },
+  {
+    "id": "facility/facility-operations-control",
+    "src": "/images/gallery/facility/facility-operations-control.webp",
+    "width": 1376,
+    "height": 768,
+    "alt": "STRICON facility management engineer and technician inspecting HVAC control panel",
+    "caption": "Integrated facility management and technical systems operations",
+    "category": "facility",
+    "featured": true,
+    "order": 4,
+    "blurDataURL": "data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAADQAQCdASoKAAYABUB8JZQAAt0H87VCcAD12nfo51QWGWHn/vTD9ZiwhI/JoCAA"
+  },
+  {
+    "id": "training/onsite-staff-training",
+    "src": "/images/gallery/training/onsite-staff-training.webp",
+    "width": 710,
+    "height": 473,
+    "alt": "STRICON security staff attending continuous on-site training session",
+    "caption": "Continuous training and site-specific SOP orientation",
+    "category": "training",
+    "featured": true,
+    "order": 5,
+    "blurDataURL": "data:image/webp;base64,UklGRkAAAABXRUJQVlA4IDQAAACwAQCdASoKAAcABUB8JZAAAlnU/wOQAP4LEbc6ZHao4TVCSEnO4BsqdG1xDcAhxjLHJwAA"
+  },
+  {
+    "id": "training/sop-training-session",
+    "src": "/images/gallery/training/sop-training-session.webp",
+    "width": 817,
+    "height": 655,
+    "alt": "STRICON security personnel during standard operating procedure training",
+    "caption": "Standard operating procedures and protocol instruction",
+    "category": "training",
+    "featured": true,
+    "order": 6,
+    "blurDataURL": "data:image/webp;base64,UklGRkIAAABXRUJQVlA4IDYAAACQAQCdASoKAAgABUB8JZwAAknfMEAA/e1AQrrz7i+qfB7vX8gfdtEVHQ8SiEWV8pimyGAAAAA="
+  }
+]
