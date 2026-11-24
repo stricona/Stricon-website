@@ -17,6 +17,7 @@ import {
 import { industries, industriesStatement } from "@/data/industries";
 
 const industryIcons: Record<string, React.ComponentType<{ className?: string }>> = {
+  "health-care-centers": Hospital,
   "healthcare-centres": Hospital,
   it: Laptop,
   ites: Headphones,

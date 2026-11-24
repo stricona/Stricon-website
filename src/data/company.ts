@@ -7,12 +7,20 @@ export const company: CompanyInfo = {
   establishedYear: 2025,
   founder: {
     name: "R Vishnu Murthy",
-    role: "Managing Director",
+    role: "Founder & Managing Director",
+    bio: "Veteran, experienced in the field of facility management services",
     background: "veteran, experienced in facility management services",
+    photo: null,
+    message: null,
   },
   description: "Facility Management & Security Services Provider with valid PSARA Licence.",
   psaraLicensed: true,
   psaraLicenseNumber: null,
+  legal: {
+    cin: null,
+    gstin: null,
+    psaraValidUntil: null,
+  },
   tagline: null,
   registeredOffice: {
     addressLine: "4th Floor, H No: 12-2-563/38, Gudimalkapur, Mehdipatnam",

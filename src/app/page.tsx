@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { siteConfig } from "@/config/site";
-import { MotionProvider } from "@/components/common";
+import { MotionProvider, OrganizationJsonLd } from "@/components/common";
 import {
   Hero,
   ClientsMarquee,
@@ -40,6 +40,7 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <MotionProvider>
+      <OrganizationJsonLd />
       <div className="flex flex-col w-full">
         <Hero />
         <ClientsMarquee />

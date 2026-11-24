@@ -1,7 +1,16 @@
 export interface FounderInfo {
   name: string;
   role: string;
-  background: string;
+  bio: string;
+  background?: string;
+  photo: string | null;
+  message: string | null;
+}
+
+export interface LegalInfo {
+  cin: string | null;
+  gstin: string | null;
+  psaraValidUntil: string | null;
 }
 
 export interface AddressInfo {
@@ -47,6 +56,7 @@ export interface CompanyInfo {
   description: string;
   psaraLicensed: boolean;
   psaraLicenseNumber: string | null;
+  legal: LegalInfo;
   tagline: string | null;
   registeredOffice: AddressInfo;
   contact: ContactInfo;

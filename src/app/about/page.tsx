@@ -1,21 +1,86 @@
 import type { Metadata } from "next";
+import { siteConfig } from "@/config/site";
+import { profile } from "@/data/profile";
+import { MotionProvider, OrganizationJsonLd } from "@/components/common";
+import {
+  AboutHero,
+  AboutStory,
+  FounderCard,
+  MissionVision,
+  CoreValues,
+  IfmVertical,
+  OurStrengths,
+  TrainingAndWelfare,
+  LicenceCompliancePanel,
+  ClientsSection,
+} from "@/components/about";
+import { WhyStricon, FinalCta } from "@/components/home";
 
 export const metadata: Metadata = {
   title: "About Us",
-  description: "Learn about STRICON People & Security Services Pvt Ltd, our mission, vision, and core values.",
+  description: profile.aboutParagraphs[0],
+  alternates: {
+    canonical: `${siteConfig.url}/about`,
+  },
+  openGraph: {
+    title: "About Us | STRICON",
+    description: profile.aboutParagraphs[0],
+    url: `${siteConfig.url}/about`,
+    siteName: siteConfig.name,
+    locale: siteConfig.locale,
+    type: "website",
+    images: [
+      {
+        url: `${siteConfig.url}/images/logo/emblem.jpg`,
+        width: 1024,
+        height: 1024,
+        alt: "STRICON Shield Emblem",
+      },
+    ],
+  },
 };
 
 export default function AboutPage() {
   return (
-    <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
-      <div className="max-w-3xl">
-        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-[var(--color-foreground)] tracking-tight">
-          About Us
-        </h1>
-        <p className="mt-4 text-lg text-[var(--color-muted-foreground)] leading-relaxed">
-          Discover our comprehensive facility management services, professional in-house teams, and company values.
-        </p>
-      </div>
-    </div>
+    <MotionProvider>
+      <OrganizationJsonLd />
+      <article className="flex flex-col w-full">
+        {/* 1. PageHero */}
+        <AboutHero />
+
+        {/* 2. About Us: Paragraphs 1-4 & "At a glance" card */}
+        <AboutStory />
+
+        {/* 3. Founder and Managing Director */}
+        <FounderCard />
+
+        {/* 4. Our Mission and Our Vision */}
+        <MissionVision />
+
+        {/* 5. Core Values */}
+        <CoreValues />
+
+        {/* 6. Integrated Facility Management Vertical */}
+        <IfmVertical />
+
+        {/* 7. Our Strengths */}
+        <OurStrengths />
+
+        {/* 8. Continuous Training & Employee Welfare */}
+        <TrainingAndWelfare />
+
+        {/* 9. Licence and compliance panel */}
+        <LicenceCompliancePanel />
+
+        {/* 10. Few of our esteemed clients */}
+        <ClientsSection />
+
+        {/* 11. To Sum Up – Why STRICON? */}
+        <WhyStricon />
+
+        {/* 12. Final CTA */}
+        <FinalCta />
+      </article>
+    </MotionProvider>
   );
 }

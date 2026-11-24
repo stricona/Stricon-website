@@ -4,3 +4,4 @@ export * from "./ButtonLink";
 export * from "./Reveal";
 export * from "./RevealGroup";
 export * from "./MotionProvider";
+export * from "./OrganizationJsonLd";

@@ -5,14 +5,27 @@ import Image from "next/image";
 import { Pause, Play } from "lucide-react";
 import { Container, SectionHeading } from "@/components/common";
 import { clients, approvedDeploymentSentence } from "@/data/clients";
+import { industries } from "@/data/industries";
 
-export function ClientsMarquee() {
+interface ClientsMarqueeProps {
+  heading?: string;
+  sentence?: string;
+  eyebrow?: string;
+  className?: string;
+  showIndustriesChips?: boolean;
+}
+
+export function ClientsMarquee({
+  heading = "Few of our esteemed clients",
+  sentence = approvedDeploymentSentence,
+  eyebrow = "Esteemed Clients",
+  className = "",
+  showIndustriesChips = false,
+}: ClientsMarqueeProps) {
   const [isPaused, setIsPaused] = useState(false);
 
-  // Filter approved clients with non-null logos
-  const approvedClients = clients.filter(
-    (c) => c.displayApproved && c.logo !== null
-  );
+  // Filter approved clients (excluding Crown Brewing which has displayApproved: false)
+  const approvedClients = clients.filter((c) => c.displayApproved);
 
   // Split into two distinct rows for opposite scrolling
   const mid = Math.ceil(approvedClients.length / 2);
@@ -20,15 +33,17 @@ export function ClientsMarquee() {
   const row2 = approvedClients.slice(mid);
 
   return (
-    <section className="relative overflow-hidden py-16 sm:py-20 bg-[var(--surface)]/50 border-y border-[var(--border)]">
+    <section
+      className={`relative overflow-hidden py-16 sm:py-20 bg-[var(--surface)]/50 border-y border-[var(--border)] ${className}`}
+    >
       <Container className="mb-10">
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
           <SectionHeading
             align="left"
-            eyebrow="Esteemed Clients"
-            title="Trusted Across Hyderabad's Enterprise Landscape"
-            intro={approvedDeploymentSentence}
-            className="max-w-2xl"
+            eyebrow={eyebrow}
+            title={heading}
+            intro={sentence}
+            className="max-w-3xl"
           />
 
           {/* Accessible Marquee Pause / Play Control */}
@@ -58,6 +73,19 @@ export function ClientsMarquee() {
             </button>
           </div>
         </div>
+
+        {showIndustriesChips && (
+          <div className="flex flex-wrap gap-2 pt-6">
+            {industries.map((ind) => (
+              <span
+                key={ind.name}
+                className="inline-flex items-center rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-1.5 text-xs font-semibold text-[var(--foreground)] shadow-2xs"
+              >
+                {ind.name}
+              </span>
+            ))}
+          </div>
+        )}
       </Container>
 
       {/* Marquee Track Container with Edge Fade Masks */}
@@ -73,7 +101,7 @@ export function ClientsMarquee() {
         />
 
         <div className="space-y-4">
-          {/* Row 1: Leftward scroll */}
+          {/* Row 1: Leftward scroll (Full Colour, no grayscale or opacity filters) */}
           <div
             className={`flex w-max space-x-4 animate-marquee-left group-hover:[animation-play-state:paused] ${
               isPaused ? "pause-animation" : ""
@@ -85,20 +113,26 @@ export function ClientsMarquee() {
                 aria-hidden={idx >= row1.length}
                 className="flex h-20 w-44 sm:h-24 sm:w-52 shrink-0 items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--logo-surface)] p-4 shadow-xs transition-transform hover:scale-[1.02]"
               >
-                <div className="relative h-12 w-full">
-                  <Image
-                    src={client.logo as string}
-                    alt={`${client.name} logo`}
-                    fill
-                    sizes="208px"
-                    className="object-contain filter grayscale hover:grayscale-0 transition-all duration-200"
-                  />
-                </div>
+                {client.logo ? (
+                  <div className="relative h-12 w-full">
+                    <Image
+                      src={client.logo}
+                      alt={`${client.name} logo`}
+                      fill
+                      sizes="208px"
+                      className="object-contain"
+                    />
+                  </div>
+                ) : (
+                  <span className="font-heading font-semibold text-xs text-center text-[#29283A] px-2 line-clamp-2">
+                    {client.name}
+                  </span>
+                )}
               </div>
             ))}
           </div>
 
-          {/* Row 2: Rightward scroll */}
+          {/* Row 2: Rightward scroll (Full Colour, no grayscale or opacity filters) */}
           <div
             className={`flex w-max space-x-4 animate-marquee-right group-hover:[animation-play-state:paused] ${
               isPaused ? "pause-animation" : ""
@@ -110,15 +144,21 @@ export function ClientsMarquee() {
                 aria-hidden={idx >= row2.length}
                 className="flex h-20 w-44 sm:h-24 sm:w-52 shrink-0 items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--logo-surface)] p-4 shadow-xs transition-transform hover:scale-[1.02]"
               >
-                <div className="relative h-12 w-full">
-                  <Image
-                    src={client.logo as string}
-                    alt={`${client.name} logo`}
-                    fill
-                    sizes="208px"
-                    className="object-contain filter grayscale hover:grayscale-0 transition-all duration-200"
-                  />
-                </div>
+                {client.logo ? (
+                  <div className="relative h-12 w-full">
+                    <Image
+                      src={client.logo}
+                      alt={`${client.name} logo`}
+                      fill
+                      sizes="208px"
+                      className="object-contain"
+                    />
+                  </div>
+                ) : (
+                  <span className="font-heading font-semibold text-xs text-center text-[#29283A] px-2 line-clamp-2">
+                    {client.name}
+                  </span>
+                )}
               </div>
             ))}
           </div>

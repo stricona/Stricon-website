@@ -10,6 +10,7 @@ export interface StrengthsGroup {
 
 export interface ProfileContent {
   about: string;
+  aboutParagraphs: string[];
   mission: string;
   vision: string;
   coreValues: CoreValue[];
@@ -21,4 +22,6 @@ export interface ProfileContent {
   strengths: StrengthsGroup[];
   valueAddedServices: string[];
   whyStricon: string[];
+  clientsHeading: string;
+  clientsSentence: string;
 }
