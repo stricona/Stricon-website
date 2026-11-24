@@ -206,4 +206,95 @@ Original files reside in `public/images/logo/`:
 - Contact pre-selection: Links with `?service=<slug>` echo the service title under H1 within `<Suspense>`.
 - Automated link crawler: Maintained in `scripts/check-links.mjs` and runnable via `npm run check:links`.
 
+---
+
+## 9. Phase 4: About Page & Deck Alignment Standards
+
+### Exact-Copy Rule
+- Every sentence or list item of body text on the About page (`/about`) and shared profile text MUST be the presentation deck's own words (`docs/STRICON_Profile.pptx`).
+- Allowed edits only: fix double spaces, normalize straight vs curly apostrophes, and fix the obvious typo `"where ever"` to `"wherever"`.
+- Short UI labels (section headings, "At a glance", button text) are permitted and must use the deck's own heading words wherever one exists.
+- Forbidden words: `"leading"`, `"largest"`, `"No.1"`, `"premier"`, `"award"` (as a superlative/claim), `"ISO"`, `"24/7"`, `"24x7"`, `"100%"` (and `"best"` outside deck text).
+- "Crown Brewing" MUST remain hidden (`displayApproved: false`) until explicit approval.
+
+### Copy Audit Script (`scripts/audit-copy.mjs`)
+- Automated verification script runnable via `npm run audit:copy`.
+- Extracts all text runs from PPTX slide XMLs (`docs/.tmp`), normalizes whitespace/apostrophes/entities, and checks all 75 deck-derived strings in `src/data/profile.ts`.
+- Exits with code 1 if any string is missing from the presentation deck corpus.
+
+### Client Logo Display Rule
+- All 18 client logos stored in `public/images/clients/` must be displayed in **FULL COLOUR** at all times.
+- Zero grayscale conversion, zero hover-only colour filters, and zero opacity down-scaling.
+- Always mounted on `--logo-surface` (`#FFFFFF`) cards to ensure contrast against both light and dark site themes.
+- Approved clients without a logo file render cleanly as a text tile.
+
+### Null-Hides-Block Rule
+- If a block has no deck text and no stated data, do NOT build it. Unknown data = `null`, and the UI hides the block completely.
+- `FounderCard`: Typographic card with initials avatar ("RVM"), name, role, bio. Photo rendered with `next/image` only if `photo !== null`; message blockquote rendered only if `message !== null`. Never invent quotes.
+- `LicenceCompliancePanel`: Valid PSARA Licence badge, registered office address, and working hours. CIN, GSTIN, and PSARA validity fields rendered ONLY when not null.
+- No empty placeholder boxes, stock photos, or mock certifications in production.
+
+### Structured Data (`OrganizationJsonLd`)
+- Implemented in `src/components/common/OrganizationJsonLd.tsx` and mounted on both `/` and `/about`.
+- Includes legal name, alternate name STRICON, canonical URL, emblem logo, founding date "2025", founder, address, phone, email, and area served ("Hyderabad"). Omit null fields; no fake reviews/ratings.
+
+---
+
+## 10. Phase 5: Contact Page & Quote Form Standards
+
+### Contact Data Flow & API Architecture
+- **Endpoint**: `/api/contact` (POST only, Node.js runtime).
+- **Body & Header Constraints**: Requires `Content-Type: application/json`. Bodies exceeding 10 KB rejected with HTTP 413.
+- **Same-Origin Verification**: Validates `Origin` header against `NEXT_PUBLIC_SITE_URL`, host header, or localhost in development (HTTP 403 on mismatch).
+- **Bot Defense (Honeypot & Timing)**:
+  - `website` honeypot field: must be empty.
+  - `startedAt` timestamp: rejects requests submitted in under 2.5 seconds or with timestamps missing / in the future.
+  - Returns fake success `{ ok: true }` without triggering delivery pipelines when bot signals are detected.
+- **Rate Limiting**:
+  - In-memory sliding window rate limiter in `src/lib/rate-limit.ts` (5 requests per 10 minutes per IP).
+  - Uses client IP from `x-forwarded-for` (first hop) or fallback. Returns HTTP 429 when exhausted.
+  - Documented: Serverless instances do not share memory; edge rate limiting recommended for distributed multi-region deployments.
+- **Payload Sanitization & Reference Generation**:
+  - Single-line fields stripped of control characters (`\r`, `\n`).
+  - Reference numbers follow format `STR-YYYYMMDD-XXXX` (4 random alphanumeric characters).
+  - User input HTML-escaped before embedding in email bodies.
+
+### Multi-Channel Delivery Engine (`src/lib/delivery.ts`)
+- **Configured via `ENQUIRY_DELIVERY`**: Comma-separated list of active channels (`log`, `resend`, `webhook`).
+- **Resend (`src/lib/email.ts`)**:
+  - Sends transactional emails via Resend API (`POST https://api.resend.com/emails`) using `RESEND_API_KEY`.
+  - Recipient: `ENQUIRY_TO` (default `info@stricon.in`).
+  - Sender: `ENQUIRY_FROM` (must be a verified domain in Resend).
+  - Reply-To: Visitor's submitted email address.
+  - Timeout: 10 seconds via native `AbortController`.
+- **Webhook (`src/lib/webhook.ts`)**:
+  - POSTs full JSON payload to `ENQUIRY_WEBHOOK_URL` with signature `secret: ENQUIRY_WEBHOOK_SECRET` for automated Google Sheets logging (e.g., via Google Apps Script).
+  - Timeout: 10 seconds via native `AbortController`.
+- **Log Mode (`log`)**:
+  - Safe one-line summary in console (reference ID, service slug, masked phone).
+  - **Critical Production Guard**: If only `log` is configured in production (`NODE_ENV === "production"`), the API returns HTTP 503 (`not_configured`) to prevent silent loss of customer enquiries.
+- **Multi-channel Resilience**: Delivery succeeds if at least ONE real channel (Resend or Webhook) succeeds. A failing channel does not block remaining channels.
+
+### Form UI & Accessibility (`QuoteForm.tsx` & `ContactInfoCards.tsx`)
+- **Client Form Architecture**: React Hook Form with Zod resolver (`enquirySchema`), validating on blur and on change after error.
+- **Accessibility & ARIA**:
+  - All form controls have associated `<label>` elements, `aria-invalid`, and `aria-describedby` pointing to error messages.
+  - First invalid field receives automatic focus on failed submission.
+  - Live announcements via polite `aria-live` region.
+  - Character counter (0/1000) for message field.
+- **Layout & Token Usage**:
+  - Two-column responsive layout (QuoteForm rendered first on mobile screens).
+  - `--danger` (`#B91C1C` light, `#EF4444` dark) and `--danger-foreground` (`#FFFFFF`) used for error banners and field invalid states.
+  - Gold submit button with charcoal text (`--accent-gold` and `--accent-gold-foreground`).
+  - Secondary "Send via WhatsApp" button pre-populates message text and redirects to `wa.me`.
+- **Success State**: Form replaced by accessible confirmation panel with reference number and focus-shifted heading.
+
+### Strict Content & Operational Rules
+- **No Response-Time Promises**: Never promise response times (e.g., "within 24 hours" is strictly forbidden). Copy only promises that STRICON will review and get in touch.
+- **No Hardcoded Hex**: All colors must use CSS variables mapped in `globals.css`.
+- **Deck-Verbatim Copy Audit Rule**: `scripts/audit-copy.mjs` tags text strings as `text` (must match PPTX XML runs verbatim) and image-only slides (Slide 9 recruitment steps, Slide 11 strengths) as `image` ("IMAGE (Slide X manual check)").
+- **Background Server Rule**: Development (`next dev -p 3200`) and production (`next start -p 3100`) servers must ALWAYS run in the background (hidden processes), polled via HTTP until ready (max 60s), tested, and terminated immediately after test suites finish. Never run servers in the foreground.
+
+
+
 
