@@ -258,10 +258,18 @@ async function runContentChecks() {
       const hasCanonical = /<link[^>]+rel=["']canonical["'][^>]*>/i.test(text);
 
       // 5. Forbidden strings
+      // Strip script tags to avoid false positives on React Flight protocol serialized "$undefined"
+      const htmlWithoutScripts = text.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, "");
       const forbiddenFound = [];
       for (const forbidden of FORBIDDEN_STRINGS) {
-        if (text.includes(forbidden)) {
-          forbiddenFound.push(forbidden);
+        if (forbidden === "24/7" || forbidden === "24x7" || forbidden === "Crown Brewing") {
+          if (text.includes(forbidden)) {
+            forbiddenFound.push(forbidden);
+          }
+        } else {
+          if (htmlWithoutScripts.includes(forbidden)) {
+            forbiddenFound.push(forbidden);
+          }
         }
       }
 

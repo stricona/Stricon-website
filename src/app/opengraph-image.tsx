@@ -3,8 +3,6 @@ import fs from "fs";
 import path from "path";
 import { themeColors } from "@/config/theme";
 
-export const runtime = "nodejs";
-
 export const alt = "STRICON People & Security Services";
 export const size = {
   width: 1200,
@@ -74,7 +72,7 @@ export default async function Image() {
               fontWeight: 600,
               letterSpacing: "0.05em",
               textTransform: "uppercase",
-              width: "fit-content",
+              alignSelf: "flex-start",
             }}
           >
             PSARA Licensed &bull; Hyderabad

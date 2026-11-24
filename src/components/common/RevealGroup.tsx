@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { motion, type HTMLMotionProps } from "motion/react";
+import { m, type HTMLMotionProps } from "motion/react";
 
 interface RevealGroupProps extends HTMLMotionProps<"div"> {
   children: React.ReactNode;
@@ -18,7 +18,7 @@ export function RevealGroup({
   ...props
 }: RevealGroupProps) {
   return (
-    <motion.div
+    <m.div
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, margin: "-80px" }}
@@ -35,7 +35,7 @@ export function RevealGroup({
       {...props}
     >
       {children}
-    </motion.div>
+    </m.div>
   );
 }
 
@@ -45,7 +45,7 @@ export function RevealItem({
   ...props
 }: HTMLMotionProps<"div">) {
   return (
-    <motion.div
+    <m.div
       variants={{
         hidden: { opacity: 0, y: 16 },
         visible: {
@@ -61,6 +61,6 @@ export function RevealItem({
       {...props}
     >
       {children}
-    </motion.div>
+    </m.div>
   );
 }

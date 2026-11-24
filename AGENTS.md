@@ -319,6 +319,10 @@ Original files reside in `public/images/logo/`:
   - Accessible success confirmation screen with focus management.
 
 
+---
+
+## 10. Phase 5: Contact Page & Enquiry Delivery Engine Standards
+
 ### Contact Data Flow & API Architecture
 - **Endpoint**: `/api/contact` (POST only, Node.js runtime).
 - **Body & Header Constraints**: Requires `Content-Type: application/json`. Bodies exceeding 10 KB rejected with HTTP 413.
@@ -371,6 +375,67 @@ Original files reside in `public/images/logo/`:
 - **No Hardcoded Hex**: All colors must use CSS variables mapped in `globals.css`.
 - **Deck-Verbatim Copy Audit Rule**: `scripts/audit-copy.mjs` tags text strings as `text` (must match PPTX XML runs verbatim) and image-only slides (Slide 9 recruitment steps, Slide 11 strengths) as `image` ("IMAGE (Slide X manual check)").
 - **Background Server Rule**: Development (`next dev -p 3200`) and production (`next start -p 3100`) servers must ALWAYS run in the background (hidden processes), polled via HTTP until ready (max 60s), tested, and terminated immediately after test suites finish. Never run servers in the foreground.
+
+
+---
+
+## 12. Phase 7: Launch Polish & Production Standards
+
+### Floating Quick-Contact Actions (`FloatingActions.tsx`)
+- **Trigger**: Visible after user scrolls past 200px (`scrollY > 200`). Hidden on `/contact` and `/careers` pages to avoid competing with page CTAs.
+- **Mobile Menu Observer**: Listens to `data-menu-open="true"` on `document.body` and automatically hides to prevent overlapping drawer navigation.
+- **Tokens & Contrast**:
+  - Uses `--whatsapp` (`#1EBE5D`) and `--whatsapp-foreground` (`#062E14`), achieving WCAG AA contrast ratio of 7.22:1.
+  - Back-to-top button uses `--secondary` and `--secondary-foreground`.
+- **WhatsApp Attention Pulse**: Gentle pulse animation (two 1.05x scale cycles every 6s) to draw attention without annoyance. Automatically disabled if user has `prefers-reduced-motion: reduce`.
+- **Z-Index & Mobile Padding**: Positioned at `z-40` with `pb-20` on `<Footer>` on mobile (`md:pb-0`) so floating buttons never obscure footer links or copyright text.
+
+### Error Boundaries & Resiliency
+- **Segment Error Boundary (`src/app/error.tsx`)**:
+  - Handles client/server runtime rendering errors within layout.
+  - Accessible layout with "Try again" button, error details toggle in development, and clear fallback messaging.
+- **Root Error Boundary (`src/app/global-error.tsx`)**:
+  - Top-level fallback rendering its own `<html>` and `<body>` with inline CSS styles so failure of CSS bundles or layout still renders a clean, functional recovery screen.
+- **Enhanced 404 (`src/app/not-found.tsx`)**:
+  - Displays branded not-found badge, honest message, and direct navigation links back to Home, Services, and Contact.
+
+### Legal Documentation & Compliance
+- **Data File (`src/data/legal.ts`)**:
+  - Structured text for Privacy Policy and Terms of Service.
+  - Explicit Lawyer Review Note flag: indicates draft status for legal review prior to commercial launch under Indian Digital Personal Data Protection Act (DPDPA 2023) and IT Act 2000.
+- **Pages**: `/privacy-policy` and `/terms` with responsive typography, clear section hierarchy, and no marketing fluff.
+- **Footer & Form Consent**: Links integrated in `<Footer>` and in consent notes under both `QuoteForm` and `ApplicationForm`.
+
+### SEO, Structured Data & Metadata Architecture
+- **Helper (`src/lib/seo.ts`)**: `constructMetadata()` provides unified OpenGraph, Twitter card, canonical URL, and title template formatting across all pages.
+- **LocalBusiness JSON-LD (`src/components/common/LocalBusinessJsonLd.tsx`)**:
+  - Extends `OrganizationJsonLd` with `@type: "LocalBusiness"` / `"SecurityService"`.
+  - Links to organization entity via `@id: "https://stricon.in/#organization"`.
+  - Specifies opening hours, telephone, price range ("₹₹"), and geographic coordinates for Hyderabad.
+- **Dynamic OG & Twitter Cards (`opengraph-image.tsx` / `twitter-image.tsx`)**:
+  - Generated via `next/og` (`ImageResponse`) at 1200x630px.
+  - Uses explicit hex constants from `src/config/theme.ts` (`themeColors.brandCharcoal`, `themeColors.accentGold`, etc.).
+  - Satori flexbox layout without incompatible CSS (`alignSelf: "flex-start"` instead of `width: "fit-content"`).
+
+### Indexing Guard & Security Headers
+- **Staging / Pre-launch Indexing Guard**:
+  - Controlled by `ALLOW_INDEXING` environment variable.
+  - When unset or not `"true"`, `src/app/robots.ts` serves `Disallow: /` and `src/app/layout.tsx` injects `<meta name="robots" content="noindex, nofollow">`.
+  - When `ALLOW_INDEXING="true"`, full indexing and XML sitemap directive are active.
+- **Security Headers (`next.config.ts`)**:
+  - `poweredByHeader: false` (removes `X-Powered-By: Next.js`).
+  - Standard enterprise headers applied to all routes:
+    - `X-Content-Type-Options: nosniff`
+    - `Referrer-Policy: strict-origin-when-cross-origin`
+    - `X-Frame-Options: DENY`
+    - `Permissions-Policy: camera=(), microphone=(), geolocation=()`
+    - `Strict-Transport-Security: max-age=63072000; includeSubDomains` (HSTS).
+  - *CSP Note*: Content-Security-Policy should be finalized post-deployment once production CDN, analytics, and font domains are locked.
+
+### Prelaunch Tooling & Verification
+- **Contrast Check (`scripts/check-contrast.mjs`)**: Evaluates all token pairs against WCAG AA standards (>= 4.5:1 normal text, >= 3.0:1 large text/UI). Run via `npm run check:contrast`.
+- **Prelaunch Verification Suite (`scripts/prelaunch-check.mjs`)**: Comprehensive 5-category audit covering environment variables, production build artifacts, live route accessibility, security headers, canonical URLs, and forbidden marketing claims. Run via `npm run prelaunch`.
+- **Checklist (`LAUNCH_CHECKLIST.md`)**: Comprehensive operational runbook for domain setup, DNS, Resend domain verification, environment secrets, and legal signoff.
 
 
 

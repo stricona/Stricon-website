@@ -25,6 +25,9 @@ const explicitUrls = [
   "/careers",
   "/careers?area=security-services",
   "/contact",
+  "/privacy-policy",
+  "/terms",
+  "/opengraph-image",
   ...serviceSlugs.map((s) => `/services/${s}`),
   ...serviceSlugs.map((s) => `/contact?service=${s}`),
 ];
