@@ -30,6 +30,7 @@ export async function sendWebhook(
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
+        type: "enquiry",
         secret,
         ref,
         timestamp,

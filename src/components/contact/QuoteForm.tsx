@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   CheckCircle2,
@@ -44,7 +44,8 @@ export function QuoteForm({ defaultService }: QuoteFormProps) {
   const {
     register,
     handleSubmit,
-    watch,
+    control,
+    setValue,
     getValues,
     setError,
     reset,
@@ -65,11 +66,16 @@ export function QuoteForm({ defaultService }: QuoteFormProps) {
       message: "",
       consent: true,
       website: "",
-      startedAt: Date.now(),
+      startedAt: 0,
     },
   });
 
-  const messageText = watch("message") || "";
+  const messageText = useWatch({ control, name: "message", defaultValue: "" }) || "";
+
+  // Set startedAt timestamp on mount
+  useEffect(() => {
+    setValue("startedAt", Date.now());
+  }, [setValue]);
 
   // Focus success heading on completion
   useEffect(() => {
