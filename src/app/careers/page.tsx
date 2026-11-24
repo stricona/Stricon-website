@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Phone, MessageCircle, Mail, Briefcase, ArrowRight } from "lucide-react";
@@ -5,12 +6,15 @@ import { siteConfig } from "@/config/site";
 import { company } from "@/data/company";
 import { profile } from "@/data/profile";
 import { openings } from "@/data/careers";
+import { CAREER_AREA_SLUGS, CareerAreaSlug } from "@/lib/validations";
+import { canForwardAttachments } from "@/lib/delivery";
 import { Container, MotionProvider, Reveal } from "@/components/common";
 import { Breadcrumbs } from "@/components/services";
 import {
   EmployeeWelfare,
   RecruitmentStepper,
   HiringAndTraining,
+  ApplicationForm,
 } from "@/components/careers";
 
 export const metadata: Metadata = {
@@ -37,6 +41,9 @@ export const metadata: Metadata = {
   },
 };
 
+interface CareersPageProps {
+  searchParams: Promise<{ area?: string }>;
+}
 
 function CareersJsonLd() {
   const schema = {
@@ -61,7 +68,32 @@ function CareersJsonLd() {
   );
 }
 
-export default async function CareersPage() {
+async function ApplicationFormSection({
+  searchParams,
+  resumeUploadEnabled,
+}: {
+  searchParams: Promise<{ area?: string }>;
+  resumeUploadEnabled: boolean;
+}) {
+  const { area: queryArea } = await searchParams;
+
+  // Validate area against known slugs silently
+  const isValidArea =
+    queryArea && CAREER_AREA_SLUGS.includes(queryArea as CareerAreaSlug);
+  const validatedArea = isValidArea ? queryArea : undefined;
+
+  return (
+    <ApplicationForm
+      defaultArea={validatedArea}
+      resumeUploadEnabled={resumeUploadEnabled}
+    />
+  );
+}
+
+export default async function CareersPage({ searchParams }: CareersPageProps) {
+  // Compute resume upload feature flag on server
+  const resumeUploadEnabled =
+    process.env.CAREERS_RESUME_UPLOAD === "on" && canForwardAttachments();
 
   return (
     <MotionProvider>
@@ -176,16 +208,22 @@ export default async function CareersPage() {
         </section>
       )}
 
-      {/* 6. Apply Placeholder (id="apply") */}
+      {/* 6. Application Form (id="apply") */}
       <section id="apply" className="py-16 sm:py-24 bg-[var(--background)] scroll-mt-12">
         <Container>
-          <div className="max-w-4xl mx-auto text-center py-12 rounded-2xl border border-[var(--border)] bg-[var(--surface)]">
-            <h3 className="font-heading text-xl font-bold text-[var(--foreground)]">
-              Job Application Form
-            </h3>
-            <p className="mt-2 text-sm text-[var(--muted-foreground)]">
-              Submit your details directly to our recruitment team in Hyderabad.
-            </p>
+          <div className="max-w-4xl mx-auto">
+            <Suspense
+              fallback={
+                <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-8 text-center text-sm text-[var(--muted-foreground)]">
+                  Loading application form...
+                </div>
+              }
+            >
+              <ApplicationFormSection
+                searchParams={searchParams}
+                resumeUploadEnabled={resumeUploadEnabled}
+              />
+            </Suspense>
           </div>
         </Container>
       </section>
