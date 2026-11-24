@@ -146,8 +146,6 @@ export function Lightbox({
     }
   };
 
-  if (!photo) return null;
-
   return (
     <dialog
       ref={dialogRef}
@@ -157,71 +155,75 @@ export function Lightbox({
       }}
       onClick={handleBackdropClick}
       className="fixed inset-0 z-50 m-0 h-screen w-screen max-h-none max-w-none border-0 bg-transparent p-0 text-[var(--overlay-foreground)] backdrop:bg-[var(--overlay)] backdrop:backdrop-blur-sm open:flex open:flex-col open:items-center open:justify-center animate-in fade-in duration-200 motion-reduce:duration-0"
-      aria-label={`Photo details: ${photo.alt}`}
+      aria-label={photo ? `Photo details: ${photo.alt}` : "Photo viewer"}
     >
-      {/* Top action bar: counter and close button */}
-      <div className="absolute top-4 inset-x-4 flex items-center justify-between z-10 sm:top-6 sm:inset-x-6">
-        <div className="rounded-full bg-[var(--overlay)] px-3.5 py-1.5 text-xs font-semibold tracking-wider text-[var(--overlay-foreground)] shadow-xs">
-          {currentIndex + 1} / {totalCount}
-        </div>
-
-        <button
-          type="button"
-          onClick={onClose}
-          aria-label="Close photo view"
-          className="flex h-11 w-11 items-center justify-center rounded-full bg-[var(--overlay)] text-[var(--overlay-foreground)] shadow-md transition-transform hover:scale-105 active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-        >
-          <X className="h-6 w-6" />
-        </button>
-      </div>
-
-      {/* Main photo container */}
-      <div
-        className="relative flex h-full w-full max-h-[85vh] max-w-5xl flex-col items-center justify-center p-4 sm:p-6"
-        onPointerDown={handlePointerDown}
-        onPointerUp={handlePointerUp}
-      >
-        <div className="relative h-full w-full flex items-center justify-center">
-          <Image
-            src={photo.src}
-            alt={photo.alt}
-            fill
-            sizes="100vw"
-            priority
-            placeholder="blur"
-            blurDataURL={photo.blurDataURL}
-            className="object-contain"
-          />
-        </div>
-
-        {/* Caption bar */}
-        {photo.caption && (
-          <div className="mt-4 max-w-2xl rounded-xl bg-[var(--overlay)] px-4 py-2.5 text-center text-xs sm:text-sm text-[var(--overlay-foreground)] shadow-md backdrop-blur-xs">
-            <p className="leading-relaxed">{photo.caption}</p>
-          </div>
-        )}
-      </div>
-
-      {/* Navigation arrows (desktop and touch) */}
-      {totalCount > 1 && (
+      {photo && (
         <>
-          <button
-            type="button"
-            onClick={handlePrev}
-            aria-label="Previous photo"
-            className="absolute left-3 top-1/2 -translate-y-1/2 flex h-12 w-12 items-center justify-center rounded-full bg-[var(--overlay)] text-[var(--overlay-foreground)] shadow-md transition-transform hover:scale-110 active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:left-6"
-          >
-            <ChevronLeft className="h-7 w-7" />
-          </button>
+          {/* Top action bar: counter and close button */}
+          <div className="absolute top-4 inset-x-4 flex items-center justify-between z-10 sm:top-6 sm:inset-x-6">
+            <div className="rounded-full bg-[var(--overlay)] px-3.5 py-1.5 text-xs font-semibold tracking-wider text-[var(--overlay-foreground)] shadow-xs">
+              {currentIndex + 1} / {totalCount}
+            </div>
 
-          <button
-            type="button"
-            onClick={handleNext}
-            aria-label="Next photo"
-            className="absolute right-3 top-1/2 -translate-y-1/2 flex h-12 w-12 items-center justify-center rounded-full bg-[var(--overlay)] text-[var(--overlay-foreground)] shadow-md transition-transform hover:scale-110 active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:right-6"
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="Close photo view"
+              className="flex h-11 w-11 items-center justify-center rounded-full bg-[var(--overlay)] text-[var(--overlay-foreground)] shadow-md transition-transform hover:scale-105 active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            >
+              <X className="h-6 w-6" />
+            </button>
+          </div>
+
+          {/* Main photo container */}
+          <div
+            className="relative flex h-full w-full max-h-[85vh] max-w-5xl flex-col items-center justify-center p-4 sm:p-6"
+            onPointerDown={handlePointerDown}
+            onPointerUp={handlePointerUp}
           >
-            <ChevronRight className="h-7 w-7" />
-          </button>
+            <div className="relative h-full w-full flex items-center justify-center">
+              <Image
+                src={photo.src}
+                alt={photo.alt}
+                fill
+                sizes="100vw"
+                priority
+                placeholder="blur"
+                blurDataURL={photo.blurDataURL}
+                className="object-contain"
+              />
+            </div>
+
+            {/* Caption bar */}
+            {photo.caption && (
+              <div className="mt-4 max-w-2xl rounded-xl bg-[var(--overlay)] px-4 py-2.5 text-center text-xs sm:text-sm text-[var(--overlay-foreground)] shadow-md backdrop-blur-xs">
+                <p className="leading-relaxed">{photo.caption}</p>
+              </div>
+            )}
+          </div>
+
+          {/* Navigation arrows (desktop and touch) */}
+          {totalCount > 1 && (
+            <>
+              <button
+                type="button"
+                onClick={handlePrev}
+                aria-label="Previous photo"
+                className="absolute left-3 top-1/2 -translate-y-1/2 flex h-12 w-12 items-center justify-center rounded-full bg-[var(--overlay)] text-[var(--overlay-foreground)] shadow-md transition-transform hover:scale-110 active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:left-6"
+              >
+                <ChevronLeft className="h-7 w-7" />
+              </button>
+
+              <button
+                type="button"
+                onClick={handleNext}
+                aria-label="Next photo"
+                className="absolute right-3 top-1/2 -translate-y-1/2 flex h-12 w-12 items-center justify-center rounded-full bg-[var(--overlay)] text-[var(--overlay-foreground)] shadow-md transition-transform hover:scale-110 active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:right-6"
+              >
+                <ChevronRight className="h-7 w-7" />
+              </button>
+            </>
+          )}
         </>
       )}
     </dialog>
