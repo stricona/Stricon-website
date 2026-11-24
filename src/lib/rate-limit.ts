@@ -13,15 +13,15 @@ interface RateLimitRecord {
   resetAt: number;
 }
 
-const ipStore = new Map<string, RateLimitRecord>();
+const store = new Map<string, RateLimitRecord>();
 
 // Clean up stale entries every 5 minutes to prevent memory leaks
 if (typeof setInterval !== "undefined") {
   setInterval(() => {
     const now = Date.now();
-    for (const [key, record] of ipStore.entries()) {
+    for (const [key, record] of store.entries()) {
       if (now > record.resetAt) {
-        ipStore.delete(key);
+        store.delete(key);
       }
     }
   }, 5 * 60 * 1000).unref?.();
@@ -30,6 +30,7 @@ if (typeof setInterval !== "undefined") {
 export interface RateLimitOptions {
   limit?: number; // max requests allowed in the window
   windowMs?: number; // window duration in ms
+  bucket?: string; // separate namespaces for different routes
 }
 
 export function checkRateLimit(
@@ -38,16 +39,18 @@ export function checkRateLimit(
 ): { allowed: boolean; remaining: number; resetAt: number } {
   const limit = options.limit ?? 5;
   const windowMs = options.windowMs ?? 10 * 60 * 1000; // 10 minutes default
+  const bucket = options.bucket ? `bucket:${options.bucket}:` : "default:";
+  const key = `${bucket}${ip}`;
   const now = Date.now();
 
-  const record = ipStore.get(ip);
+  const record = store.get(key);
 
   if (!record || now > record.resetAt) {
     const newRecord: RateLimitRecord = {
       count: 1,
       resetAt: now + windowMs,
     };
-    ipStore.set(ip, newRecord);
+    store.set(key, newRecord);
     return {
       allowed: true,
       remaining: limit - 1,
@@ -69,4 +72,12 @@ export function checkRateLimit(
     remaining: limit - record.count,
     resetAt: record.resetAt,
   };
+}
+
+export function checkCareerRateLimit(ip: string) {
+  return checkRateLimit(ip, {
+    limit: 5,
+    windowMs: 10 * 60 * 1000,
+    bucket: "careers",
+  });
 }

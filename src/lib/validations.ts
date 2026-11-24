@@ -56,26 +56,33 @@ export function normalizeIndianPhone(input: string): string | null {
   return match ? match[1] : null;
 }
 
+/**
+ * Shared Name & Phone Validation Rules
+ */
+const nameRule = z
+  .string()
+  .trim()
+  .min(1, "Name is required")
+  .min(2, "Name must be at least 2 characters")
+  .max(80, "Name cannot exceed 80 characters");
+
+const phoneRule = z
+  .string()
+  .trim()
+  .min(1, "Phone number is required")
+  .refine((val) => normalizeIndianPhone(val) !== null, {
+    message: "Enter a valid 10 digit mobile number",
+  })
+  .transform((val) => normalizeIndianPhone(val) || val);
+
 export const enquirySchema = z.object({
-  name: z
-    .string()
-    .trim()
-    .min(1, "Name is required")
-    .min(2, "Name must be at least 2 characters")
-    .max(80, "Name cannot exceed 80 characters"),
+  name: nameRule,
   company: z
     .string()
     .max(120, "Company name cannot exceed 120 characters")
     .optional()
     .default(""),
-  phone: z
-    .string()
-    .trim()
-    .min(1, "Phone number is required")
-    .refine((val) => normalizeIndianPhone(val) !== null, {
-      message: "Enter a valid 10 digit mobile number",
-    })
-    .transform((val) => normalizeIndianPhone(val) || val),
+  phone: phoneRule,
   email: z
     .string()
     .trim()
@@ -111,6 +118,78 @@ export const enquirySchema = z.object({
 
 export type EnquiryInput = z.input<typeof enquirySchema>;
 export type EnquiryOutput = z.output<typeof enquirySchema>;
+
+export const CAREER_AREA_SLUGS = [
+  "security-services",
+  "housekeeping-janitorial",
+  "technical-services",
+  "support-staff-services",
+  "pest-control-disinfection",
+  "horticulture-services",
+  "specialized-cleaning",
+  "manpower-management",
+  "food-vending-supplies",
+  "other",
+] as const;
+
+export type CareerAreaSlug = (typeof CAREER_AREA_SLUGS)[number];
+
+export const EXPERIENCE_CHOICES = [
+  "Fresher",
+  "Less than 1 year",
+  "1 to 3 years",
+  "3 to 5 years",
+  "More than 5 years",
+] as const;
+
+export type ExperienceChoice = (typeof EXPERIENCE_CHOICES)[number];
+
+export const careerSchema = z.object({
+  name: nameRule,
+  phone: phoneRule,
+  email: z
+    .string()
+    .trim()
+    .max(120, "Email cannot exceed 120 characters")
+    .optional()
+    .refine(
+      (val) => !val || val === "" || z.string().email().safeParse(val).success,
+      { message: "Enter a valid email address" }
+    )
+    .default(""),
+  area: z.enum(CAREER_AREA_SLUGS, {
+    message: "Please select an area of interest",
+  }),
+  experience: z.enum(EXPERIENCE_CHOICES, {
+    message: "Please select your experience level",
+  }),
+  location: z
+    .string()
+    .trim()
+    .min(1, "Location is required")
+    .min(2, "Location must be at least 2 characters")
+    .max(120, "Location cannot exceed 120 characters"),
+  education: z
+    .string()
+    .trim()
+    .max(80, "Education cannot exceed 80 characters")
+    .optional()
+    .default(""),
+  message: z
+    .string()
+    .trim()
+    .max(800, "Message cannot exceed 800 characters")
+    .optional()
+    .default(""),
+  consent: z.literal(true, {
+    message: "I agree that STRICON may contact me about my application.",
+  }),
+  website: z.string().optional().default(""),
+  startedAt: z.number().optional(),
+});
+
+export type CareerInput = z.input<typeof careerSchema>;
+export type CareerOutput = z.output<typeof careerSchema>;
 
 // Backwards compatibility for /api/careers stub
 export interface ValidationResult {
