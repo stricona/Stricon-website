@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   UserCheck,
   GraduationCap,
@@ -5,6 +6,7 @@ import {
   CheckCircle2,
   Heart,
   ChevronRight,
+  ArrowRight,
 } from "lucide-react";
 import {
   Container,
@@ -152,7 +154,7 @@ export function HiringAndTraining() {
         </Reveal>
 
         {/* Employee Welfare Row */}
-        <Reveal delay={0.4}>
+        <Reveal delay={0.4} className="mb-10">
           <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6 sm:p-8">
             <div className="flex items-center gap-2.5 mb-2">
               <Heart className="h-5 w-5 text-red-500" />
@@ -173,6 +175,35 @@ export function HiringAndTraining() {
                   <span>{item}</span>
                 </div>
               ))}
+            </div>
+          </div>
+        </Reveal>
+
+        {/* Careers & Apply Now Links */}
+        <Reveal delay={0.5}>
+          <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+              <h4 className="font-heading text-base sm:text-lg font-bold text-[var(--foreground)]">
+                Looking to build your career with STRICON?
+              </h4>
+              <p className="text-xs sm:text-sm text-[var(--muted-foreground)] mt-0.5">
+                We are always seeking dedicated security, facility, and technical personnel.
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center gap-3 shrink-0">
+              <Link
+                href="/careers"
+                className="inline-flex items-center gap-2 rounded-xl border border-[var(--border)] bg-[var(--background)] px-5 py-2.5 text-xs sm:text-sm font-semibold text-[var(--foreground)] hover:bg-[var(--surface)] transition-colors"
+              >
+                <span>Careers</span>
+              </Link>
+              <Link
+                href="/careers#apply"
+                className="inline-flex items-center gap-2 rounded-xl bg-[var(--accent-gold)] px-5 py-2.5 text-xs sm:text-sm font-bold text-[var(--accent-gold-foreground)] hover:brightness-105 transition-all"
+              >
+                <span>Apply now</span>
+                <ArrowRight className="h-4 w-4" />
+              </Link>
             </div>
           </div>
         </Reveal>
