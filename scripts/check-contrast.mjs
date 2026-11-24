@@ -36,6 +36,21 @@ function parseVariables(cssContent) {
   };
 }
 
+function colorToRgb(val) {
+  const clean = val.trim();
+  if (clean.startsWith("rgba") || clean.startsWith("rgb")) {
+    const m = clean.match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/);
+    if (m) {
+      return {
+        r: parseInt(m[1], 10),
+        g: parseInt(m[2], 10),
+        b: parseInt(m[3], 10),
+      };
+    }
+  }
+  return hexToRgb(clean);
+}
+
 function hexToRgb(hex) {
   let clean = hex.replace("#", "").trim();
   if (clean.length === 3) {
@@ -52,8 +67,8 @@ function hexToRgb(hex) {
   };
 }
 
-function getLuminance(hex) {
-  const { r, g, b } = hexToRgb(hex);
+function getLuminance(color) {
+  const { r, g, b } = colorToRgb(color);
   const sRGB = [r / 255, g / 255, b / 255];
   const linear = sRGB.map((c) =>
     c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4)
@@ -61,9 +76,9 @@ function getLuminance(hex) {
   return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2];
 }
 
-function getContrastRatio(hex1, hex2) {
-  const lum1 = getLuminance(hex1);
-  const lum2 = getLuminance(hex2);
+function getContrastRatio(color1, color2) {
+  const lum1 = getLuminance(color1);
+  const lum2 = getLuminance(color2);
   const brighter = Math.max(lum1, lum2);
   const darker = Math.min(lum1, lum2);
   return (brighter + 0.05) / (darker + 0.05);
@@ -103,6 +118,11 @@ const REQUIRED_PAIRS = [
     fg: "--whatsapp-foreground",
     bg: "--whatsapp",
     label: "whatsapp-foreground / whatsapp",
+  },
+  {
+    fg: "--overlay-foreground",
+    bg: "--overlay",
+    label: "overlay-foreground / overlay",
   },
 ];
 
@@ -170,7 +190,7 @@ async function main() {
     process.exit(1);
   } else {
     console.log(
-      "\n✅ All 20 evaluated token pairs meet or exceed the WCAG AA requirement (>= 4.5:1).\n"
+      `\n✅ All ${results.length} evaluated token pairs meet or exceed the WCAG AA requirement (>= 4.5:1).\n`
     );
     process.exit(0);
   }

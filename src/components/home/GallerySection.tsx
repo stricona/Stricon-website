@@ -1,64 +1,92 @@
-import { ImageIcon } from "lucide-react";
-import { Container, SectionHeading } from "@/components/common";
-import { galleryItems } from "@/data/gallery";
+import Link from "next/link";
+import Image from "next/image";
+import { Container, SectionHeading, Reveal, RevealGroup, RevealItem } from "@/components/common";
+import { getFeaturedPhotos } from "@/lib/gallery";
 
 export function GallerySection() {
-  const hasImages = galleryItems.some((item) => item.src !== null);
-  const isProduction = process.env.NODE_ENV === "production";
+  const photos = getFeaturedPhotos(6);
 
-  // Production requirement: hide the entire section if all slots are null
-  if (!hasImages && isProduction) {
+  // Renders ONLY when at least 3 photos exist; otherwise render nothing (no heading either)
+  if (photos.length < 3) {
     return null;
   }
+
+  // Bento span calculations:
+  // Desktop 4 cols: first photo spans 2x2 (col-span-2 row-span-2) when 3, 5 or 6 photos.
+  // Tablet 3 cols
+  // Mobile 2 cols: first photo spans both cols
+  const getBentoClasses = (index: number, total: number) => {
+    if (index === 0) {
+      if (total >= 5 || total === 3) {
+        return "col-span-2 sm:col-span-2 lg:col-span-2 lg:row-span-2 aspect-4/3 lg:aspect-auto min-h-[220px]";
+      }
+      if (total === 4) {
+        return "col-span-2 sm:col-span-2 lg:col-span-2 aspect-4/3";
+      }
+      return "col-span-2 aspect-4/3";
+    }
+    if (total === 4 && index === 1) {
+      return "col-span-2 sm:col-span-1 lg:col-span-2 aspect-4/3";
+    }
+    return "col-span-1 aspect-4/3";
+  };
 
   return (
     <section className="py-16 sm:py-24 bg-[var(--surface)] border-y border-[var(--border)]">
       <Container>
         <SectionHeading
-          eyebrow="On-Ground Operations"
-          title="Field Deployments & Operations Gallery"
-          intro="Visual documentation of our facility management teams, security personnel, and mechanised cleaning operations."
+          eyebrow="Gallery"
+          title="Gallery"
+          intro="Photos of STRICON teams and operations."
           className="mb-12"
         />
 
-        <div className="mb-6 rounded-xl border border-[var(--accent-gold)]/40 bg-[var(--accent-gold)]/10 p-4 text-xs sm:text-sm text-[var(--foreground)]">
-          <p className="font-semibold text-[var(--accent-gold-foreground)]">
-            Gallery Placeholder Notice (Development Mode):
-          </p>
-          <p className="text-[var(--muted-foreground)] mt-0.5">
-            Real field photography will appear here once uploaded (recommended 1600px wide WebP/JPG in <code>public/images/gallery/</code>). In production, this section automatically hides until images are provided.
-          </p>
-        </div>
+        <RevealGroup className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+          {photos.map((photo, index) => {
+            const hashId = photo.id.replace("/", "-");
+            const spanClass = getBentoClasses(index, photos.length);
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {galleryItems.map((item) => (
-            <div
-              key={item.id}
-              className="flex flex-col rounded-2xl border border-[var(--border)] bg-[var(--background)] overflow-hidden shadow-2xs"
+            return (
+              <RevealItem key={photo.id} className={`${spanClass} h-full`}>
+                <Link
+                  href={`/gallery#${hashId}`}
+                  aria-label={`View photo: ${photo.alt}`}
+                  className="group relative flex h-full w-full overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--background)] shadow-2xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary)]"
+                >
+                  <Image
+                    src={photo.src}
+                    alt={photo.alt}
+                    fill
+                    sizes={
+                      index === 0
+                        ? "(max-width: 640px) 100vw, (max-width: 1024px) 66vw, 50vw"
+                        : "(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                    }
+                    placeholder="blur"
+                    blurDataURL={photo.blurDataURL}
+                    className="object-cover transition-transform duration-300 ease-out group-hover:scale-[1.03]"
+                  />
+
+                  {photo.caption && (
+                    <div className="absolute inset-x-0 bottom-0 bg-[var(--overlay)] px-3 py-2 text-xs text-[var(--overlay-foreground)] backdrop-blur-xs transition-opacity duration-200">
+                      <p className="line-clamp-2 leading-snug">{photo.caption}</p>
+                    </div>
+                  )}
+                </Link>
+              </RevealItem>
+            );
+          })}
+        </RevealGroup>
+
+        <div className="mt-12 flex justify-center">
+          <Reveal delay={0.2}>
+            <Link
+              href="/gallery"
+              className="inline-flex items-center justify-center rounded-xl bg-[var(--accent-gold)] px-6 py-3 text-sm font-semibold text-[var(--accent-gold-foreground)] shadow-xs transition-opacity hover:opacity-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent-gold)]"
             >
-              <div className="relative flex aspect-4/3 items-center justify-center bg-[var(--surface)] text-[var(--muted-foreground)]">
-                <div className="flex flex-col items-center gap-2 p-4 text-center">
-                  <ImageIcon className="h-8 w-8 text-[var(--muted-foreground)]/50" />
-                  <span className="text-xs font-medium">
-                    {item.category} Slot
-                  </span>
-                </div>
-              </div>
-              <div className="p-4">
-                <p className="text-xs font-semibold text-[var(--secondary)] mb-1 uppercase tracking-wider">
-                  {item.category}
-                </p>
-                <h4 className="font-heading text-sm font-bold text-[var(--foreground)]">
-                  {item.title}
-                </h4>
-                {item.description && (
-                  <p className="text-xs text-[var(--muted-foreground)] mt-1">
-                    {item.description}
-                  </p>
-                )}
-              </div>
-            </div>
-          ))}
+              View full gallery
+            </Link>
+          </Reveal>
         </div>
       </Container>
     </section>

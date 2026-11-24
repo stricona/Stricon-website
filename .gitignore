@@ -43,3 +43,7 @@ next-env.d.ts
 
 # docs / presentation files
 /docs/
+
+# gallery raw inbox
+/gallery-inbox/*
+!/gallery-inbox/**/.gitkeep

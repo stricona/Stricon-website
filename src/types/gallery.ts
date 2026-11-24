@@ -1,14 +1,24 @@
-export type GalleryCategory =
-  | "Security deployments"
-  | "Housekeeping"
-  | "Facility operations"
-  | "Training sessions";
+export type GalleryCategoryId =
+  | "security"
+  | "housekeeping"
+  | "facility"
+  | "training";
 
-export interface GalleryItem {
+export interface GalleryCategory {
+  id: GalleryCategoryId;
+  label: string;
+  folder: string;
+}
+
+export interface GalleryPhoto {
   id: string;
-  title: string;
-  category: GalleryCategory;
-  src: string | null;
+  src: string;
+  width: number;
+  height: number;
   alt: string;
-  description?: string;
+  caption: string | null;
+  category: GalleryCategoryId;
+  featured: boolean;
+  order: number;
+  blurDataURL: string;
 }

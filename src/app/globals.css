@@ -17,6 +17,8 @@
   --whatsapp-foreground: #29283A;
   --danger: #B91C1C;
   --danger-foreground: #FFFFFF;
+  --overlay: rgba(18, 18, 26, 0.85);
+  --overlay-foreground: #FFFFFF;
   --border: #E7E5DE;
 }
 
@@ -37,6 +39,8 @@
   --whatsapp-foreground: #29283A;
   --danger: #F87171;
   --danger-foreground: #FFFFFF;
+  --overlay: rgba(10, 10, 15, 0.90);
+  --overlay-foreground: #FFFFFF;
   --border: #383747;
 }
 
@@ -57,6 +61,8 @@
   --color-whatsapp-foreground: var(--whatsapp-foreground);
   --color-danger: var(--danger);
   --color-danger-foreground: var(--danger-foreground);
+  --color-overlay: var(--overlay);
+  --color-overlay-foreground: var(--overlay-foreground);
   --color-border: var(--border);
 
   --font-sans: var(--font-inter);

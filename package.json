@@ -12,7 +12,9 @@
     "test:contact": "node scripts/test-contact.mjs",
     "test:careers": "node scripts/test-careers.mjs",
     "check:contrast": "node scripts/check-contrast.mjs",
-    "prelaunch": "node scripts/prelaunch-check.mjs"
+    "prelaunch": "node scripts/prelaunch-check.mjs",
+    "gallery:import": "node --no-warnings=MODULE_TYPELESS_PACKAGE_JSON scripts/gallery-import.mjs",
+    "gallery:sync": "node --no-warnings=MODULE_TYPELESS_PACKAGE_JSON scripts/gallery-sync.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^7.0.8",
