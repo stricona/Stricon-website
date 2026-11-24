@@ -102,13 +102,13 @@ export function MobileMenu({ items, cta }: MobileMenuProps) {
   }, [isOpen]);
 
   return (
-    <div className="md:hidden flex items-center gap-2">
+    <div className="lg:hidden flex items-center gap-2">
       <ThemeToggle />
       <button
         ref={triggerRef}
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="p-2 rounded-lg border border-[var(--border)] bg-[var(--surface)] text-[var(--foreground)] hover:border-[var(--primary)] transition-colors focus-visible:outline-2"
+        className="p-2 min-w-11 min-h-11 rounded-lg border border-[var(--border)] bg-[var(--surface)] text-[var(--foreground)] hover:border-[var(--primary)] transition-colors focus-visible:outline-2 flex items-center justify-center"
         aria-expanded={isOpen}
         aria-controls="mobile-menu-panel"
         aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
@@ -118,7 +118,7 @@ export function MobileMenu({ items, cta }: MobileMenuProps) {
 
       {isOpen && (
         <div
-          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex justify-end"
+          className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-xs flex justify-end"
           aria-modal="true"
           role="dialog"
           aria-label="Mobile Navigation"
@@ -131,7 +131,7 @@ export function MobileMenu({ items, cta }: MobileMenuProps) {
           <div
             ref={menuRef}
             id="mobile-menu-panel"
-            className="w-full max-w-xs h-full bg-[var(--surface)] border-l border-[var(--border)] p-6 flex flex-col justify-between shadow-2xl overflow-y-auto"
+            className="w-full max-w-xs sm:max-w-sm h-full bg-[var(--surface)] border-l border-[var(--border)] p-6 pt-[calc(env(safe-area-inset-top,0px)+1.5rem)] pb-[calc(env(safe-area-inset-bottom,0px)+1.5rem)] pl-[calc(env(safe-area-inset-left,0px)+1.5rem)] pr-[calc(env(safe-area-inset-right,0px)+1.5rem)] flex flex-col justify-between shadow-2xl overflow-y-auto"
           >
             <div>
               <div className="flex items-center justify-between pb-4 border-b border-[var(--border)]">

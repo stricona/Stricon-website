@@ -87,7 +87,7 @@ export function Navbar({ items }: NavbarProps) {
   return (
     <nav
       aria-label="Main Navigation"
-      className="hidden md:flex items-center gap-1 lg:gap-2"
+      className="hidden lg:flex items-center gap-1 xl:gap-2"
     >
       {items.map((item) => {
         const isServices = item.href === "/services";
@@ -128,7 +128,7 @@ export function Navbar({ items }: NavbarProps) {
                   aria-expanded={dropdownOpen}
                   aria-haspopup="true"
                   aria-controls="desktop-services-dropdown"
-                  aria-label="Toggle services navigation menu"
+                  aria-label="Show services menu"
                   className="pr-2.5 pl-0.5 py-2 text-inherit focus-visible:outline-2 rounded-r-lg"
                 >
                   <ChevronDown
