@@ -173,8 +173,7 @@ export function QuoteForm({ defaultService }: QuoteFormProps) {
       formValues.message ? `Requirement: ${formValues.message}.` : null,
     ].filter(Boolean);
 
-    const waText = encodeURIComponent(parts.join(" "));
-    const waUrl = `https://wa.me/918978107573?text=${waText}`;
+    const waUrl = siteConfig.whatsappUrlWithText(parts.join(" "));
     window.open(waUrl, "_blank", "noopener,noreferrer");
   };
 

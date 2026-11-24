@@ -28,6 +28,7 @@ import {
   getCareerAreaLabel,
 } from "@/data/careers";
 import { company } from "@/data/company";
+import { whatsappUrlWithText } from "@/config/site";
 import { siteConfig } from "@/config/site";
 
 interface ApplicationFormProps {
@@ -250,8 +251,7 @@ export function ApplicationForm({
       values.education ? `Education: ${values.education}.` : null,
     ].filter(Boolean);
 
-    const waText = encodeURIComponent(parts.join(" "));
-    const waUrl = `https://wa.me/918978107573?text=${waText}`;
+    const waUrl = whatsappUrlWithText(parts.join(" "));
     window.open(waUrl, "_blank", "noopener,noreferrer");
   };
 

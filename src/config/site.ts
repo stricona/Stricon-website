@@ -18,6 +18,10 @@ export function whatsappUrlForService(title: string): string {
   return `https://wa.me/91${company.contact.whatsapp}?text=${encodeURIComponent(text)}`;
 }
 
+export function whatsappUrlWithText(text: string): string {
+  return `https://wa.me/91${company.contact.whatsapp}?text=${encodeURIComponent(text)}`;
+}
+
 export const siteConfig = {
   name: company.brandName,
   legalName: company.legalName,
@@ -29,6 +33,7 @@ export const siteConfig = {
   whatsappUrl,
   quoteHref,
   whatsappUrlForService,
+  whatsappUrlWithText,
   links: {
     website: company.contact.website,
     email: company.contact.email,

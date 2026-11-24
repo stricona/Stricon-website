@@ -112,7 +112,7 @@ export default async function ServiceDetailPage({ params }: ServicePageProps) {
         postalCode: "500028",
         addressCountry: "IN",
       },
-      telephone: "+918978107573",
+      telephone: `+91${siteConfig.links.phone}`,
     },
     areaServed: {
       "@type": "City",

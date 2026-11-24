@@ -136,7 +136,7 @@ export function Footer() {
               <div className="flex items-center gap-2.5">
                 <Phone className="h-4 w-4 shrink-0 text-[var(--color-primary)]" />
                 <a
-                  href={`tel:${company.contact.phone}`}
+                  href={siteConfig.phoneHref}
                   className="hover:text-[var(--color-primary)] transition-colors"
                 >
                   {company.contact.phoneDisplay}
