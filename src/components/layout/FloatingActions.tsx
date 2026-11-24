@@ -11,6 +11,7 @@ export function FloatingActions() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
   const [hasAppeared, setHasAppeared] = useState(false);
 
   // Hidden on contact and careers pages
@@ -45,19 +46,20 @@ export function FloatingActions() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [hasAppeared]);
 
-  // Mobile menu observer: hide while mobile menu is open
+  // Mobile menu & lightbox observer: hide while mobile menu or lightbox is open
   useEffect(() => {
     if (typeof document === "undefined") return;
 
-    const checkMenu = () => {
+    const checkOverlays = () => {
       setMenuOpen(document.body.getAttribute("data-menu-open") === "true");
+      setLightboxOpen(document.body.getAttribute("data-lightbox-open") === "true");
     };
 
-    checkMenu();
-    const observer = new MutationObserver(checkMenu);
+    checkOverlays();
+    const observer = new MutationObserver(checkOverlays);
     observer.observe(document.body, {
       attributes: true,
-      attributeFilter: ["data-menu-open"],
+      attributeFilter: ["data-menu-open", "data-lightbox-open"],
     });
 
     return () => observer.disconnect();
@@ -67,7 +69,7 @@ export function FloatingActions() {
     return null;
   }
 
-  const isVisible = scrolled && !menuOpen;
+  const isVisible = scrolled && !menuOpen && !lightboxOpen;
 
   return (
     <div
