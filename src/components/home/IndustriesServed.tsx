@@ -1,166 +1,264 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import {
-  Hospital,
-  Monitor,
-  Hotel,
-  Building,
-  Factory,
-  Home,
-  Building2,
-  MapPin,
   ArrowRight,
+  Building,
+  Building2,
+  Cpu,
+  Factory,
+  HeartPulse,
+  Home,
+  Hotel,
+  Monitor,
 } from "lucide-react";
-import { Container, ButtonLink } from "@/components/common";
-import { cn } from "@/lib/utils";
 
-// 4 Vertically arranged content groups for Left Column
-interface IndustryGroup {
-  id: string;
-  title: string;
-  description: string;
-  location: string;
-  icon: React.ComponentType<{ className?: string }>;
-  associatedPills: string[];
+function cn(...classes: Array<string | false | null | undefined>): string {
+  return classes.filter(Boolean).join(" ");
 }
 
-const industryGroups: IndustryGroup[] = [
+interface ButtonLinkProps {
+  href: string;
+  variant?: "primary" | "outline";
+  size?: "sm" | "md" | "lg";
+  className?: string;
+  children: React.ReactNode;
+}
+
+const ButtonLink: React.FC<ButtonLinkProps> = ({
+  href,
+  variant = "primary",
+  size = "md",
+  className,
+  children,
+}) => {
+  return (
+    <Link
+      href={href}
+      className={cn(
+        "inline-flex items-center justify-center gap-2 rounded-lg font-semibold transition-all duration-200",
+        size === "sm" && "px-4 py-2 text-sm",
+        size === "md" && "px-6 py-3 text-sm sm:text-base",
+        size === "lg" && "px-7 py-3.5 text-base",
+        variant === "primary"
+          ? "bg-teal-700 text-white hover:bg-teal-800 dark:bg-teal-600 dark:hover:bg-teal-500 shadow-sm"
+          : "bg-white text-slate-800 border border-slate-300 hover:border-teal-600 hover:text-teal-700 dark:bg-slate-900 dark:text-slate-100 dark:border-slate-700 dark:hover:border-teal-400 dark:hover:text-teal-300",
+        className
+      )}
+    >
+      {children}
+    </Link>
+  );
+};
+
+const Container: React.FC<{ className?: string; children: React.ReactNode }> = ({
+  className,
+  children,
+}) => (
+  <div className={cn("mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8", className)}>
+    {children}
+  </div>
+);
+
+type GroupId =
+  | "healthcare"
+  | "it-ites"
+  | "hotels-commercial"
+  | "manufacturing-residential";
+
+interface IndustryGroup {
+  id: GroupId;
+  title: string;
+  description: string;
+  icon: React.ComponentType<{ className?: string; strokeWidth?: number }>;
+}
+
+interface SectorPill {
+  id: string;
+  slug: string;
+  label: string;
+  groupId: GroupId;
+  angleDeg: number;
+  icon: React.ComponentType<{ className?: string; strokeWidth?: number }>;
+}
+
+const INDUSTRY_GROUPS: readonly IndustryGroup[] = [
   {
     id: "healthcare",
     title: "Healthcare Centres",
     description: "Security and facility support for healthcare environments.",
-    location: "Deployment: Hyderabad",
-    icon: Hospital,
-    associatedPills: ["healthcare"],
+    icon: HeartPulse,
   },
   {
     id: "it-ites",
     title: "IT & ITES",
     description: "Workplace security and day-to-day facility operations.",
-    location: "Deployment: Hyderabad",
     icon: Monitor,
-    associatedPills: ["it-ites"],
   },
   {
     id: "hotels-commercial",
     title: "Hotels & Commercial Spaces",
     description: "Professional support for guest-facing and business facilities.",
-    location: "Deployment: Hyderabad",
     icon: Building2,
-    associatedPills: ["hotels", "commercial"],
   },
   {
     id: "manufacturing-residential",
     title: "Manufacturing & Residential Communities",
     description:
       "Security and maintenance for industrial sites, apartments and villa complexes.",
-    location: "Deployment: Hyderabad",
     icon: Factory,
-    associatedPills: ["manufacturing", "apartments", "villas"],
   },
 ];
 
-// 7 Floating labels for the Circular Infographic Ecosystem
-interface EcosystemPill {
-  id: string;
-  label: string;
-  icon: React.ComponentType<{ className?: string }>;
-  positionClass: string;
-  groupId: string;
-}
-
-const ecosystemPills: EcosystemPill[] = [
+// 7 sectors evenly distributed around the circle (0° = 12 o'clock)
+const SECTOR_PILLS: readonly SectorPill[] = [
   {
-    id: "healthcare",
+    id: "pill-healthcare",
+    slug: "healthcare-centres",
     label: "Healthcare Centres",
-    icon: Hospital,
-    positionClass: "top-[2%] left-1/2 -translate-x-1/2",
     groupId: "healthcare",
+    angleDeg: 0,
+    icon: HeartPulse,
   },
   {
-    id: "it-ites",
+    id: "pill-it-ites",
+    slug: "it-ites",
     label: "IT & ITES",
-    icon: Monitor,
-    positionClass: "top-[19%] right-[2%] sm:right-[6%]",
     groupId: "it-ites",
+    angleDeg: 51.43,
+    icon: Cpu,
   },
   {
-    id: "hotels",
+    id: "pill-hotels",
+    slug: "hotels",
     label: "Hotels",
+    groupId: "hotels-commercial",
+    angleDeg: 102.86,
     icon: Hotel,
-    positionClass: "top-[42%] right-[0%] sm:right-[1%]",
-    groupId: "hotels-commercial",
   },
   {
-    id: "manufacturing",
-    label: "Manufacturing",
-    icon: Factory,
-    positionClass: "bottom-[20%] right-[3%] sm:right-[8%]",
-    groupId: "manufacturing-residential",
-  },
-  {
-    id: "villas",
-    label: "Villa Complexes",
-    icon: Home,
-    positionClass: "bottom-[2%] left-[64%] -translate-x-1/2 sm:left-[62%]",
-    groupId: "manufacturing-residential",
-  },
-  {
-    id: "apartments",
-    label: "Apartments",
-    icon: BuildingCheckIcon,
-    positionClass: "bottom-[2%] left-[34%] -translate-x-1/2 sm:left-[36%]",
-    groupId: "manufacturing-residential",
-  },
-  {
-    id: "commercial",
+    id: "pill-commercial",
+    slug: "commercial-spaces",
     label: "Commercial Spaces",
-    icon: Building,
-    positionClass: "top-[38%] left-[0%] sm:left-[1%]",
     groupId: "hotels-commercial",
+    angleDeg: 154.29,
+    icon: Building2,
+  },
+  {
+    id: "pill-manufacturing",
+    slug: "manufacturing",
+    label: "Manufacturing",
+    groupId: "manufacturing-residential",
+    angleDeg: 205.71,
+    icon: Factory,
+  },
+  {
+    id: "pill-apartments",
+    slug: "apartments",
+    label: "Apartments",
+    groupId: "manufacturing-residential",
+    angleDeg: 257.14,
+    icon: Building,
+  },
+  {
+    id: "pill-villas",
+    slug: "villa-complexes",
+    label: "Villa Complexes",
+    groupId: "manufacturing-residential",
+    angleDeg: 308.57,
+    icon: Home,
   },
 ];
 
-function BuildingCheckIcon({ className }: { className?: string }) {
-  return (
-    <div className="relative inline-flex items-center justify-center">
-      <Building className={className} />
-    </div>
-  );
+function getPillPercentPosition(angleDeg: number, radiusPercent: number) {
+  const rad = ((angleDeg - 90) * Math.PI) / 180;
+  return {
+    left: `${50 + radiusPercent * Math.cos(rad)}%`,
+    top: `${50 + radiusPercent * Math.sin(rad)}%`,
+  };
 }
 
-export function IndustriesServed() {
-  const [activeGroup, setActiveGroup] = useState<string | null>(null);
+export interface IndustryFocusSectionProps {
+  className?: string;
+}
+
+export const IndustryFocusSection: React.FC<IndustryFocusSectionProps> = ({
+  className,
+}) => {
+  const [activeSlug, setActiveSlug] = useState<string | null>(null);
+  const [activeGroup, setActiveGroup] = useState<GroupId | null>(null);
 
   return (
-    <section className="py-16 sm:py-24 bg-white dark:bg-[#0B1120] border-y border-slate-200 dark:border-slate-800 transition-colors overflow-hidden">
+    <section
+      aria-labelledby="stricon-industry-focus-heading"
+      className={cn(
+        "relative overflow-x-hidden py-16 sm:py-20 lg:py-24 bg-slate-50/80 dark:bg-slate-950 text-slate-900 dark:text-slate-100",
+        className
+      )}
+    >
+      <style>{`
+        @keyframes striconSpinClockwise {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
+        @keyframes striconSpinAnticlockwise {
+          from {
+            transform: rotate(360deg);
+          }
+          to {
+            transform: rotate(0deg);
+          }
+        }
+        .stricon-orbit-cw {
+          transform-box: fill-box;
+          transform-origin: center;
+          animation: striconSpinClockwise 28s linear infinite;
+        }
+        .stricon-orbit-ccw {
+          transform-box: fill-box;
+          transform-origin: center;
+          animation: striconSpinAnticlockwise 22s linear infinite;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .stricon-orbit-cw,
+          .stricon-orbit-ccw {
+            animation: none;
+          }
+        }
+      `}</style>
+
       <Container>
-        {/* Top Centered Section Header */}
-        <div className="max-w-3xl mx-auto text-center mb-12 sm:mb-16">
-          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200 dark:bg-blue-950/60 dark:text-blue-300 dark:border-blue-800/80 mb-3 shadow-xs">
-            <span>Industry Focus</span>
-          </div>
-
-          <h2 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#0F172A] dark:text-white tracking-tight mb-3">
-            Sectors We Protect & Maintain
+        {/* Top Centered Heading */}
+        <div className="mx-auto max-w-2xl text-center mb-12 sm:mb-16">
+          <p className="text-xs sm:text-sm font-bold uppercase tracking-widest text-teal-700 dark:text-teal-400">
+            Industry Focus
+          </p>
+          <h2
+            id="stricon-industry-focus-heading"
+            className="mt-2 text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-slate-900 dark:text-white"
+          >
+            Sectors We Protect &amp; Maintain
           </h2>
-
-          <p className="text-sm sm:text-base leading-relaxed text-slate-600 dark:text-slate-400">
+          <p className="mt-3 text-sm sm:text-base leading-relaxed text-slate-600 dark:text-slate-400">
             We have well-trained personnel deployed at Health care centers, IT,
             ITES, Hotels, Commercial, Manufacturing and large residential
             apartments and villa complexes in Hyderabad.
           </p>
         </div>
 
-        {/* Main Content: Two-Column Split Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
-          {/* Left Column: 4 Vertically Arranged Content Groups */}
-          <div className="lg:col-span-5 flex flex-col space-y-6 sm:space-y-8">
-            {industryGroups.map((group) => {
-              const Icon = group.icon;
-              const isHovered = activeGroup === group.id;
+        {/* Two-Column Main Content */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+          {/* Left Column: 4 Vertically Arranged Industry Groups */}
+          <div className="lg:col-span-5 flex flex-col gap-5 sm:gap-6">
+            {INDUSTRY_GROUPS.map((group) => {
+              const GroupIcon = group.icon;
+              const isGroupHighlighted = activeGroup === group.id;
 
               return (
                 <div
@@ -168,277 +266,251 @@ export function IndustriesServed() {
                   onMouseEnter={() => setActiveGroup(group.id)}
                   onMouseLeave={() => setActiveGroup(null)}
                   className={cn(
-                    "group flex items-start gap-4 p-3 -mx-3 rounded-xl transition-all duration-200 cursor-pointer",
-                    isHovered
-                      ? "bg-blue-50/60 dark:bg-blue-950/30 translate-x-1"
-                      : "hover:bg-slate-50/80 dark:hover:bg-slate-900/40"
+                    "group flex items-start gap-4 rounded-xl p-3 -mx-3 transition-all duration-200 border-l-2 cursor-pointer",
+                    isGroupHighlighted
+                      ? "bg-white dark:bg-slate-900/90 border-teal-600 dark:border-teal-400 shadow-xs"
+                      : "border-transparent hover:bg-white/70 dark:hover:bg-slate-900/60 hover:border-teal-500/60"
                   )}
                 >
-                  {/* Teal/Blue Outline Icon Badge */}
                   <div
                     className={cn(
-                      "w-12 h-12 rounded-xl flex items-center justify-center shrink-0 border transition-all duration-200 shadow-xs",
-                      isHovered
-                        ? "border-blue-500 bg-blue-600 text-white dark:bg-blue-500 dark:border-blue-400 scale-105 shadow-md ring-2 ring-blue-500/20"
-                        : "border-teal-500/40 bg-teal-50/50 text-teal-700 dark:border-teal-400/30 dark:bg-teal-950/40 dark:text-teal-300 group-hover:border-blue-400 group-hover:text-blue-600"
+                      "mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border transition-all duration-200",
+                      isGroupHighlighted
+                        ? "bg-teal-700 text-white border-teal-700 dark:bg-teal-500 dark:border-teal-500 shadow-sm"
+                        : "bg-white dark:bg-slate-900 text-teal-700 dark:text-teal-400 border-slate-200 dark:border-slate-800 group-hover:border-teal-500"
                     )}
                   >
-                    <Icon className="h-6 w-6 stroke-[1.8]" />
+                    <GroupIcon className="h-5 w-5" strokeWidth={1.85} />
                   </div>
-
-                  {/* Title & Description */}
-                  <div className="flex-1 min-w-0">
-                    <h3
-                      className={cn(
-                        "font-heading text-base sm:text-lg font-bold transition-colors mb-1",
-                        isHovered
-                          ? "text-blue-900 dark:text-blue-200"
-                          : "text-[#0F172A] dark:text-white group-hover:text-blue-700 dark:group-hover:text-blue-300"
-                      )}
-                    >
+                  <div className="min-w-0">
+                    <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
                       {group.title}
                     </h3>
-                    <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed mb-1.5">
+                    <p className="mt-1 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
                       {group.description}
                     </p>
-                    <div className="flex items-center gap-1.5 text-xs text-[#2563EB] dark:text-blue-400 font-medium">
-                      <MapPin className="h-3 w-3 shrink-0" />
-                      <span>{group.location}</span>
-                    </div>
                   </div>
                 </div>
               );
             })}
           </div>
 
-          {/* Right Column: Circular Industry Ecosystem Infographic */}
-          <div className="lg:col-span-7 flex items-center justify-center">
-            <div className="relative w-full aspect-square max-w-[480px] sm:max-w-[530px] flex items-center justify-center p-3 select-none">
-              {/* Outside Annotation Label 1 (Top Left): "Industry-specific support" */}
-              <div className="absolute top-[8%] left-[6%] sm:left-[8%] z-40 flex flex-col items-end pointer-events-none">
-                <span className="font-heading italic text-xs sm:text-sm text-slate-700 dark:text-slate-300 font-medium tracking-tight">
-                  Industry-specific support
-                </span>
-                {/* Curved arrow pointing toward the circle */}
-                <svg
-                  className="w-8 h-8 text-slate-400 dark:text-slate-500 -mt-1 mr-2"
-                  viewBox="0 0 32 32"
-                  fill="none"
-                >
-                  <path
-                    d="M6 6 C 14 12, 18 18, 22 24"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeDasharray="2 3"
-                  />
-                  <path
-                    d="M16 23 L22 24 L21 18"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </div>
+          {/* Right Column: Circular Industry Ecosystem */}
+          <div className="lg:col-span-7 flex flex-col items-center">
+            <div
+              role="region"
+              aria-label="STRICON circular industry ecosystem"
+              className="relative aspect-square w-full max-w-[310px] sm:max-w-[440px] md:max-w-[500px] select-none"
+            >
+              {/* Top-left annotation */}
+              <span className="hidden sm:block absolute top-3 left-1 z-20 max-w-[130px] text-[11px] italic font-medium leading-snug text-slate-500 dark:text-slate-400">
+                Industry-specific support
+              </span>
 
-              {/* Outside Annotation Label 2 (Bottom Right): "Integrated service delivery" */}
-              <div className="absolute bottom-[8%] right-[6%] sm:right-[8%] z-40 flex flex-col items-start pointer-events-none">
-                {/* Curved arrow pointing toward the circle */}
-                <svg
-                  className="w-8 h-8 text-slate-400 dark:text-slate-500 -mb-1 ml-2"
-                  viewBox="0 0 32 32"
-                  fill="none"
-                >
-                  <path
-                    d="M26 26 C 18 20, 14 14, 10 8"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeDasharray="2 3"
-                  />
-                  <path
-                    d="M16 9 L10 8 L11 14"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-                <span className="font-heading italic text-xs sm:text-sm text-slate-700 dark:text-slate-300 font-medium tracking-tight">
-                  Integrated service delivery
-                </span>
-              </div>
-
-              {/* Concentric Dashed Orbital Rings & Fine Radiating Connecting Lines (SVG) */}
+              {/* Rotating Dotted Circles + Teal/Blue Dots + Radial Spokes */}
               <svg
-                className="absolute inset-0 w-full h-full pointer-events-none"
-                viewBox="0 0 520 520"
-                fill="none"
+                viewBox="0 0 440 440"
+                aria-hidden="true"
+                className="absolute inset-0 h-full w-full z-10 overflow-visible"
               >
-                {/* Outer Orbit Ring (Radius = 205) */}
+                {/* Subtle inner static ring */}
                 <circle
-                  cx="260"
-                  cy="260"
-                  r="205"
-                  className="stroke-blue-200/90 dark:stroke-blue-900/60"
-                  strokeWidth="1.5"
-                  strokeDasharray="4 6"
-                />
-                {/* Inner Orbit Ring (Radius = 135) */}
-                <circle
-                  cx="260"
-                  cy="260"
-                  r="135"
-                  className="stroke-blue-200/90 dark:stroke-blue-900/60"
-                  strokeWidth="1.5"
-                  strokeDasharray="3 5"
+                  cx="220"
+                  cy="220"
+                  r="82"
+                  fill="none"
+                  className="stroke-slate-200 dark:stroke-slate-800"
+                  strokeWidth="1"
                 />
 
-                {/* Decorative Dots on the Orbital Circles */}
-                <circle cx="260" cy="55" r="3.5" className="fill-blue-500" />
-                <circle cx="435" cy="160" r="3" className="fill-teal-500" />
-                <circle cx="465" cy="260" r="3.5" className="fill-blue-500" />
-                <circle cx="435" cy="360" r="3" className="fill-teal-500" />
-                <circle cx="260" cy="465" r="3.5" className="fill-blue-500" />
-                <circle cx="85" cy="360" r="3" className="fill-teal-500" />
-                <circle cx="55" cy="260" r="3.5" className="fill-blue-500" />
+                {/* Inner dotted circle: rotates ANTICLOCKWISE with highlighted teal/blue dots */}
+                <g className="stricon-orbit-ccw">
+                  <circle
+                    cx="220"
+                    cy="220"
+                    r="118"
+                    fill="none"
+                    className="stroke-teal-600/55 dark:stroke-teal-400/50"
+                    strokeWidth="1.75"
+                    strokeDasharray="2 7"
+                    strokeLinecap="round"
+                  />
+                  {[0, 60, 120, 180, 240, 300].map((deg, i) => {
+                    const rad = ((deg - 90) * Math.PI) / 180;
+                    const cx = 220 + 118 * Math.cos(rad);
+                    const cy = 220 + 118 * Math.sin(rad);
+                    return (
+                      <circle
+                        key={`inner-dot-${deg}`}
+                        cx={cx}
+                        cy={cy}
+                        r={i % 2 === 0 ? 3.8 : 3}
+                        className={
+                          i % 2 === 0
+                            ? "fill-teal-600 dark:fill-teal-400"
+                            : "fill-sky-600 dark:fill-sky-400"
+                        }
+                      />
+                    );
+                  })}
+                </g>
 
-                {/* Fine connecting radiating lines from central hub edge to orbital pills */}
-                <line
-                  x1="260"
-                  y1="190"
-                  x2="260"
-                  y2="65"
-                  className="stroke-blue-300/40 dark:stroke-blue-700/40"
-                  strokeWidth="1"
-                  strokeDasharray="2 4"
-                />
-                <line
-                  x1="315"
-                  y1="210"
-                  x2="425"
-                  y2="160"
-                  className="stroke-blue-300/40 dark:stroke-blue-700/40"
-                  strokeWidth="1"
-                  strokeDasharray="2 4"
-                />
-                <line
-                  x1="330"
-                  y1="260"
-                  x2="445"
-                  y2="260"
-                  className="stroke-blue-300/40 dark:stroke-blue-700/40"
-                  strokeWidth="1"
-                  strokeDasharray="2 4"
-                />
-                <line
-                  x1="315"
-                  y1="310"
-                  x2="420"
-                  y2="365"
-                  className="stroke-blue-300/40 dark:stroke-blue-700/40"
-                  strokeWidth="1"
-                  strokeDasharray="2 4"
-                />
-                <line
-                  x1="260"
-                  y1="330"
-                  x2="260"
-                  y2="455"
-                  className="stroke-blue-300/40 dark:stroke-blue-700/40"
-                  strokeWidth="1"
-                  strokeDasharray="2 4"
-                />
-                <line
-                  x1="205"
-                  y1="310"
-                  x2="100"
-                  y2="365"
-                  className="stroke-blue-300/40 dark:stroke-blue-700/40"
-                  strokeWidth="1"
-                  strokeDasharray="2 4"
-                />
-                <line
-                  x1="190"
-                  y1="260"
-                  x2="75"
-                  y2="260"
-                  className="stroke-blue-300/40 dark:stroke-blue-700/40"
-                  strokeWidth="1"
-                  strokeDasharray="2 4"
-                />
+                {/* Outer dotted circle: rotates CLOCKWISE with highlighted teal/blue dots */}
+                <g className="stricon-orbit-cw">
+                  <circle
+                    cx="220"
+                    cy="220"
+                    r="164"
+                    fill="none"
+                    className="stroke-sky-600/60 dark:stroke-sky-400/55"
+                    strokeWidth="2"
+                    strokeDasharray="2.5 8"
+                    strokeLinecap="round"
+                  />
+                  {[25, 95, 165, 235, 305].map((deg, i) => {
+                    const rad = ((deg - 90) * Math.PI) / 180;
+                    const cx = 220 + 164 * Math.cos(rad);
+                    const cy = 220 + 164 * Math.sin(rad);
+                    return (
+                      <circle
+                        key={`outer-dot-${deg}`}
+                        cx={cx}
+                        cy={cy}
+                        r={i % 2 === 0 ? 4.2 : 3.2}
+                        className={
+                          i % 2 === 0
+                            ? "fill-sky-600 dark:fill-sky-400"
+                            : "fill-teal-600 dark:fill-teal-400"
+                        }
+                      />
+                    );
+                  })}
+                </g>
+
+                {/* Static radial lines connecting hub to each sector */}
+                {SECTOR_PILLS.map((pill) => {
+                  const rad = ((pill.angleDeg - 90) * Math.PI) / 180;
+                  const x1 = 220 + 56 * Math.cos(rad);
+                  const y1 = 220 + 56 * Math.sin(rad);
+                  const x2 = 220 + 158 * Math.cos(rad);
+                  const y2 = 220 + 158 * Math.sin(rad);
+
+                  const isHighlighted =
+                    activeSlug === pill.slug || activeGroup === pill.groupId;
+
+                  return (
+                    <line
+                      key={`line-${pill.id}`}
+                      x1={x1}
+                      y1={y1}
+                      x2={x2}
+                      y2={y2}
+                      strokeWidth={isHighlighted ? 2 : 1.15}
+                      className={cn(
+                        "transition-all duration-200",
+                        isHighlighted
+                          ? "stroke-teal-600 dark:stroke-teal-400 opacity-100"
+                          : "stroke-slate-300/80 dark:stroke-slate-700/80 opacity-80"
+                      )}
+                    />
+                  );
+                })}
               </svg>
 
-              {/* Central STRICON Hub inside Prominent Circular Shape */}
-              <div className="relative z-20 w-36 h-36 sm:w-44 sm:h-44 rounded-full bg-white dark:bg-slate-900 p-3 shadow-xl border-2 border-blue-500/40 dark:border-blue-400/50 flex flex-col items-center justify-center text-center transition-transform duration-300 hover:scale-105">
-                {/* Ambient glow halo */}
-                <div className="absolute -inset-1.5 rounded-full bg-gradient-to-tr from-blue-600/20 via-teal-500/20 to-sky-400/20 blur-sm -z-10" />
-
-                {/* STRICON Shield Emblem Image */}
-                <div className="relative w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center mb-1">
+              {/* Stationary Central STRICON Shield Hub with user's provided shield emblem */}
+              <div
+                aria-label="STRICON Security Hub"
+                className="
+                  absolute left-1/2 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2
+                  flex h-24 w-24 sm:h-28 sm:w-28 md:h-32 md:w-32
+                  flex-col items-center justify-center rounded-full
+                  bg-white dark:bg-slate-900
+                  border-2 border-teal-600/80 dark:border-teal-400/80
+                  shadow-lg ring-4 ring-teal-500/15 dark:ring-teal-400/10
+                  p-2
+                "
+              >
+                <div className="relative flex h-11 w-11 sm:h-14 sm:w-14 md:h-16 md:w-16 items-center justify-center rounded-full overflow-hidden">
                   <Image
                     src="/images/logo/stricon-emblem-shield.jpg"
-                    alt="STRICON Corporate Shield"
-                    width={80}
-                    height={80}
-                    className="object-contain drop-shadow-sm max-h-full"
+                    alt="STRICON Corporate Shield Emblem"
+                    width={64}
+                    height={64}
+                    className="object-contain max-h-full max-w-full drop-shadow-sm"
                     priority
                   />
                 </div>
-
-                {/* Central Hub Label: Deployment: Hyderabad */}
-                <span className="inline-block px-2.5 py-0.5 rounded-full text-[10px] sm:text-[11px] font-extrabold tracking-tight bg-gradient-to-r from-[#0F172A] to-[#1E3A8A] text-white dark:from-blue-600 dark:to-indigo-600 shadow-xs">
-                  Deployment: Hyderabad
+                <span className="mt-0.5 text-[10px] sm:text-[11px] font-extrabold tracking-wider text-slate-900 dark:text-white">
+                  STRICON
                 </span>
               </div>
 
-              {/* Surrounding 7 Connected Floating Pill-Shaped Labels */}
-              {ecosystemPills.map((pill) => {
-                const Icon = pill.icon;
+              {/* Seven Fixed Industry Pills Around the Circle */}
+              {SECTOR_PILLS.map((pill) => {
+                const PillIcon = pill.icon;
+                const posStyle = getPillPercentPosition(pill.angleDeg, 38.5);
                 const isHovered =
-                  activeGroup === pill.groupId || activeGroup === pill.id;
+                  activeSlug === pill.slug || activeGroup === pill.groupId;
 
                 return (
-                  <div
+                  <button
                     key={pill.id}
-                    onMouseEnter={() => setActiveGroup(pill.groupId)}
-                    onMouseLeave={() => setActiveGroup(null)}
+                    type="button"
+                    style={posStyle}
+                    onMouseEnter={() => {
+                      setActiveSlug(pill.slug);
+                      setActiveGroup(pill.groupId);
+                    }}
+                    onMouseLeave={() => {
+                      setActiveSlug(null);
+                      setActiveGroup(null);
+                    }}
+                    onFocus={() => {
+                      setActiveSlug(pill.slug);
+                      setActiveGroup(pill.groupId);
+                    }}
+                    onBlur={() => {
+                      setActiveSlug(null);
+                      setActiveGroup(null);
+                    }}
                     className={cn(
-                      "absolute z-30 transition-all duration-200 cursor-pointer",
-                      pill.positionClass
+                      "absolute z-30 -translate-x-1/2 -translate-y-1/2 cursor-pointer",
+                      "rounded-full px-2 sm:px-3.5 py-1 sm:py-1.5",
+                      "text-[10px] sm:text-xs font-semibold flex items-center gap-1 sm:gap-1.5",
+                      "border whitespace-nowrap transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500",
+                      isHovered
+                        ? "bg-teal-700 text-white dark:bg-teal-500 dark:text-slate-950 border-teal-700 dark:border-teal-400 scale-110 shadow-[0_0_20px_rgba(13,148,136,0.45)] ring-2 ring-teal-400/40"
+                        : "bg-white/95 dark:bg-slate-900/95 backdrop-blur-md text-slate-800 dark:text-slate-200 border-slate-200 dark:border-slate-800 shadow-sm hover:border-teal-500 hover:text-teal-700 dark:hover:text-teal-300"
                     )}
                   >
-                    <div
+                    <PillIcon
                       className={cn(
-                        "rounded-full px-2.5 sm:px-3.5 py-1.5 sm:py-2 text-[11px] sm:text-xs font-semibold flex items-center gap-1.5 shadow-sm border transition-all duration-200 whitespace-nowrap",
+                        "h-3 w-3 sm:h-3.5 sm:w-3.5 shrink-0 transition-colors duration-200",
                         isHovered
-                          ? "bg-blue-600 text-white dark:bg-blue-500 border-blue-600 dark:border-blue-400 scale-110 shadow-md ring-2 ring-blue-400/30"
-                          : "bg-white/95 dark:bg-slate-900/95 backdrop-blur-md text-slate-800 dark:text-slate-200 border-slate-200 dark:border-slate-800 hover:border-blue-400 hover:text-blue-600 dark:hover:text-blue-300 hover:scale-105"
+                          ? "text-white dark:text-slate-950"
+                          : "text-teal-700 dark:text-teal-400"
                       )}
-                    >
-                      <Icon
-                        className={cn(
-                          "h-3.5 w-3.5 shrink-0 transition-colors",
-                          isHovered
-                            ? "text-white"
-                            : "text-blue-600 dark:text-blue-400"
-                        )}
-                      />
-                      <span>{pill.label}</span>
-                    </div>
-                  </div>
+                      strokeWidth={2}
+                    />
+                    <span>{pill.label}</span>
+                  </button>
                 );
               })}
+
+              {/* Bottom-right annotation */}
+              <span className="hidden sm:block absolute bottom-3 right-1 z-20 max-w-[135px] text-right text-[11px] italic font-medium leading-snug text-slate-500 dark:text-slate-400">
+                Integrated service delivery
+              </span>
             </div>
           </div>
         </div>
 
-        {/* Section 5: Bottom CTA (Two Buttons) */}
-        <div className="mt-14 sm:mt-18 pt-8 border-t border-slate-200/80 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-center gap-4">
+        {/* Bottom CTA Buttons */}
+        <div className="mt-14 sm:mt-16 pt-8 border-t border-slate-200/80 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-center gap-4">
           <ButtonLink href="/services" variant="primary" size="md">
             <span>Explore Our Services</span>
             <ArrowRight className="h-4 w-4" />
           </ButtonLink>
-
           <ButtonLink href="/contact" variant="outline" size="md">
             <span>Talk to Our Team</span>
           </ButtonLink>
@@ -446,4 +518,7 @@ export function IndustriesServed() {
       </Container>
     </section>
   );
-}
+};
+
+export { IndustryFocusSection as IndustriesServed };
+export default IndustryFocusSection;
