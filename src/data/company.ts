@@ -49,7 +49,7 @@ export const company: CompanyInfo = {
     workingDays: null,
   },
   socialLinks: null,
-  googleMapsEmbedUrl: null,
+  googleMapsEmbedUrl: "https://www.google.com/maps/embed?origin=mfe&pb=!1m3!2m1!1s12-2-563/38,+Gudimalkapur,+Mehdipatnam,+Hyderabad,+Telangana+500028!6i15",
   pendingConfirmation: {
     alternateAddress: "6th floor, Awfis, N-Heights, Plot no 38, Phase 2, HITEC City, Hyderabad, Telangana 500081",
     claim24x7Monitoring: "24x7 Monitoring with QRT Support",

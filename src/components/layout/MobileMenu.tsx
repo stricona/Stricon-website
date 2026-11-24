@@ -1,18 +1,29 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, ChevronDown } from "lucide-react";
+import { Menu, X, ChevronDown, Phone, MessageCircle } from "lucide-react";
 import { NavLink } from "@/types/navigation";
 import { ThemeToggle } from "./ThemeToggle";
 import { services, serviceCategories } from "@/data/services";
 import { ServiceGroupCategory } from "@/types/service";
+import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 
 interface MobileMenuProps {
   items: NavLink[];
   cta: NavLink;
+}
+
+const emptySubscribe = () => () => {};
+function useIsMounted() {
+  return useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  );
 }
 
 const categoryOrder: ServiceGroupCategory[] = [
@@ -23,6 +34,7 @@ const categoryOrder: ServiceGroupCategory[] = [
 
 export function MobileMenu({ items, cta }: MobileMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const mounted = useIsMounted();
   const pathname = usePathname();
   const [prevPathname, setPrevPathname] = useState(pathname);
   const [servicesExpanded, setServicesExpanded] = useState(() =>
@@ -50,6 +62,17 @@ export function MobileMenu({ items, cta }: MobileMenuProps) {
       };
     }
   }, [isOpen]);
+
+  // Close menu automatically on window resize to desktop (1024px+)
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) {
+        setIsOpen(false);
+      }
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   // Focus management & Escape key listener
   useEffect(() => {
@@ -101,6 +124,181 @@ export function MobileMenu({ items, cta }: MobileMenuProps) {
     };
   }, [isOpen]);
 
+  // Mobile menu overlay and panel content
+  const menuContent = isOpen && mounted && (
+    <div data-mobile-menu-portal className="lg:hidden">
+      {/* Backdrop covering screen below header */}
+      <div
+        className="fixed inset-x-0 top-16 bottom-0 z-40 bg-black/60 backdrop-blur-xs transition-opacity duration-200"
+        aria-hidden="true"
+        onClick={() => {
+          setIsOpen(false);
+          triggerRef.current?.focus();
+        }}
+      />
+
+      {/* Navigation panel positioned directly below header */}
+      <div
+        ref={menuRef}
+        id="mobile-menu-panel"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Mobile Navigation"
+        className="fixed inset-x-0 top-16 z-50 max-h-[calc(100dvh-4rem)] overflow-y-auto bg-[var(--surface)] border-b border-[var(--border)] shadow-2xl transition-all duration-200 ease-out"
+      >
+        <div className="container mx-auto max-w-7xl px-4 sm:px-6 py-6 flex flex-col gap-6">
+          <nav aria-label="Mobile Navigation Links" className="flex flex-col gap-1.5">
+            {items.map((item) => {
+              const isServices = item.href === "/services";
+              const isActive =
+                item.href === "/"
+                  ? pathname === "/"
+                  : pathname === item.href || pathname.startsWith(`${item.href}/`);
+
+              if (isServices) {
+                return (
+                  <div key={item.href} className="flex flex-col">
+                    <div
+                      className={cn(
+                        "flex items-center justify-between rounded-lg px-4 py-3 min-h-[44px] transition-colors",
+                        isActive
+                          ? "bg-[var(--primary)]/10 text-[var(--primary)] font-semibold"
+                          : "text-[var(--foreground)] hover:bg-[var(--background)]"
+                      )}
+                    >
+                      <Link
+                        href="/services"
+                        onClick={() => setIsOpen(false)}
+                        className="flex-1 text-base font-medium focus-visible:outline-2"
+                        aria-current={isActive ? "page" : undefined}
+                      >
+                        {item.title}
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={() => setServicesExpanded((prev) => !prev)}
+                        aria-expanded={servicesExpanded}
+                        aria-controls="mobile-services-accordion"
+                        aria-label="Toggle services list"
+                        className="p-2 text-inherit focus-visible:outline-2 rounded-md hover:bg-[var(--surface)]"
+                      >
+                        <ChevronDown
+                          className={cn(
+                            "h-5 w-5 transition-transform duration-200",
+                            servicesExpanded && "rotate-180"
+                          )}
+                        />
+                      </button>
+                    </div>
+
+                    {/* Services Accordion Panel */}
+                    {servicesExpanded && (
+                      <div
+                        id="mobile-services-accordion"
+                        className="ml-3 mt-1.5 pl-3 border-l-2 border-[var(--border)] space-y-4 py-2 text-sm"
+                      >
+                        <Link
+                          href="/services"
+                          onClick={() => setIsOpen(false)}
+                          className="block font-semibold text-[var(--primary)] py-1.5 hover:underline"
+                        >
+                          All Services Overview →
+                        </Link>
+
+                        {categoryOrder.map((catKey) => {
+                          const catMeta = serviceCategories[catKey];
+                          const catServices = services.filter(
+                            (s) => s.category === catKey
+                          );
+
+                          return (
+                            <div key={catKey} className="space-y-1.5">
+                              <p className="font-bold text-xs uppercase tracking-wider text-[var(--secondary)]">
+                                {catMeta.name}
+                              </p>
+                              <ul className="space-y-1">
+                                {catServices.map((s) => {
+                                  const isCurr = pathname === `/services/${s.slug}`;
+                                  return (
+                                    <li key={s.slug}>
+                                      <Link
+                                        href={`/services/${s.slug}`}
+                                        onClick={() => setIsOpen(false)}
+                                        className={cn(
+                                          "block py-2 rounded px-2.5 text-sm transition-colors min-h-[40px] flex items-center",
+                                          isCurr
+                                            ? "bg-[var(--primary)] text-white font-medium"
+                                            : "text-[var(--foreground)] hover:text-[var(--primary)] hover:bg-[var(--background)]"
+                                        )}
+                                      >
+                                        {s.title}
+                                      </Link>
+                                    </li>
+                                  );
+                                })}
+                              </ul>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setIsOpen(false)}
+                  className={cn(
+                    "px-4 py-3 rounded-lg text-base font-medium min-h-[44px] flex items-center transition-colors focus-visible:outline-2",
+                    isActive
+                      ? "bg-[var(--primary)]/10 text-[var(--primary)] font-semibold"
+                      : "text-[var(--foreground)] hover:bg-[var(--background)] hover:text-[var(--primary)]"
+                  )}
+                  aria-current={isActive ? "page" : undefined}
+                >
+                  {item.title}
+                </Link>
+              );
+            })}
+          </nav>
+
+          {/* Action Row: CTA & Quick Contact */}
+          <div className="pt-4 border-t border-[var(--border)] flex flex-col sm:flex-row gap-4 items-stretch sm:items-center justify-between">
+            <Link
+              href={cta.href}
+              onClick={() => setIsOpen(false)}
+              className="text-center px-5 py-3.5 rounded-lg font-semibold text-sm bg-[var(--accent-gold)] text-[var(--accent-gold-foreground)] hover:opacity-95 transition-opacity shadow-xs focus-visible:outline-2"
+            >
+              {cta.title}
+            </Link>
+
+            <div className="flex items-center justify-around sm:justify-end gap-6 text-xs text-[var(--muted-foreground)] pt-2 sm:pt-0">
+              <a
+                href={siteConfig.phoneHref}
+                className="flex items-center gap-1.5 hover:text-[var(--primary)] font-medium p-1 transition-colors"
+              >
+                <Phone className="h-4 w-4 text-[var(--primary)]" />
+                <span>{siteConfig.links.phoneDisplay}</span>
+              </a>
+              <a
+                href={siteConfig.whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 hover:text-[var(--secondary)] font-medium p-1 transition-colors"
+              >
+                <MessageCircle className="h-4 w-4 text-[var(--secondary)]" />
+                <span>WhatsApp</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div className="lg:hidden flex items-center gap-2">
       <ThemeToggle />
@@ -108,7 +306,7 @@ export function MobileMenu({ items, cta }: MobileMenuProps) {
         ref={triggerRef}
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="p-2 min-w-11 min-h-11 rounded-lg border border-[var(--border)] bg-[var(--surface)] text-[var(--foreground)] hover:border-[var(--primary)] transition-colors focus-visible:outline-2 flex items-center justify-center"
+        className="p-2 min-w-11 min-h-11 rounded-lg border border-[var(--border)] bg-[var(--surface)] text-[var(--foreground)] hover:border-[var(--primary)] transition-colors focus-visible:outline-2 flex items-center justify-center cursor-pointer"
         aria-expanded={isOpen}
         aria-controls="mobile-menu-panel"
         aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
@@ -116,172 +314,8 @@ export function MobileMenu({ items, cta }: MobileMenuProps) {
         {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
       </button>
 
-      {isOpen && (
-        <div
-          className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-xs flex justify-end"
-          aria-modal="true"
-          role="dialog"
-          aria-label="Mobile Navigation"
-          onClick={(e) => {
-            if (e.target === e.currentTarget) {
-              setIsOpen(false);
-            }
-          }}
-        >
-          <div
-            ref={menuRef}
-            id="mobile-menu-panel"
-            className="w-full max-w-xs sm:max-w-sm h-full bg-[var(--surface)] border-l border-[var(--border)] p-6 pt-[calc(env(safe-area-inset-top,0px)+1.5rem)] pb-[calc(env(safe-area-inset-bottom,0px)+1.5rem)] pl-[calc(env(safe-area-inset-left,0px)+1.5rem)] pr-[calc(env(safe-area-inset-right,0px)+1.5rem)] flex flex-col justify-between shadow-2xl overflow-y-auto"
-          >
-            <div>
-              <div className="flex items-center justify-between pb-4 border-b border-[var(--border)]">
-                <span className="font-heading font-semibold text-lg text-[var(--foreground)]">
-                  Menu
-                </span>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsOpen(false);
-                    triggerRef.current?.focus();
-                  }}
-                  className="p-2 rounded-lg text-[var(--muted-foreground)] hover:text-[var(--foreground)] focus-visible:outline-2"
-                  aria-label="Close menu"
-                >
-                  <X className="h-5 w-5" />
-                </button>
-              </div>
-
-              <nav aria-label="Mobile Navigation Links" className="mt-6 flex flex-col gap-1.5">
-                {items.map((item) => {
-                  const isServices = item.href === "/services";
-                  const isActive =
-                    item.href === "/"
-                      ? pathname === "/"
-                      : pathname === item.href || pathname.startsWith(`${item.href}/`);
-
-                  if (isServices) {
-                    return (
-                      <div key={item.href} className="flex flex-col">
-                        <div
-                          className={cn(
-                            "flex items-center justify-between rounded-lg px-4 py-2.5 transition-colors",
-                            isActive
-                              ? "bg-[var(--primary)]/10 text-[var(--primary)] font-semibold"
-                              : "text-[var(--foreground)] hover:bg-[var(--background)]"
-                          )}
-                        >
-                          <Link
-                            href="/services"
-                            onClick={() => setIsOpen(false)}
-                            className="flex-1 focus-visible:outline-2"
-                            aria-current={isActive ? "page" : undefined}
-                          >
-                            {item.title}
-                          </Link>
-                          <button
-                            type="button"
-                            onClick={() => setServicesExpanded((prev) => !prev)}
-                            aria-expanded={servicesExpanded}
-                            aria-controls="mobile-services-accordion"
-                            aria-label="Toggle services list"
-                            className="p-1 text-inherit focus-visible:outline-2 rounded"
-                          >
-                            <ChevronDown
-                              className={cn(
-                                "h-4 w-4 transition-transform duration-200",
-                                servicesExpanded && "rotate-180"
-                              )}
-                            />
-                          </button>
-                        </div>
-
-                        {/* Services Accordion Panel */}
-                        {servicesExpanded && (
-                          <div
-                            id="mobile-services-accordion"
-                            className="ml-3 mt-1.5 pl-3 border-l-2 border-[var(--border)] space-y-3 py-2 text-xs"
-                          >
-                            <Link
-                              href="/services"
-                              onClick={() => setIsOpen(false)}
-                              className="block font-semibold text-[var(--primary)] py-1"
-                            >
-                              All Services Overview →
-                            </Link>
-
-                            {categoryOrder.map((catKey) => {
-                              const catMeta = serviceCategories[catKey];
-                              const catServices = services.filter(
-                                (s) => s.category === catKey
-                              );
-
-                              return (
-                                <div key={catKey} className="space-y-1">
-                                  <p className="font-bold text-[10px] uppercase tracking-wider text-[var(--secondary)]">
-                                    {catMeta.name}
-                                  </p>
-                                  <ul className="space-y-1">
-                                    {catServices.map((s) => {
-                                      const isCurr = pathname === `/services/${s.slug}`;
-                                      return (
-                                        <li key={s.slug}>
-                                          <Link
-                                            href={`/services/${s.slug}`}
-                                            onClick={() => setIsOpen(false)}
-                                            className={cn(
-                                              "block py-1 rounded px-2 transition-colors",
-                                              isCurr
-                                                ? "bg-[var(--primary)] text-white font-medium"
-                                                : "text-[var(--foreground)] hover:text-[var(--primary)]"
-                                            )}
-                                          >
-                                            {s.title}
-                                          </Link>
-                                        </li>
-                                      );
-                                    })}
-                                  </ul>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        )}
-                      </div>
-                    );
-                  }
-
-                  return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      onClick={() => setIsOpen(false)}
-                      className={cn(
-                        "px-4 py-2.5 rounded-lg text-sm font-medium transition-colors focus-visible:outline-2",
-                        isActive
-                          ? "bg-[var(--primary)]/10 text-[var(--primary)] font-semibold"
-                          : "text-[var(--foreground)] hover:bg-[var(--background)] hover:text-[var(--primary)]"
-                      )}
-                      aria-current={isActive ? "page" : undefined}
-                    >
-                      {item.title}
-                    </Link>
-                  );
-                })}
-              </nav>
-            </div>
-
-            <div className="pt-6 border-t border-[var(--border)] flex flex-col gap-4">
-              <Link
-                href={cta.href}
-                onClick={() => setIsOpen(false)}
-                className="w-full text-center px-4 py-3 rounded-lg font-semibold text-sm bg-[var(--accent-gold)] text-[var(--accent-gold-foreground)] hover:opacity-95 transition-opacity shadow-xs focus-visible:outline-2"
-              >
-                {cta.title}
-              </Link>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Render menu portal directly to document.body */}
+      {mounted && typeof document !== "undefined" && createPortal(menuContent, document.body)}
     </div>
   );
 }

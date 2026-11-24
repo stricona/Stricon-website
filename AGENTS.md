@@ -533,10 +533,11 @@ Original files reside in `public/images/logo/`:
   - `MobileMenu`: Safe-area padding applied to inner scroll container and close controls.
   - `Lightbox`: Safe-area insets applied to navigation controls and caption overlays.
 - **Strict Layering & Z-Index Scale**:
-  - Sticky Header: `z-40`
-  - Floating Quick Contact Actions: `z-[45]`
+  - Sticky Header: `z-50` (pinned at `top-0`, solid surface background)
+  - Mobile Menu Panel: `z-50` (anchored at `top-16` below header, portalled into `document.body`)
+  - Mobile Menu Backdrop: `z-40` (spans `top-16` to bottom)
+  - Floating Quick Contact Actions: `z-[45]` (automatically hidden when `data-menu-open="true"`)
   - Desktop Call Popover Card: `z-[50]`
-  - Mobile Menu Overlay & Drawer: `z-[60]`
   - Lightbox `<dialog>` Modal: Browser top layer (`z-[70]`)
 - **Horizontal Overflow Prevention & Methodology**:
   - `html, body` configured with `overflow-x: clip; max-width: 100vw;` to contain flex-child track expansions (such as marquee tracks) without breaking sticky positioning.

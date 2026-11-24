@@ -119,18 +119,37 @@ export function ContactInfoCards() {
         </a>
       </div>
 
-      {/* Google Maps Embed Iframe (Rendered ONLY if googleMapsEmbedUrl is not null) */}
+      {/* Google Maps Embed Iframe (Rendered when googleMapsEmbedUrl is available) */}
       {company.googleMapsEmbedUrl && (
-        <div className="overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface)] shadow-xs aspect-video w-full">
-          <iframe
-            src={company.googleMapsEmbedUrl}
-            title="STRICON Registered Office Location Map"
-            width="100%"
-            height="100%"
-            style={{ border: 0 }}
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-          />
+        <div className="overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface)] shadow-xs">
+          <div className="p-3.5 sm:p-4 border-b border-[var(--border)] flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <MapPin className="h-4 w-4 text-[var(--secondary)]" />
+              <h3 className="font-heading text-sm font-bold text-[var(--foreground)]">
+                Office Location Map
+              </h3>
+            </div>
+            <a
+              href={directionsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-xs font-semibold text-[var(--primary)] hover:underline focus-visible:outline-2"
+            >
+              <span>Open in Google Maps</span>
+              <ExternalLink className="h-3.5 w-3.5" />
+            </a>
+          </div>
+          <div className="aspect-video w-full">
+            <iframe
+              src={company.googleMapsEmbedUrl}
+              title="STRICON Registered Office Location Map"
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+          </div>
         </div>
       )}
     </div>
