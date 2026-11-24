@@ -238,9 +238,86 @@ Original files reside in `public/images/logo/`:
 - Implemented in `src/components/common/OrganizationJsonLd.tsx` and mounted on both `/` and `/about`.
 - Includes legal name, alternate name STRICON, canonical URL, emblem logo, founding date "2025", founder, address, phone, email, and area served ("Hyderabad"). Omit null fields; no fake reviews/ratings.
 
+
 ---
 
-## 10. Phase 5: Contact Page & Quote Form Standards
+## 11. Phase 6: Careers Page & Job Application Form Standards
+
+### Careers Data Flow & API Architecture
+- **Endpoint**: `/api/careers` (POST only, Node.js runtime).
+- **Body & Header Constraints**:
+  - Accepts both `application/json` (text-only) and `multipart/form-data` (applications with resume attachments).
+  - Max request payload size: 3 MB. Requests exceeding 3 MB rejected with HTTP 413.
+- **Same-Origin Verification**: Validates `Origin` header against `NEXT_PUBLIC_SITE_URL`, host header, or localhost in non-production environments (HTTP 403 on mismatch).
+- **Bot Defense (Honeypot & Timing)**:
+  - `website` honeypot field: must remain empty.
+  - `startedAt` timestamp: rejects submissions completed in under 2.5 seconds or with invalid timestamps.
+  - Returns fake success `{ ok: true }` with generated application reference without executing delivery when bot signals are detected.
+- **Rate Limiting**:
+  - Uses dedicated rate limit bucket (`bucket: "careers"`) in `src/lib/rate-limit.ts` (5 submissions per 10 minutes per IP).
+  - Client IP extracted from `x-forwarded-for` (first hop) or fallback. Returns HTTP 429 when exhausted.
+- **Application Reference Generation**:
+  - Reference codes follow format `APP-YYYYMMDD-XXXX` (4 random alphanumeric characters).
+- **Single-Line Field Sanitization**:
+  - Single-line fields (name, phone, email, location, education) stripped of newline and tab control characters (`\r`, `\n`, `\t`).
+  - Form field contents HTML-escaped before embedding into email notification templates.
+
+### Strict Data Minimisation & Privacy Rules
+- **Prohibited Data Collection**:
+  - NEVER request, collect, or store Aadhaar numbers, PAN cards, dates of birth, candidate photos, or bank details.
+  - Fields collected: Full Name, Phone (+91 10-digit mobile), Email (optional), Area of Interest, Experience level, Current Location / City, Highest Qualification / Education (optional), Brief Note / Message (optional, max 800 chars), Consent confirmation.
+- **Zero Disk Writes**:
+  - Uploaded resume files are NEVER written to the local disk, temporary directories, or database blobs.
+  - Resumes are validated and held purely in-memory as Buffers and forwarded via base64 email attachment if Resend is configured.
+  - Personal identifiable information (PII) and resume binaries are never logged in production console outputs.
+
+### Resume Upload Feature Flag & In-Memory Validation
+- **Feature Flag Control (`CAREERS_RESUME_UPLOAD`)**:
+  - Configured via environment variable: `CAREERS_RESUME_UPLOAD=on` (enabled) or `off` (disabled).
+  - Runtime check: `process.env.CAREERS_RESUME_UPLOAD === "on" && canForwardAttachments()`.
+  - When disabled or when no real email attachment forwarding channel is configured:
+    - The client application form hides the file upload input.
+    - If a file is submitted via direct API calls when disabled, `/api/careers` returns HTTP 400 with `{ ok: false, error: "resume_disabled" }`.
+- **In-Memory Magic Byte Validation (`src/lib/file-validation.ts`)**:
+  - Max file size: 2 MB (`MAX_FILE_SIZE = 2 * 1024 * 1024`).
+  - Extension allowlist: `.pdf`, `.doc`, `.docx`.
+  - Magic byte verification:
+    - **PDF**: Begins with `%PDF-` (`0x25, 0x50, 0x44, 0x46, 0x2D`).
+    - **DOCX**: Begins with `PK\x03\x04` ZIP magic header and contains `[Content_Types].xml`.
+    - **DOC**: Begins with `0xD0, 0xCF, 0x11, 0xE0, 0xA1, 0xB1, 0x1A, 0xE1` (OLECF header).
+  - Executable binaries (e.g. `.exe`, `.bat`) and files with spoofed extensions are rejected with HTTP 400.
+  - Filename sanitisation strips directory traversal characters (`../`, `..\`), non-printable characters, and limits filename length.
+
+### Careers Multi-Channel Delivery Engine
+- **Resend Email (`src/lib/email.ts`)**:
+  - Recipient: `CAREERS_TO` (defaults to `info@stricon.in`).
+  - Sender: `ENQUIRY_FROM`.
+  - Reply-To: Applicant's email address if provided, otherwise sender address.
+  - Attachment: In-memory Buffer converted to base64 string and forwarded via Resend attachments API.
+  - Timeout: 10 seconds via native `AbortController`.
+- **Webhook Delivery (`src/lib/webhook.ts`)**:
+  - POSTs full application data with `type: "career_application"`.
+  - Resume attachment is NOT sent in full over webhook for privacy and payload size limits; webhook receives resume metadata only (`filename`, `size`).
+- **Production Guard**:
+  - If only `log` delivery is configured in production (`NODE_ENV === "production"`), the API returns HTTP 503 (`not_configured`) to prevent lost candidate applications.
+
+### Page Sections & Exact Deck Alignment
+- **Hero & Welfare**:
+  - PageHero displays corporate badge, headline, and deck alignment.
+  - `RecruitmentStepper`: 7-step process from Slide 9 (responsive horizontal desktop / vertical mobile).
+  - `EmployeeWelfare`: 6 welfare cards from Slide 10 with Lucide icons (On-time Salary, Medical Insurance, PF & ESIC Benefits, Safety & Uniform Kit, Career Progression, Welfare Support).
+  - `HiringAndTraining`: 4 hiring strengths, 4 training strengths, and 5 continuous training topics from Slide 11.
+- **Job Openings**:
+  - Data-driven empty array `openings: []` in `src/data/careers.ts`.
+  - Rendered with polite informative message ("Currently, there are no specific vacancies listed. However, we are always looking for dedicated professionals...") and a direct CTA button to the application form.
+- **Application Form (`ApplicationForm.tsx`)**:
+  - React Hook Form with Zod resolver (`careerSchema`), validating on blur and on change after error.
+  - Supports both FormData multipart submissions (when resume is attached and enabled) and JSON submissions.
+  - Full ARIA accessibility attributes (`aria-invalid`, `aria-describedby`, polite `aria-live` status announcement).
+  - Character counter (0/800) for note/message field.
+  - WhatsApp application fallback button with prefilled enquiry text for candidates who prefer direct mobile chat.
+  - Accessible success confirmation screen with focus management.
+
 
 ### Contact Data Flow & API Architecture
 - **Endpoint**: `/api/contact` (POST only, Node.js runtime).

@@ -178,9 +178,12 @@ export async function POST(request: Request) {
   }
 
   // 5. Parse and Validate Fields
-  // Normalize consent from string ("true" / "on") if sent via FormData
+  // Normalize consent and startedAt from FormData string types
   if (rawFields.consent === "true" || rawFields.consent === "on" || rawFields.consent === true) {
     rawFields.consent = true;
+  }
+  if (rawFields.startedAt !== undefined && !isNaN(startedAt)) {
+    rawFields.startedAt = startedAt;
   }
 
   const parsedFields = careerSchema.safeParse(rawFields);

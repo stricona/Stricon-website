@@ -34,7 +34,10 @@ async function runTests() {
   try {
     const res = await fetch(ENDPOINT, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "x-forwarded-for": "192.168.2.2",
+      },
       body: JSON.stringify({
         name: "",
         email: "not-an-email",
@@ -59,7 +62,10 @@ async function runTests() {
   try {
     const res = await fetch(ENDPOINT, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "x-forwarded-for": "192.168.2.3",
+      },
       body: JSON.stringify({
         name: "Suresh Kumar",
         email: "suresh@example.com",
@@ -90,7 +96,10 @@ async function runTests() {
   try {
     const res = await fetch(ENDPOINT, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "x-forwarded-for": "192.168.2.4",
+      },
       body: JSON.stringify({
         name: "Vikram Reddy",
         email: "vikram@example.com",
@@ -136,6 +145,9 @@ async function runTests() {
 
     const res = await fetch(ENDPOINT, {
       method: "POST",
+      headers: {
+        "x-forwarded-for": "192.168.2.5",
+      },
       body: formData,
     });
     const json = await res.json().catch(() => ({}));
@@ -147,7 +159,9 @@ async function runTests() {
     record(
       "5. Valid multipart with genuine small PDF returns 200",
       is200,
-      `Status: ${res.status}, Ref: ${json.ref || "none"}`
+      is200
+        ? `Status: ${res.status}, Ref: ${json.ref || "none"}`
+        : `Status: ${res.status}, Error: ${JSON.stringify(json)}`
     );
   } catch (err) {
     record("5. Valid multipart with genuine small PDF returns 200", false, err.message);
@@ -171,6 +185,9 @@ async function runTests() {
 
     const res = await fetch(ENDPOINT, {
       method: "POST",
+      headers: {
+        "x-forwarded-for": "192.168.2.6",
+      },
       body: formData,
     });
     const json = await res.json().catch(() => ({}));
@@ -178,7 +195,7 @@ async function runTests() {
     record(
       "6. File named .pdf with invalid magic bytes returns 400",
       is400,
-      `Status: ${res.status}, Error: ${json.errors?.resume || "none"}`
+      `Status: ${res.status}, Error: ${json.errors?.resume || JSON.stringify(json)}`
     );
   } catch (err) {
     record("6. File named .pdf with invalid magic bytes returns 400", false, err.message);
@@ -201,6 +218,9 @@ async function runTests() {
 
     const res = await fetch(ENDPOINT, {
       method: "POST",
+      headers: {
+        "x-forwarded-for": "192.168.2.7",
+      },
       body: formData,
     });
     const json = await res.json().catch(() => ({}));
@@ -208,7 +228,7 @@ async function runTests() {
     record(
       "7. Executable file (.exe) returns 400 error",
       is400,
-      `Status: ${res.status}, Error: ${json.errors?.resume || "none"}`
+      `Status: ${res.status}, Error: ${json.errors?.resume || JSON.stringify(json)}`
     );
   } catch (err) {
     record("7. Executable file (.exe) returns 400 error", false, err.message);
@@ -238,6 +258,9 @@ async function runTests() {
 
     const res = await fetch(ENDPOINT, {
       method: "POST",
+      headers: {
+        "x-forwarded-for": "192.168.2.8",
+      },
       body: formData,
     });
     const isError = res.status === 400 || res.status === 413;
@@ -254,7 +277,10 @@ async function runTests() {
   try {
     const res = await fetch(ENDPOINT, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "x-forwarded-for": "192.168.2.9",
+      },
       body: JSON.stringify({
         name: "Bot User",
         email: "bot@example.com",

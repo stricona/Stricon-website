@@ -23,6 +23,7 @@ const explicitUrls = [
   "/services",
   "/about",
   "/careers",
+  "/careers?area=security-services",
   "/contact",
   ...serviceSlugs.map((s) => `/services/${s}`),
   ...serviceSlugs.map((s) => `/contact?service=${s}`),
