@@ -108,6 +108,7 @@ export default function RootLayout({
     <html
       lang="en-IN"
       suppressHydrationWarning
+      data-scroll-behavior="smooth"
       className={`${inter.variable} ${poppins.variable}`}
     >
       <body className="min-h-screen flex flex-col font-sans bg-[var(--color-background)] text-[var(--color-foreground)] transition-colors antialiased">
