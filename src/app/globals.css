@@ -13,6 +13,8 @@
   --accent-gold-foreground: #29283A;
   --logo-surface: #FFFFFF;
   --logo-surface-foreground: #29283A;
+  --danger: #B91C1C;
+  --danger-foreground: #FFFFFF;
   --border: #E7E5DE;
 }
 
@@ -29,6 +31,8 @@
   --accent-gold-foreground: #29283A;
   --logo-surface: #FFFFFF;
   --logo-surface-foreground: #29283A;
+  --danger: #EF4444;
+  --danger-foreground: #FFFFFF;
   --border: #383747;
 }
 
@@ -45,6 +49,8 @@
   --color-accent-gold-foreground: var(--accent-gold-foreground);
   --color-logo-surface: var(--logo-surface);
   --color-logo-surface-foreground: var(--logo-surface-foreground);
+  --color-danger: var(--danger);
+  --color-danger-foreground: var(--danger-foreground);
   --color-border: var(--border);
 
   --font-sans: var(--font-inter);

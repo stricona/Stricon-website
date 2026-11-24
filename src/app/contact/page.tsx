@@ -1,50 +1,164 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
+import { Layers } from "lucide-react";
 import { siteConfig } from "@/config/site";
+import { company } from "@/data/company";
+import { profile } from "@/data/profile";
 import { getServiceBySlug } from "@/data/services";
+import { SERVICE_SLUGS, ServiceSlugOption } from "@/lib/validations";
+import { Container, MotionProvider, Reveal } from "@/components/common";
+import { Breadcrumbs } from "@/components/services";
+import { ContactInfoCards, QuoteForm } from "@/components/contact";
 
 export const metadata: Metadata = {
   title: "Contact Us",
-  description: `Contact ${siteConfig.legalName} for facility management and security enquiries in Hyderabad.`,
+  description:
+    "Contact STRICON for facility management and security services in Hyderabad.",
+  alternates: {
+    canonical: `${siteConfig.url}/contact`,
+  },
+  openGraph: {
+    title: "Contact Us | STRICON",
+    description:
+      "Contact STRICON for facility management and security services in Hyderabad.",
+    url: `${siteConfig.url}/contact`,
+    siteName: siteConfig.name,
+    locale: siteConfig.locale,
+    type: "website",
+    images: [
+      {
+        url: `${siteConfig.url}/images/logo/emblem.jpg`,
+        width: 1024,
+        height: 1024,
+        alt: "STRICON Shield Emblem",
+      },
+    ],
+  },
 };
 
 interface ContactPageProps {
   searchParams: Promise<{ service?: string }>;
 }
 
-async function ServiceEnquiryBanner({
+function ContactJsonLd() {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    name: "Contact STRICON",
+    url: `${siteConfig.url}/contact`,
+    description:
+      "Contact STRICON for facility management and security services in Hyderabad.",
+    about: {
+      "@type": "Organization",
+      name: company.legalName,
+      alternateName: company.brandName,
+      url: company.contact.website,
+      telephone: company.contact.phoneDisplay,
+      email: company.contact.email,
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: company.registeredOffice.addressLine,
+        addressLocality: company.registeredOffice.city,
+        addressRegion: company.registeredOffice.state,
+        postalCode: company.registeredOffice.pincode,
+        addressCountry: "IN",
+      },
+    },
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
+async function ContactContent({
   searchParams,
 }: {
   searchParams: Promise<{ service?: string }>;
 }) {
-  const { service: serviceSlug } = await searchParams;
-  const matchedService = serviceSlug ? getServiceBySlug(serviceSlug) : undefined;
+  const { service: queryService } = await searchParams;
 
-  if (!matchedService) return null;
+  // Validate service slug against known options (ignore invalid values silently)
+  const isValidSlug =
+    queryService && SERVICE_SLUGS.includes(queryService as ServiceSlugOption);
+  const validatedSlug = isValidSlug ? queryService : undefined;
+  const matchedService = validatedSlug ? getServiceBySlug(validatedSlug) : undefined;
 
   return (
-    <p className="mt-2 text-sm sm:text-base font-semibold text-[var(--primary)] inline-flex items-center gap-1.5 rounded-md bg-[var(--primary)]/10 px-3 py-1">
-      Enquiry about: {matchedService.title}
-    </p>
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
+      {/* Left Column on Desktop / Bottom on Mobile: Contact Info Cards */}
+      <div className="order-2 lg:order-1 lg:col-span-5">
+        <Reveal delay={0.1}>
+          <div className="mb-6">
+            <h2 className="font-heading text-xl sm:text-2xl font-bold text-[var(--foreground)]">
+              Get in Touch
+            </h2>
+            <p className="mt-1 text-xs sm:text-sm text-[var(--muted-foreground)]">
+              Direct communication channels with our Hyderabad corporate office.
+            </p>
+          </div>
+          <ContactInfoCards />
+        </Reveal>
+      </div>
+
+      {/* Right Column on Desktop / Top on Mobile: Preselected Chip & Quote Form */}
+      <div className="order-1 lg:order-2 lg:col-span-7">
+        <Reveal delay={0.15}>
+          {matchedService && (
+            <div className="mb-4 inline-flex items-center gap-2 rounded-lg border border-[var(--primary)]/30 bg-[var(--primary)]/10 px-3.5 py-1.5 text-xs sm:text-sm font-semibold text-[var(--primary)]">
+              <Layers className="h-4 w-4" />
+              <span>Enquiry about: {matchedService.title}</span>
+            </div>
+          )}
+
+          <QuoteForm defaultService={validatedSlug} />
+        </Reveal>
+      </div>
+    </div>
   );
 }
 
 export default function ContactPage({ searchParams }: ContactPageProps) {
+  const breadcrumbItems = [
+    { label: "Home", href: "/" },
+    { label: "Contact Us" },
+  ];
+
   return (
-    <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
-      <div className="max-w-3xl">
-        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-[var(--color-foreground)] tracking-tight">
-          Contact Us
-        </h1>
+    <MotionProvider>
+      <ContactJsonLd />
 
-        <Suspense fallback={null}>
-          <ServiceEnquiryBanner searchParams={searchParams} />
-        </Suspense>
+      <main id="main-content" className="flex flex-col w-full">
+        {/* Section 1: Page Header */}
+        <section className="bg-[var(--surface)] py-12 sm:py-16 border-b border-[var(--border)]">
+          <Container>
+            <div className="mb-6">
+              <Breadcrumbs items={breadcrumbItems} />
+            </div>
 
-        <p className="mt-4 text-lg text-[var(--color-muted-foreground)] leading-relaxed">
-          Get in touch with our team for enquiries, quotations, or more information about our services.
-        </p>
-      </div>
-    </div>
+            <div className="max-w-3xl space-y-4">
+              <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[var(--foreground)]">
+                Contact Us
+              </h1>
+              <p className="text-base sm:text-lg leading-relaxed text-[var(--muted-foreground)]">
+                {profile.aboutParagraphs[2].split(".")[0]}.
+              </p>
+            </div>
+          </Container>
+        </section>
+
+        {/* Section 2: Contact Info & Form (2 columns) */}
+        <section className="py-12 sm:py-20 bg-[var(--background)]">
+          <Container>
+            <Suspense fallback={<div className="h-96 w-full animate-pulse bg-[var(--surface)] rounded-2xl" />}>
+              <ContactContent searchParams={searchParams} />
+            </Suspense>
+          </Container>
+        </section>
+      </main>
+    </MotionProvider>
   );
 }
