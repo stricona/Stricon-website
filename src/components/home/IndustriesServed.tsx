@@ -302,10 +302,6 @@ export const IndustryFocusSection: React.FC<IndustryFocusSectionProps> = ({
               aria-label="STRICON circular industry ecosystem"
               className="relative aspect-square w-full max-w-[310px] sm:max-w-[440px] md:max-w-[500px] select-none"
             >
-              {/* Top-left annotation */}
-              <span className="hidden sm:block absolute top-3 left-1 z-20 max-w-[130px] text-[11px] italic font-medium leading-snug text-slate-500 dark:text-slate-400">
-                Industry-specific support
-              </span>
 
               {/* Rotating Dotted Circles + Teal/Blue Dots + Radial Spokes */}
               <svg
@@ -497,10 +493,6 @@ export const IndustryFocusSection: React.FC<IndustryFocusSectionProps> = ({
                 );
               })}
 
-              {/* Bottom-right annotation */}
-              <span className="hidden sm:block absolute bottom-3 right-1 z-20 max-w-[135px] text-right text-[11px] italic font-medium leading-snug text-slate-500 dark:text-slate-400">
-                Integrated service delivery
-              </span>
             </div>
           </div>
         </div>
