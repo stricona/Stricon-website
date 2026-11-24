@@ -34,7 +34,7 @@ export const homeContent: HomeContent = {
     eyebrow: "Facility Management & Security Services",
     title: "Professional Security & Facility Management Services in Hyderabad",
     description:
-      "Integrated facility management, trained security personnel, and mechanised cleaning solutions delivered with operational discipline and full statutory compliance.",
+      "Comprehensive facility management services, combining facilities and manpower to boost productivity. Facility Management & Security Services Provider with valid PSARA Licence.",
     trustChips: [
       "PSARA Licensed Provider",
       "Self-Delivery Model",

@@ -19,7 +19,7 @@ export function IntegratedFacilityManagement() {
 
             <Reveal delay={0.1}>
               <h2 className="font-heading text-2xl font-bold tracking-tight text-[var(--foreground)] sm:text-3xl lg:text-4xl">
-                Unified Operations. Tailored for Your Facility.
+                Integrated Facility Management Vertical
               </h2>
             </Reveal>
 

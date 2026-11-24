@@ -326,7 +326,7 @@ export default async function ServiceDetailPage({ params }: ServicePageProps) {
                     </h2>
                   </div>
                   <p className="text-sm text-[var(--muted-foreground)] mb-6">
-                    Our {service.title.toLowerCase()} are currently deployed across Hyderabad&apos;s leading commercial and industrial establishments.
+                    {profile.clientsSentence}
                   </p>
                   <div className="flex flex-wrap gap-2.5">
                     {industries.map((ind) => (

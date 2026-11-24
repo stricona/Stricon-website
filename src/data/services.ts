@@ -48,7 +48,7 @@ export const services: ServiceItem[] = [
     summary:
       "We provide professional security services and guarding personnel for facility protection.",
     intro:
-      "STRICON provides security services in Hyderabad through trained, in-house teams under a self delivery model. Each service plan is customized to the needs of the client's site. STRICON is a PSARA licensed security services provider.",
+      "STRICON provides security services in Hyderabad through highly trained and professional in-house teams under a self delivery model. We develop customized management plans to meet the needs of every organization. STRICON is a Facility Management & Security Services Provider with valid PSARA Licence.",
     includes: [],
     includedServices: [],
     relatedSlugs: [
@@ -59,7 +59,7 @@ export const services: ServiceItem[] = [
     image: null,
     faqs: [],
     seoDescription:
-      "Professional security services and guarding personnel in Hyderabad with valid PSARA licence, delivered by trained in-house STRICON teams.",
+      "STRICON provides security services in Hyderabad through highly trained in-house teams with valid PSARA Licence under a self delivery model.",
   },
   {
     slug: "housekeeping-janitorial",
@@ -71,7 +71,7 @@ export const services: ServiceItem[] = [
     summary:
       "We provide comprehensive housekeeping and janitorial services to keep facilities clean and sanitized.",
     intro:
-      "STRICON provides housekeeping and janitorial services in Hyderabad through trained, in-house teams under a self delivery model. Each service plan is customized to the needs of the client's site.",
+      "STRICON provides housekeeping & janitorial services in Hyderabad through highly trained and professional in-house teams under a self delivery model. We develop customized management plans to meet the needs of every organization.",
     includes: [],
     includedServices: [],
     relatedSlugs: [
@@ -82,7 +82,7 @@ export const services: ServiceItem[] = [
     image: null,
     faqs: [],
     seoDescription:
-      "Comprehensive housekeeping and janitorial services in Hyderabad delivered through trained in-house STRICON teams under a self-delivery model.",
+      "STRICON provides housekeeping & janitorial services in Hyderabad through highly trained and professional in-house teams under a self delivery model.",
   },
   {
     slug: "technical-services",
@@ -94,7 +94,7 @@ export const services: ServiceItem[] = [
     summary:
       "We provide technical services covering mechanical, electrical and plumbing maintenance, minor repairs, and minor civil works.",
     intro:
-      "STRICON provides technical services in Hyderabad through trained, in-house teams under a self delivery model. Each service plan is customized to the needs of the client's site.",
+      "STRICON provides technical services in Hyderabad through highly trained and professional in-house teams under a self delivery model. We develop customized management plans to meet the needs of every organization.",
     includes: [
       "Mechanical, Electrical & Plumbing maintenance",
       "Minor repair and maintenance",
@@ -113,7 +113,7 @@ export const services: ServiceItem[] = [
     image: null,
     faqs: [],
     seoDescription:
-      "Commercial MEP maintenance, minor repairs, and civil works in Hyderabad delivered through trained, in-house STRICON technical teams.",
+      "STRICON provides technical services in Hyderabad through highly trained and professional in-house teams under a self delivery model.",
   },
   {
     slug: "support-staff-services",
@@ -125,7 +125,7 @@ export const services: ServiceItem[] = [
     summary:
       "We provide essential support staff services covering office support personnel, front desk management, and loader services.",
     intro:
-      "STRICON provides support staff services in Hyderabad through trained, in-house teams under a self delivery model. Each service plan is customized to the needs of the client's site.",
+      "STRICON provides support staff services in Hyderabad through highly trained and professional in-house teams under a self delivery model. We develop customized management plans to meet the needs of every organization.",
     includes: ["Support staff", "Front desk management", "Loader services"],
     includedServices: [
       "Support staff",
@@ -140,7 +140,7 @@ export const services: ServiceItem[] = [
     image: null,
     faqs: [],
     seoDescription:
-      "Front desk management, office support staff, and loader services in Hyderabad delivered by STRICON's vetted, trained personnel.",
+      "STRICON provides support staff services in Hyderabad through highly trained and professional in-house teams under a self delivery model.",
   },
   {
     slug: "pest-control-disinfection",
@@ -152,7 +152,7 @@ export const services: ServiceItem[] = [
     summary:
       "We provide pest control, disinfection, and fumigation services for facilities.",
     intro:
-      "STRICON provides pest control, disinfection, and fumigation services in Hyderabad through trained, in-house teams under a self delivery model. Each service plan is customized to the needs of the client's site.",
+      "STRICON provides pest control, disinfection & fumigation in Hyderabad through highly trained and professional in-house teams under a self delivery model. We develop customized management plans to meet the needs of every organization.",
     includes: ["Pest control", "Disinfection", "Fumigation"],
     includedServices: ["Pest control", "Disinfection", "Fumigation"],
     relatedSlugs: [
@@ -163,7 +163,7 @@ export const services: ServiceItem[] = [
     image: null,
     faqs: [],
     seoDescription:
-      "Professional pest control, commercial disinfection, and fumigation services in Hyderabad customized to your facility by STRICON.",
+      "STRICON provides pest control, disinfection & fumigation in Hyderabad through highly trained and professional in-house teams under a self delivery model.",
   },
   {
     slug: "horticulture-services",
@@ -175,7 +175,7 @@ export const services: ServiceItem[] = [
     summary:
       "We provide horticulture services focused on comprehensive garden and lawn maintenance.",
     intro:
-      "STRICON provides horticulture services in Hyderabad through trained, in-house teams under a self delivery model. Each service plan is customized to the needs of the client's site.",
+      "STRICON provides horticulture services in Hyderabad through highly trained and professional in-house teams under a self delivery model. We develop customized management plans to meet the needs of every organization.",
     includes: ["Garden & lawn maintenance"],
     includedServices: ["Garden & lawn maintenance"],
     relatedSlugs: [
@@ -186,7 +186,7 @@ export const services: ServiceItem[] = [
     image: null,
     faqs: [],
     seoDescription:
-      "Dedicated garden and commercial lawn maintenance services in Hyderabad delivered by experienced STRICON horticulture teams.",
+      "STRICON provides horticulture services in Hyderabad through highly trained and professional in-house teams under a self delivery model.",
   },
   {
     slug: "specialized-cleaning",
@@ -198,7 +198,7 @@ export const services: ServiceItem[] = [
     summary:
       "We provide specialized cleaning services including chair and carpet shampooing, upholstery cleaning, and façade cleaning.",
     intro:
-      "STRICON provides specialized cleaning services in Hyderabad through trained, in-house teams under a self delivery model. Each service plan is customized to the needs of the client's site.",
+      "STRICON provides specialized cleaning in Hyderabad through highly trained and professional in-house teams under a self delivery model. We develop customized management plans to meet the needs of every organization.",
     includes: [
       "Chair & carpet shampooing",
       "Carpet cleaning",
@@ -219,7 +219,7 @@ export const services: ServiceItem[] = [
     image: null,
     faqs: [],
     seoDescription:
-      "Commercial chair shampooing, carpet cleaning, upholstery sanitisation, and façade cleaning services in Hyderabad by STRICON.",
+      "STRICON provides specialized cleaning in Hyderabad through highly trained and professional in-house teams under a self delivery model.",
   },
   {
     slug: "manpower-management",
@@ -231,7 +231,7 @@ export const services: ServiceItem[] = [
     summary:
       "We provide manpower management services including staffing, payroll processing, attendance systems, and vendor management.",
     intro:
-      "STRICON provides manpower management services in Hyderabad through trained, in-house teams under a self delivery model. Each service plan is customized to the needs of the client's site.",
+      "STRICON provides manpower management services in Hyderabad through highly trained and professional in-house teams under a self delivery model. We develop customized management plans to meet the needs of every organization.",
     includes: [
       "Staffing",
       "Payroll processing",
@@ -252,7 +252,7 @@ export const services: ServiceItem[] = [
     image: null,
     faqs: [],
     seoDescription:
-      "End-to-end staffing, payroll processing, attendance systems, and vendor management in Hyderabad delivered by STRICON.",
+      "STRICON provides manpower management services in Hyderabad through highly trained and professional in-house teams under a self delivery model.",
   },
   {
     slug: "food-vending-supplies",
@@ -264,7 +264,7 @@ export const services: ServiceItem[] = [
     summary:
       "We provide food and vending services and supply personal hygiene items and consumables.",
     intro:
-      "STRICON provides food and vending services in Hyderabad through trained, in-house teams under a self delivery model. Each service plan is customized to the needs of the client's site.",
+      "STRICON provides food & vending services in Hyderabad through highly trained and professional in-house teams under a self delivery model. We develop customized management plans to meet the needs of every organization.",
     includes: [
       "Food & vending services",
       "Supply of personal hygiene and consumables",
@@ -281,7 +281,7 @@ export const services: ServiceItem[] = [
     image: null,
     faqs: [],
     seoDescription:
-      "Corporate food, beverage vending, and personal hygiene consumable supplies in Hyderabad customized by STRICON.",
+      "STRICON provides food & vending services in Hyderabad through highly trained and professional in-house teams under a self delivery model.",
   },
 ];
 

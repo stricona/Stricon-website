@@ -37,7 +37,7 @@ export const clients: Client[] = [
     displayApproved: true,
   },
   {
-    name: "Maphar Constructions Pvt Ltd",
+    name: "Maphar Constructions",
     logo: "/images/clients/maphar-constructions.png",
     displayApproved: true,
   },
@@ -102,4 +102,4 @@ export const clients: Client[] = [
  * Approved sentence permitted for use regarding industry deployments
  */
 export const approvedDeploymentSentence =
-  "We have well-trained personnel deployed at healthcare centres, IT, ITES, hotels, commercial, manufacturing and large residential apartments and villa complexes in Hyderabad.";
+  "We have well-trained personnel deployed at Health care centers, IT, ITES, Hotels, Commercial, Manufacturing and large residential apartments and villa complexes in Hyderabad.";
