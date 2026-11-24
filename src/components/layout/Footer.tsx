@@ -10,7 +10,7 @@ export function Footer() {
 
   return (
     <footer className="w-full border-t border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-foreground)] transition-colors">
-      <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+      <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-12 lg:pt-16 pb-28 md:pb-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
           {/* Column 1: Brand Info */}
           <div className="flex flex-col gap-4">

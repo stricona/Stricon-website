@@ -38,12 +38,14 @@ export function MobileMenu({ items, cta }: MobileMenuProps) {
     setServicesExpanded(pathname.startsWith("/services"));
   }
 
-  // Lock body scroll when open
+  // Lock body scroll and mark data-menu-open when open
   useEffect(() => {
     if (isOpen) {
+      document.body.setAttribute("data-menu-open", "true");
       const originalStyle = window.getComputedStyle(document.body).overflow;
       document.body.style.overflow = "hidden";
       return () => {
+        document.body.removeAttribute("data-menu-open");
         document.body.style.overflow = originalStyle;
       };
     }

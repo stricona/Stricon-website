@@ -13,6 +13,8 @@
   --accent-gold-foreground: #29283A;
   --logo-surface: #FFFFFF;
   --logo-surface-foreground: #29283A;
+  --whatsapp: #25D366;
+  --whatsapp-foreground: #29283A;
   --danger: #B91C1C;
   --danger-foreground: #FFFFFF;
   --border: #E7E5DE;
@@ -31,6 +33,8 @@
   --accent-gold-foreground: #29283A;
   --logo-surface: #FFFFFF;
   --logo-surface-foreground: #29283A;
+  --whatsapp: #25D366;
+  --whatsapp-foreground: #29283A;
   --danger: #EF4444;
   --danger-foreground: #FFFFFF;
   --border: #383747;
@@ -49,6 +53,8 @@
   --color-accent-gold-foreground: var(--accent-gold-foreground);
   --color-logo-surface: var(--logo-surface);
   --color-logo-surface-foreground: var(--logo-surface-foreground);
+  --color-whatsapp: var(--whatsapp);
+  --color-whatsapp-foreground: var(--whatsapp-foreground);
   --color-danger: var(--danger);
   --color-danger-foreground: var(--danger-foreground);
   --color-border: var(--border);
@@ -121,6 +127,23 @@
 
 .pause-animation {
   animation-play-state: paused !important;
+}
+
+/* WhatsApp floating button attention pulse (2 cycles then stops) */
+@keyframes whatsapp-attention {
+  0% {
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.6);
+  }
+  70% {
+    box-shadow: 0 0 0 12px rgba(37, 211, 102, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
+  }
+}
+
+.animate-whatsapp-attention {
+  animation: whatsapp-attention 1.25s ease-out 2 forwards;
 }
 
 /* Respect user's motion preferences */

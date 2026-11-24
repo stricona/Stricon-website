@@ -12,18 +12,24 @@ export default function NotFound() {
       <p className="mt-4 text-base text-[var(--color-muted-foreground)] max-w-md">
         The page you are looking for does not exist or has been moved.
       </p>
-      <div className="mt-8 flex gap-4">
+      <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
         <Link
           href="/"
-          className="px-5 py-2.5 rounded-md font-semibold text-sm bg-[var(--color-primary)] text-[var(--color-primary-foreground)] hover:opacity-90 transition-opacity"
+          className="px-5 py-2.5 rounded-md font-semibold text-sm bg-[var(--color-primary)] text-[var(--color-primary-foreground)] hover:opacity-90 transition-opacity focus-visible:outline-2"
         >
           Return Home
         </Link>
         <Link
           href="/services"
-          className="px-5 py-2.5 rounded-md font-semibold text-sm border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-foreground)] hover:border-[var(--color-primary)] transition-colors"
+          className="px-5 py-2.5 rounded-md font-semibold text-sm border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-foreground)] hover:border-[var(--color-primary)] transition-colors focus-visible:outline-2"
         >
           View Services
+        </Link>
+        <Link
+          href="/contact"
+          className="px-5 py-2.5 rounded-md font-semibold text-sm bg-[var(--color-accent-gold)] text-[var(--color-accent-gold-foreground)] hover:opacity-95 transition-opacity focus-visible:outline-2"
+        >
+          Contact Us
         </Link>
       </div>
     </div>

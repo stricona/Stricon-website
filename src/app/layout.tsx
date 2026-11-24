@@ -4,6 +4,7 @@ import { siteConfig } from "@/config/site";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { FloatingActions } from "@/components/layout/FloatingActions";
 import "./globals.css";
 
 const inter = Inter({
@@ -115,6 +116,7 @@ export default function RootLayout({
             {children}
           </main>
           <Footer />
+          <FloatingActions />
         </ThemeProvider>
       </body>
     </html>
