@@ -382,13 +382,11 @@ Original files reside in `public/images/logo/`:
 ## 12. Phase 7: Launch Polish & Production Standards
 
 ### Floating Quick-Contact Actions (`FloatingActions.tsx`)
-- **Trigger**: Visible after user scrolls past 200px (`scrollY > 200`). Hidden on `/contact` and `/careers` pages to avoid competing with page CTAs.
-- **Mobile Menu Observer**: Listens to `data-menu-open="true"` on `document.body` and automatically hides to prevent overlapping drawer navigation.
+> Note: Rebuilt and modernized in Phase 9 (Section 14) with dual WhatsApp + Call buttons, desktop popover, and safe-area insets.
 - **Tokens & Contrast**:
-  - Uses `--whatsapp` (`#1EBE5D`) and `--whatsapp-foreground` (`#062E14`), achieving WCAG AA contrast ratio of 7.22:1.
-  - Back-to-top button uses `--secondary` and `--secondary-foreground`.
-- **WhatsApp Attention Pulse**: Gentle pulse animation (two 1.05x scale cycles every 6s) to draw attention without annoyance. Automatically disabled if user has `prefers-reduced-motion: reduce`.
-- **Z-Index & Mobile Padding**: Positioned at `z-40` with `pb-20` on `<Footer>` on mobile (`md:pb-0`) so floating buttons never obscure footer links or copyright text.
+  - Uses `--whatsapp` (`#25D366`) and `--whatsapp-foreground` (`#29283A`), achieving WCAG AA contrast ratio of 7.26:1.
+  - Call action uses `--primary` and `--primary-foreground`.
+- **Z-Index & Mobile Padding**: Positioned at `z-[45]` with `pb-20` on `<Footer>` on mobile (`md:pb-0`) so floating buttons never obscure footer links or copyright text.
 
 ### Error Boundaries & Resiliency
 - **Segment Error Boundary (`src/app/error.tsx`)**:
@@ -501,6 +499,71 @@ Original files reside in `public/images/logo/`:
   - Responsive bento grid: 4 columns on desktop (first photo spans 2x2), 3 on tablet, 2 on mobile (first photo spans full 2 columns).
   - Tiles link directly to deep-linked lightbox hash (`/gallery#<id>`).
   - Overlay captions appear on hover/focus using `--overlay` tokens.
+
+---
+
+## 14. Phase 9: Floating Actions & Comprehensive Responsive Standards
+
+### Responsive Design Rules & Breakpoint System
+- **Breakpoint Conventions**: Mobile-first architecture using standard Tailwind CSS breakpoints:
+  - `sm`: 640px (large smartphones, small tablets portrait)
+  - `md`: 768px (tablets portrait, small screens)
+  - `lg`: 1024px (tablets landscape, desktop navigation cutoff; hamburger menu triggers below `lg`, full desktop navbar renders on `lg+`)
+  - `xl`: 1280px (standard desktop)
+  - `2xl`: 1536px (wide screens)
+- **Content & Functionality Parity**:
+  - No essential information, contact method, or feature is hidden on mobile viewports without an accessible equivalent.
+  - Desktop nav links and theme toggle have exact functional equivalents in the Mobile Menu drawer.
+  - Desktop call popover and touch `tel:` direct action share identical phone numbers and prefilled enquiry capabilities.
+- **Interaction Model (No Hover-Only Access)**:
+  - Every interactive element (dropdowns, cards, popovers, bento tiles) must have direct click/tap and keyboard focus equivalents.
+  - Hover states act strictly as progressive visual enhancements.
+  - Nav services flyout toggles on tap/click with explicit `aria-expanded` and supports keyboard Escape dismissal.
+- **Touch Target Dimensions**:
+  - All interactive buttons, links, inputs, and toggles meet or exceed the minimum 44x44px touch target requirement on touch viewports (`min-h-[44px] min-w-[44px]` or `48px` circular action buttons).
+  - Adequate spacing (minimum 8px) is maintained between adjacent touch targets.
+- **Anchor Clearance & Scroll Padding**:
+  - Sticky header clearance is uniformly applied to `html` via `scroll-padding-top: 5rem` (`6rem` on `lg:`) in `src/app/globals.css`.
+  - In-page section anchors use `scroll-mt-20` / `scroll-mt-24` ensuring anchored navigation lands cleanly without content obscured beneath the sticky header.
+- **Viewport Height Units**:
+  - Uses dynamic viewport height units (`dvh` and `svh`) instead of traditional `vh` (`min-h-[100dvh]`, `h-[100dvh]`) to eliminate viewport jumping caused by mobile browser address bar collapse/expand.
+- **Safe-Area Inset Handling**:
+  - Fixed, floating, and full-screen overlay components respect device hardware cutouts and home indicators via `env(safe-area-inset-*)`:
+  - `FloatingActions`: `bottom: calc(env(safe-area-inset-bottom, 0px) + 16px)` and `right: calc(env(safe-area-inset-right, 0px) + 16px)`.
+  - `MobileMenu`: Safe-area padding applied to inner scroll container and close controls.
+  - `Lightbox`: Safe-area insets applied to navigation controls and caption overlays.
+- **Strict Layering & Z-Index Scale**:
+  - Sticky Header: `z-40`
+  - Floating Quick Contact Actions: `z-[45]`
+  - Desktop Call Popover Card: `z-[50]`
+  - Mobile Menu Overlay & Drawer: `z-[60]`
+  - Lightbox `<dialog>` Modal: Browser top layer (`z-[70]`)
+- **Horizontal Overflow Prevention & Methodology**:
+  - `html, body` configured with `overflow-x: clip; max-width: 100vw;` to contain flex-child track expansions (such as marquee tracks) without breaking sticky positioning.
+  - Main container `<main id="main-content">` explicitly specifies `min-w-0 w-full` to prevent flex items from expanding beyond the viewport width.
+  - Automated overflow matrix verifies `document.documentElement.scrollWidth <= window.innerWidth` across standard viewports (320px to 1920px) and landscape orientations.
+
+### Floating Contact Actions Architecture (`FloatingActions.tsx`)
+- **Visibility & Timer**:
+  - Positioned at bottom-right corner across all viewports.
+  - Appears after a gentle 600ms timer; does NOT require page scrolling.
+  - Active across all pages including `/contact` and `/careers`.
+- **Form Factor & Responsive Ergonomics**:
+  - `<md`: 48px circular icon buttons with 8px gap.
+  - `md+`: 48px rounded pills with explicit text labels ("WhatsApp" and "Call").
+  - Container uses `pointer-events-none` with `pointer-events-auto` on individual buttons to prevent blocking underlying content clicks.
+- **Contextual WhatsApp Messaging**:
+  - On service detail pages (`/services/[slug]`), the WhatsApp link pre-fills: `"Hello STRICON, I would like to enquire about {service.title}."`
+  - On all other pages, pre-fills default enquiry: `"Hello STRICON, I would like to enquire about your services."`
+- **Call Action Device Intelligence**:
+  - Touch devices (coarse pointer / touch-capable): direct `<a href="tel:+918978107573">` link.
+  - Desktop / mouse devices: opens `#desktop-call-popover` card with phone number display, one-click "Copy number" button (with live region and 2-second confirmation feedback), "Open phone app" link, and dismiss controls (Escape, outside click, route change).
+- **Suppression Signals**:
+  - Automatically hides (`opacity-0 pointer-events-none`) when:
+    1. Mobile menu drawer is open (`data-menu-open="true"` on `body`).
+    2. Lightbox modal is open (`data-lightbox-open="true"` on `body`).
+    3. Any text input/textarea has focus on coarse-pointer mobile devices (`(hover: none) and (pointer: coarse)`) to prevent obscuring software keyboards.
+
 
 
 
