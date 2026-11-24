@@ -225,9 +225,51 @@ export const IndustryFocusSection: React.FC<IndustryFocusSectionProps> = ({
           transform-origin: center;
           animation: striconSpinAnticlockwise 22s linear infinite;
         }
+        @keyframes striconLogoPop {
+          0%, 100% {
+            transform: scale(1);
+            filter: drop-shadow(0 4px 6px rgba(13, 148, 136, 0.25));
+          }
+          50% {
+            transform: scale(1.12);
+            filter: drop-shadow(0 12px 20px rgba(13, 148, 136, 0.45));
+          }
+        }
+        @keyframes striconHubBreath {
+          0%, 100% {
+            transform: translate(-50%, -50%) scale(1);
+            box-shadow: 0 10px 25px -5px rgba(13, 148, 136, 0.25), 0 0 0 0 rgba(13, 148, 136, 0.2);
+          }
+          50% {
+            transform: translate(-50%, -50%) scale(1.06);
+            box-shadow: 0 20px 35px -5px rgba(13, 148, 136, 0.4), 0 0 25px 6px rgba(13, 148, 136, 0.3);
+          }
+        }
+        @keyframes striconHaloPulse {
+          0%, 100% {
+            transform: scale(0.95);
+            opacity: 0.5;
+          }
+          50% {
+            transform: scale(1.2);
+            opacity: 0.85;
+          }
+        }
+        .stricon-hub-animated {
+          animation: striconHubBreath 3.6s ease-in-out infinite;
+        }
+        .stricon-logo-zoom {
+          animation: striconLogoPop 3.6s ease-in-out infinite;
+        }
+        .stricon-halo-animated {
+          animation: striconHaloPulse 3.6s ease-in-out infinite;
+        }
         @media (prefers-reduced-motion: reduce) {
           .stricon-orbit-cw,
-          .stricon-orbit-ccw {
+          .stricon-orbit-ccw,
+          .stricon-hub-animated,
+          .stricon-logo-zoom,
+          .stricon-halo-animated {
             animation: none;
           }
         }
@@ -413,7 +455,7 @@ export const IndustryFocusSection: React.FC<IndustryFocusSectionProps> = ({
                 })}
               </svg>
 
-              {/* Stationary Central STRICON Shield Hub with user's provided shield emblem */}
+              {/* Central STRICON Shield Hub with Zoom In/Out Pop-Up Animation */}
               <div
                 aria-label="STRICON Security Hub"
                 className="
@@ -423,16 +465,19 @@ export const IndustryFocusSection: React.FC<IndustryFocusSectionProps> = ({
                   bg-white dark:bg-slate-900
                   border-2 border-teal-600/80 dark:border-teal-400/80
                   shadow-lg ring-4 ring-teal-500/15 dark:ring-teal-400/10
-                  p-2
+                  p-2 stricon-hub-animated hover:scale-115 transition-transform duration-300 cursor-pointer
                 "
               >
-                <div className="relative flex h-11 w-11 sm:h-14 sm:w-14 md:h-16 md:w-16 items-center justify-center rounded-full overflow-hidden">
+                {/* Glowing halo behind the hub */}
+                <div className="absolute -inset-2.5 rounded-full bg-gradient-to-tr from-teal-500/25 via-sky-400/20 to-teal-400/25 blur-md -z-10 stricon-halo-animated pointer-events-none" />
+
+                <div className="relative flex h-11 w-11 sm:h-14 sm:w-14 md:h-16 md:w-16 items-center justify-center rounded-full overflow-hidden stricon-logo-zoom">
                   <Image
                     src="/images/logo/stricon-emblem-shield.jpg"
                     alt="STRICON Corporate Shield Emblem"
                     width={64}
                     height={64}
-                    className="object-contain max-h-full max-w-full drop-shadow-sm"
+                    className="object-contain max-h-full max-w-full drop-shadow-sm transition-transform duration-300"
                     priority
                   />
                 </div>
