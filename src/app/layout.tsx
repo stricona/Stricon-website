@@ -29,6 +29,8 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
+const allowIndexing = process.env.ALLOW_INDEXING === "true";
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
@@ -79,17 +81,22 @@ export const metadata: Metadata = {
     icon: "/images/logo/symbol.jpg",
     apple: "/images/logo/symbol.jpg",
   },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
-  },
+  robots: allowIndexing
+    ? {
+        index: true,
+        follow: true,
+        googleBot: {
+          index: true,
+          follow: true,
+          "max-video-preview": -1,
+          "max-image-preview": "large",
+          "max-snippet": -1,
+        },
+      }
+    : {
+        index: false,
+        follow: false,
+      },
 };
 
 export default function RootLayout({

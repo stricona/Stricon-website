@@ -1,26 +1,15 @@
 import type { Metadata } from "next";
-import { siteConfig } from "@/config/site";
+import { constructMetadata } from "@/lib/seo";
 import { legalConfig, termsSections } from "@/data/legal";
 import { PageHero } from "@/components/services/PageHero";
 import { Container } from "@/components/common";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = constructMetadata({
   title: "Terms and Conditions",
   description:
     "Terms and conditions governing the informational use of the STRICON corporate website.",
-  alternates: {
-    canonical: `${siteConfig.url}/terms`,
-  },
-  openGraph: {
-    title: "Terms and Conditions | STRICON",
-    description:
-      "Terms and conditions governing the informational use of the STRICON corporate website.",
-    url: `${siteConfig.url}/terms`,
-    siteName: siteConfig.name,
-    locale: siteConfig.locale,
-    type: "website",
-  },
-};
+  path: "/terms",
+});
 
 export default function TermsPage() {
   const breadcrumbs = [

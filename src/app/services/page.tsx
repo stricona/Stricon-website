@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { constructMetadata } from "@/lib/seo";
 import {
   ShieldCheck,
   Building,
@@ -10,7 +11,6 @@ import {
   Zap,
   ClipboardCheck,
 } from "lucide-react";
-import { siteConfig } from "@/config/site";
 import {
   Container,
   SectionHeading,
@@ -25,21 +25,12 @@ import { services, serviceCategories, integratedServices } from "@/data/services
 import { profile } from "@/data/profile";
 import { ServiceGroupCategory } from "@/types/service";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = constructMetadata({
   title: "Our Services",
   description:
     "Facility management and security services in Hyderabad by STRICON. Professional guarding, mechanised housekeeping, technical maintenance, and manpower solutions.",
-  alternates: {
-    canonical: `${siteConfig.url}/services`,
-  },
-  openGraph: {
-    title: "Our Services | STRICON",
-    description:
-      "Facility management and security services in Hyderabad by STRICON. Valid PSARA licence and trained in-house personnel.",
-    url: `${siteConfig.url}/services`,
-    type: "website",
-  },
-};
+  path: "/services",
+});
 
 const categoryOrder: ServiceGroupCategory[] = [
   "security",

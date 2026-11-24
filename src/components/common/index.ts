@@ -5,3 +5,4 @@ export * from "./Reveal";
 export * from "./RevealGroup";
 export * from "./MotionProvider";
 export * from "./OrganizationJsonLd";
+export * from "./LocalBusinessJsonLd";

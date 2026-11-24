@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import { constructMetadata } from "@/lib/seo";
 import {
   ShieldCheck,
   Sparkles,
@@ -76,21 +77,11 @@ export async function generateMetadata({
     notFound();
   }
 
-  const pageUrl = `${siteConfig.url}/services/${service.slug}`;
-
-  return {
+  return constructMetadata({
     title: service.title,
     description: service.seoDescription,
-    alternates: {
-      canonical: pageUrl,
-    },
-    openGraph: {
-      title: `${service.title} | STRICON`,
-      description: service.seoDescription,
-      url: pageUrl,
-      type: "website",
-    },
-  };
+    path: `/services/${service.slug}`,
+  });
 }
 
 export default async function ServiceDetailPage({ params }: ServicePageProps) {

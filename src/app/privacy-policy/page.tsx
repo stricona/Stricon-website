@@ -1,26 +1,15 @@
 import type { Metadata } from "next";
-import { siteConfig } from "@/config/site";
+import { constructMetadata } from "@/lib/seo";
 import { legalConfig, privacyPolicySections } from "@/data/legal";
 import { PageHero } from "@/components/services/PageHero";
 import { Container } from "@/components/common";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = constructMetadata({
   title: "Privacy Policy",
   description:
     "Read STRICON's Privacy Policy describing how enquiry and application information is collected, used, and protected.",
-  alternates: {
-    canonical: `${siteConfig.url}/privacy-policy`,
-  },
-  openGraph: {
-    title: "Privacy Policy | STRICON",
-    description:
-      "Read STRICON's Privacy Policy describing how enquiry and application information is collected, used, and protected.",
-    url: `${siteConfig.url}/privacy-policy`,
-    siteName: siteConfig.name,
-    locale: siteConfig.locale,
-    type: "website",
-  },
-};
+  path: "/privacy-policy",
+});
 
 export default function PrivacyPolicyPage() {
   const breadcrumbs = [

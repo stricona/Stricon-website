@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { siteConfig } from "@/config/site";
+import { constructMetadata } from "@/lib/seo";
 import { profile } from "@/data/profile";
 import { MotionProvider, OrganizationJsonLd } from "@/components/common";
 import {
@@ -16,29 +16,11 @@ import {
 } from "@/components/about";
 import { WhyStricon, FinalCta } from "@/components/home";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = constructMetadata({
   title: "About Us",
   description: profile.aboutParagraphs[0],
-  alternates: {
-    canonical: `${siteConfig.url}/about`,
-  },
-  openGraph: {
-    title: "About Us | STRICON",
-    description: profile.aboutParagraphs[0],
-    url: `${siteConfig.url}/about`,
-    siteName: siteConfig.name,
-    locale: siteConfig.locale,
-    type: "website",
-    images: [
-      {
-        url: `${siteConfig.url}/images/logo/emblem.jpg`,
-        width: 1024,
-        height: 1024,
-        alt: "STRICON Shield Emblem",
-      },
-    ],
-  },
-};
+  path: "/about",
+});
 
 export default function AboutPage() {
   return (

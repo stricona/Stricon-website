@@ -8,6 +8,7 @@ import { profile } from "@/data/profile";
 import { openings } from "@/data/careers";
 import { CAREER_AREA_SLUGS, CareerAreaSlug } from "@/lib/validations";
 import { canForwardAttachments } from "@/lib/delivery";
+import { constructMetadata } from "@/lib/seo";
 import { Container, MotionProvider, Reveal } from "@/components/common";
 import { Breadcrumbs } from "@/components/services";
 import {
@@ -17,29 +18,11 @@ import {
   ApplicationForm,
 } from "@/components/careers";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = constructMetadata({
   title: "Careers",
   description: "Careers at STRICON People & Security Services, Hyderabad.",
-  alternates: {
-    canonical: `${siteConfig.url}/careers`,
-  },
-  openGraph: {
-    title: "Careers | STRICON",
-    description: "Careers at STRICON People & Security Services, Hyderabad.",
-    url: `${siteConfig.url}/careers`,
-    siteName: siteConfig.name,
-    locale: siteConfig.locale,
-    type: "website",
-    images: [
-      {
-        url: `${siteConfig.url}/images/logo/emblem.jpg`,
-        width: 1024,
-        height: 1024,
-        alt: "STRICON Shield Emblem",
-      },
-    ],
-  },
-};
+  path: "/careers",
+});
 
 interface CareersPageProps {
   searchParams: Promise<{ area?: string }>;

@@ -1,9 +1,11 @@
 import { company } from "@/data/company";
 
 export function OrganizationJsonLd() {
+  const baseUrl = company.contact.website || "https://www.stricon.in";
   const schema: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "Organization",
+    "@id": `${baseUrl}/#organization`,
     name: company.legalName,
     alternateName: company.brandName,
     url: company.contact.website,

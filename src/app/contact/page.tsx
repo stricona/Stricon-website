@@ -1,77 +1,23 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import { Layers } from "lucide-react";
-import { siteConfig } from "@/config/site";
-import { company } from "@/data/company";
 import { profile } from "@/data/profile";
 import { getServiceBySlug } from "@/data/services";
 import { SERVICE_SLUGS, ServiceSlugOption } from "@/lib/validations";
-import { Container, MotionProvider, Reveal } from "@/components/common";
+import { constructMetadata } from "@/lib/seo";
+import { Container, MotionProvider, Reveal, LocalBusinessJsonLd } from "@/components/common";
 import { Breadcrumbs } from "@/components/services";
 import { ContactInfoCards, QuoteForm } from "@/components/contact";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = constructMetadata({
   title: "Contact Us",
   description:
     "Contact STRICON for facility management and security services in Hyderabad.",
-  alternates: {
-    canonical: `${siteConfig.url}/contact`,
-  },
-  openGraph: {
-    title: "Contact Us | STRICON",
-    description:
-      "Contact STRICON for facility management and security services in Hyderabad.",
-    url: `${siteConfig.url}/contact`,
-    siteName: siteConfig.name,
-    locale: siteConfig.locale,
-    type: "website",
-    images: [
-      {
-        url: `${siteConfig.url}/images/logo/emblem.jpg`,
-        width: 1024,
-        height: 1024,
-        alt: "STRICON Shield Emblem",
-      },
-    ],
-  },
-};
+  path: "/contact",
+});
 
 interface ContactPageProps {
   searchParams: Promise<{ service?: string }>;
-}
-
-function ContactJsonLd() {
-  const schema = {
-    "@context": "https://schema.org",
-    "@type": "ContactPage",
-    name: "Contact STRICON",
-    url: `${siteConfig.url}/contact`,
-    description:
-      "Contact STRICON for facility management and security services in Hyderabad.",
-    about: {
-      "@type": "Organization",
-      name: company.legalName,
-      alternateName: company.brandName,
-      url: company.contact.website,
-      telephone: company.contact.phoneDisplay,
-      email: company.contact.email,
-      address: {
-        "@type": "PostalAddress",
-        streetAddress: company.registeredOffice.addressLine,
-        addressLocality: company.registeredOffice.city,
-        addressRegion: company.registeredOffice.state,
-        postalCode: company.registeredOffice.pincode,
-        addressCountry: "IN",
-      },
-    },
-  };
-
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-    />
-  );
 }
 
 async function ContactContent({
@@ -129,7 +75,7 @@ export default function ContactPage({ searchParams }: ContactPageProps) {
 
   return (
     <MotionProvider>
-      <ContactJsonLd />
+      <LocalBusinessJsonLd />
 
       <main id="main-content" className="flex flex-col w-full">
         {/* Section 1: Page Header */}

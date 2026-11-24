@@ -2,6 +2,19 @@ import type { MetadataRoute } from "next";
 import { siteConfig } from "@/config/site";
 
 export default function robots(): MetadataRoute.Robots {
+  const allowIndexing = process.env.ALLOW_INDEXING === "true";
+
+  if (!allowIndexing) {
+    return {
+      rules: [
+        {
+          userAgent: "*",
+          disallow: "/",
+        },
+      ],
+    };
+  }
+
   return {
     rules: [
       {

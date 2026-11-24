@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { siteConfig } from "@/config/site";
+import { themeColors } from "@/config/theme";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
@@ -8,8 +9,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: siteConfig.description,
     start_url: "/",
     display: "standalone",
-    background_color: "#F7F6F1",
-    theme_color: "#494B98",
+    background_color: themeColors.light.background,
+    theme_color: themeColors.light.primary,
     icons: [
       {
         src: "/images/logo/symbol.jpg",
