@@ -165,11 +165,28 @@ export function Footer() {
         </div>
 
         {/* Bottom Bar: Copyright & Legal */}
-        <div className="mt-12 pt-8 border-t border-[var(--color-border)] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[var(--color-muted-foreground)]">
+        <div className="mt-12 pt-8 border-t border-[var(--color-border)] flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-[var(--color-muted-foreground)]">
           <p>
             &copy; {currentYear} {company.legalName}. All rights reserved.
           </p>
-          <p className="text-center sm:text-right">
+
+          <div className="flex items-center gap-4">
+            <Link
+              href="/privacy-policy"
+              className="hover:text-[var(--color-primary)] transition-colors"
+            >
+              Privacy Policy
+            </Link>
+            <span>&bull;</span>
+            <Link
+              href="/terms"
+              className="hover:text-[var(--color-primary)] transition-colors"
+            >
+              Terms &amp; Conditions
+            </Link>
+          </div>
+
+          <p className="text-center md:text-right">
             Established {company.establishedYear} &bull; {company.registeredOffice.city}, {company.registeredOffice.state}
           </p>
         </div>

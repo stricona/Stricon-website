@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import Link from "next/link";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -556,7 +557,7 @@ export function QuoteForm({ defaultService }: QuoteFormProps) {
         </div>
 
         {/* Row 6: Consent Checkbox */}
-        <div className="pt-1">
+        <div className="pt-1 space-y-1.5">
           <div className="flex items-start gap-3">
             <input
               id="consent"
@@ -573,6 +574,14 @@ export function QuoteForm({ defaultService }: QuoteFormProps) {
             >
               I agree that STRICON may contact me about this enquiry.
             </label>
+          </div>
+          <div className="pl-7">
+            <Link
+              href="/privacy-policy"
+              className="text-xs text-[var(--primary)] hover:underline inline-block"
+            >
+              Read our Privacy Policy
+            </Link>
           </div>
           {errors.consent && (
             <p id="consent-error" className="mt-1 text-xs text-[var(--danger)] font-medium pl-7">

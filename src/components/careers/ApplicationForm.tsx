@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import Link from "next/link";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -701,7 +702,7 @@ export function ApplicationForm({
         </div>
 
         {/* Consent Checkbox */}
-        <div>
+        <div className="space-y-1.5">
           <div className="flex items-start gap-3">
             <input
               id="applicant-consent"
@@ -719,11 +720,19 @@ export function ApplicationForm({
               I agree that STRICON may contact me about my application. <span className="text-[var(--danger)]">*</span>
             </label>
           </div>
+          <div className="pl-7">
+            <Link
+              href="/privacy-policy"
+              className="text-xs text-[var(--primary)] hover:underline inline-block"
+            >
+              Read our Privacy Policy
+            </Link>
+          </div>
           {errors.consent && (
             <span
               id="consent-error"
               role="alert"
-              className="mt-1.5 block text-xs font-medium text-[var(--danger)]"
+              className="mt-1.5 block text-xs font-medium text-[var(--danger)] pl-7"
             >
               {errors.consent.message}
             </span>
