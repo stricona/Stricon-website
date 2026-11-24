@@ -6,7 +6,7 @@ export const themeColors = {
     mutedForeground: "#686879",
     primary: "#494B98",
     primaryForeground: "#FFFFFF",
-    secondary: "#178C83",
+    secondary: "#148078",
     secondaryForeground: "#FFFFFF",
     accentGold: "#E4B94F",
     accentGoldForeground: "#29283A",

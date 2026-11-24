@@ -7,7 +7,7 @@
   --muted-foreground: #686879;
   --primary: #494B98;
   --primary-foreground: #FFFFFF;
-  --secondary: #178C83;
+  --secondary: #148078;
   --secondary-foreground: #FFFFFF;
   --accent-gold: #E4B94F;
   --accent-gold-foreground: #29283A;
@@ -35,7 +35,7 @@
   --logo-surface-foreground: #29283A;
   --whatsapp: #25D366;
   --whatsapp-foreground: #29283A;
-  --danger: #EF4444;
+  --danger: #F87171;
   --danger-foreground: #FFFFFF;
   --border: #383747;
 }

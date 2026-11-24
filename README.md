@@ -1,108 +1,94 @@
-# STRICON Corporate Website – Phase 1 Foundation
+# STRICON Corporate Website
 
-Corporate website foundation for **STRICON PEOPLE & SECURITY SERVICES PVT LTD** (Brand: STRICON), a Facility Management and Security Services company based in Hyderabad, India.
-
----
-
-## Tech Stack
-
-- **Framework**: Next.js 16 (App Router, `src/` directory)
-- **Language**: TypeScript (strict mode)
-- **Styling**: Tailwind CSS v4 (`@theme inline` CSS variable mapping in `src/app/globals.css`)
-- **Icons**: `lucide-react`
-- **Theme**: `next-themes` (light/dark mode with system preference)
-- **Typography**: `Poppins` (headings) and `Inter` (body) loaded via `next/font/google`
+Official corporate website for **STRICON PEOPLE & SECURITY SERVICES PVT LTD** (Brand: STRICON), a professional Facility Management and Security Services provider in Hyderabad, Telangana, India.
 
 ---
 
-## Getting Started
+## 1. Local Run & NPM Scripts
 
-### Prerequisites
-- Node.js LTS (v26.x or later)
-- npm (v11.x or later)
-
-### Installation & Development
-
-```bash
-# Install dependencies
-npm install
-
-# Run the local development server
-npm run dev
-
-# Lint code
-npm run lint
-
-# Build for production
-npm run build
-```
-
-Open [http://localhost:3000](http://localhost:3000) to view the site in your browser.
+| Command | Purpose |
+| :--- | :--- |
+| `npm run dev` | Start local Next.js development server (default port 3000). |
+| `npm run build` | Build optimized production bundle using Turbopack compiler. |
+| `npm run start` | Run production server locally after running `build`. |
+| `npm run lint` | Run ESLint across all codebase files (0 errors, 0 warnings enforced). |
+| `npm run audit:copy` | Verbatim text audit matching all 44 slide text runs against the official deck. |
+| `npm run check:links` | Automated crawler validating all 25 internal routes (status 200) and 404 handler. |
+| `npm run test:contact` | Automated 7-case test suite for `/api/contact` enquiry submission. |
+| `npm run test:careers` | Automated 10-case test suite for `/api/careers` application and file upload. |
+| `npm run check:contrast` | Computes WCAG contrast ratios for all 20 theme token pairs (light & dark). |
+| `npm run prelaunch` | Prelaunch verification checking environment variables and live HTML/SEO integrity. |
 
 ---
 
-## Project Structure
+## 2. Environment Variables
 
-```
-stricon-website/
-├── public/
-│   ├── images/
-│   │   ├── logo/ (wordmark.jpg, symbol.jpg, emblem.jpg)
-│   │   ├── banners/
-│   │   ├── security/
-│   │   ├── facility/
-│   │   ├── about/
-│   │   └── industries/
-│   ├── documents/
-│   └── fonts/
-├── src/
-│   ├── app/
-│   │   ├── layout.tsx (Root layout with fonts, theme provider, metadata)
-│   │   ├── page.tsx (Home route)
-│   │   ├── globals.css (Tailwind v4 tokens & styles)
-│   │   ├── not-found.tsx (Accessible 404 page)
-│   │   ├── about/page.tsx
-│   │   ├── services/page.tsx
-│   │   ├── services/[slug]/page.tsx (9 service detail dynamic routes)
-│   │   ├── careers/page.tsx
-│   │   ├── contact/page.tsx
-│   │   ├── api/contact/route.ts (Validation stub)
-│   │   ├── api/careers/route.ts (Validation stub)
-│   │   ├── robots.ts
-│   │   ├── sitemap.ts
-│   │   ├── manifest.ts
-│   │   ├── icon.jpg / apple-icon.jpg
-│   ├── components/
-│   │   ├── layout/ (Header, Navbar, Footer, MobileMenu, ThemeToggle)
-│   │   ├── home/
-│   │   ├── about/
-│   │   ├── services/
-│   │   ├── careers/
-│   │   ├── contact/
-│   │   └── common/
-│   ├── providers/ (ThemeProvider.tsx)
-│   ├── hooks/
-│   ├── data/ (company.ts, profile.ts, navigation.ts, services.ts, industries.ts, clients.ts)
-│   ├── lib/ (utils.ts, constants.ts, validations.ts, email.ts)
-│   ├── types/ (company.ts, profile.ts, service.ts, navigation.ts, client.ts, enquiry.ts)
-│   └── config/ (site.ts, theme.ts)
-├── .env.example
-├── .env.local
-├── .gitignore
-├── AGENTS.md (Single source of architectural standards for future phases)
-├── eslint.config.mjs
-├── next.config.ts
-├── package.json
-├── tsconfig.json
-└── README.md
-```
+Configure these variables in your deployment platform (e.g. Vercel Project Settings) or `.env.local` for local development:
+
+| Variable | Description | Example | Required? |
+| :--- | :--- | :--- | :--- |
+| `NEXT_PUBLIC_SITE_URL` | Canonical public URL used for SEO, metadata, sitemaps, and origin checks. | `https://www.stricon.in` | **Yes (Prod)** |
+| `ALLOW_INDEXING` | Production search engine indexing guard (`true` allows indexing, `false` blocks robots). | `true` | **Yes (Prod)** |
+| `ENQUIRY_DELIVERY` | Active delivery channels for quote requests (`log`, `resend`, `webhook`). | `resend,webhook` | **Yes (Prod)** |
+| `ENQUIRY_TO` | Target email address receiving quote requests. | `info@stricon.in` | **Yes (Prod)** |
+| `ENQUIRY_FROM` | Verified sender email address in Resend. | `STRICON <contact@stricon.in>` | If Resend active |
+| `RESEND_API_KEY` | API authentication key for Resend transactional email delivery. | `re_123456789...` | If Resend active |
+| `ENQUIRY_WEBHOOK_URL` | Endpoint receiving JSON submissions (e.g. Google Apps Script for Google Sheets). | `https://script.google.com/...` | Optional |
+| `ENQUIRY_WEBHOOK_SECRET` | Secret token sent in headers to authenticate webhook payloads. | `your_secret_here` | Optional |
+| `CAREERS_TO` | Target email address receiving job applications. | `info@stricon.in` | **Yes (Prod)** |
+| `CAREERS_RESUME_UPLOAD` | Feature flag enabling candidate resume uploads (`on` or `off`). | `off` | Optional (default off) |
 
 ---
 
-## Architectural Principles
+## 3. Deployment Guide (Vercel)
 
-1. **Single Source of Truth**: All company facts and contact details are stored in `src/data/company.ts` and `src/config/site.ts`. Never hardcode company data in components.
-2. **Strict Verification**: No fabricated statistics, testimonials, or awards. No 24/7 support claims.
-3. **Pending Confirmation**: Unconfirmed facts are stored in `pendingConfirmation` and are never rendered in the UI or metadata.
-4. **Client Logos**: Clients in `src/data/clients.ts` have `displayApproved: false` and are not rendered until approved with verified assets.
-5. **Accessibility**: Full keyboard navigation, ARIA landmarks, focus traps, body scroll locking, and WCAG AA color contrast compliance.
+1. **Push to GitHub**: Push the validated `main` branch to your GitHub repository.
+2. **Import Project**: Log in to [Vercel](https://vercel.com), select **Add New Project**, and import the repository.
+3. **Environment Variables**: Add production environment variables listed in the table above under **Project Settings > Environment Variables**.
+   - **Important**: Set `ALLOW_INDEXING="true"` **only** on the Production environment. Leave Preview and Development deployments with `ALLOW_INDEXING="false"` (default) to prevent staging environments from being indexed by Google.
+4. **Request Body Limits**: Vercel Serverless Functions support request payloads up to ~4.5 MB. The careers application form enforces a strict 2 MB cap on resume documents and 3 MB on total request payload, comfortably fitting within Vercel's limits.
+5. **Deploy**: Trigger the initial deployment and verify that the build succeeds cleanly.
+
+---
+
+## 4. Custom Domain Setup
+
+1. In Vercel, navigate to **Project Settings > Domains**.
+2. Add both `stricon.in` and `www.stricon.in`.
+3. Set `www.stricon.in` as the primary production domain and configure `stricon.in` to redirect (301) to `www.stricon.in`.
+4. Add the DNS records (A record `@` and CNAME `www`) at your domain registrar as displayed in Vercel.
+
+---
+
+## 5. ⚠️ Email DNS Configuration Warning (CRITICAL)
+
+The domain `stricon.in` may already handle corporate email (e.g. `info@stricon.in` on Google Workspace or Microsoft 365).
+
+When configuring DNS records for Resend:
+- **SPF Record**: A domain must have **exactly one** SPF TXT record. If an SPF record already exists (e.g. `v=spf1 include:_spf.google.com ~all`), **MERGE** Resend's mechanism into it:
+  ```text
+  v=spf1 include:_spf.google.com include:resend.com ~all
+  ```
+  ❌ **NEVER** create a second TXT record starting with `v=spf1`. Doing so invalidates all SPF checks and causes corporate emails to bounce or land in spam.
+- **MX Records**: Do **NOT** delete or alter existing MX records pointing to your corporate email host. Resend only sends transactional emails and does not receive mail on the apex domain.
+- **DKIM & DMARC**: Add the distinct CNAME and TXT records specified by Resend for DKIM verification.
+- **Verification**: Ensure the domain status is marked as **Verified** in the Resend dashboard before configuring `ENQUIRY_FROM`.
+
+---
+
+## 6. Post-Launch Operations
+
+1. **Google Search Console**: Add the property `https://www.stricon.in` and submit the sitemap URL: `https://www.stricon.in/sitemap.xml`.
+2. **Google Business Profile**: Claim or update the STRICON listing in Hyderabad ensuring business name, phone number (`+91 89781 07573`), and registered office address match the website.
+3. **End-to-End Test Submissions**:
+   - Submit a test quote request on `/contact` and confirm delivery in `info@stricon.in` and/or Google Sheets.
+   - Submit a test job application on `/careers` and verify attachment delivery.
+   - Check spam and junk folders to ensure proper inbox delivery.
+
+---
+
+## 7. Known Limits & Future Enhancements
+
+- **Rate Limiting**: The in-memory sliding-window rate limiter protects individual serverless and container instances. For distributed multi-region serverless clusters (e.g. edge deployments), an external key-value store (such as Upstash Redis or Cloudflare KV) or Cloudflare Turnstile bot verification can be added.
+- **Analytics & Cookies**: No third-party tracking or advertising cookies are loaded on this website. Adding analytics tools (such as Google Analytics) that store tracking cookies will require adding a cookie consent banner and updating the Privacy Policy accordingly.
+- **Content Security Policy (CSP)**: Strict security headers are active in `next.config.ts`. Full CSP can be configured in future revisions once nonces or script hashes for Turbopack inline scripts are defined.
