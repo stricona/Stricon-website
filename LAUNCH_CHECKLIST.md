@@ -20,7 +20,7 @@ This document details all action items, verification commands, and pending owner
 - [ ] **Working Days Schedule**: Official days of operation (e.g. "Monday – Saturday") (`company.workingHours.workingDays`).
 - [ ] **Founder & Managing Director Photo**: Professional executive headshot (replaces typographic monogram) (`company.founder.photo`).
 - [ ] **Founder Message**: Formal signed message from the MD for the About page (`company.founder.message`).
-- [ ] **High-Resolution Facility Gallery**: 8 verified photographs of security deployments, mechanised housekeeping equipment, and facility operations (`src/data/gallery.ts`).
+- [ ] **Add gallery photos**: Put raw photos in `gallery-inbox/<category>/`, run `npm run gallery:import`, add alt text and captions in `src/data/gallery-meta.ts`, mark up to 6 as featured, then rebuild. Ensure permission is obtained from people shown and from clients whose premises appear; camera, GPS, and EXIF location metadata are automatically stripped by the import script.
 - [ ] **Client Logo Assets**: Higher-resolution SVG/PNG assets for client logos if desired (`public/images/clients/`).
 - [ ] **Crown Brewing Logo**: Final legal clearance to display Crown Brewing logo on website (`clients.ts` `displayApproved`).
 

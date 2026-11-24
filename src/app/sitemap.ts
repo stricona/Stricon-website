@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { siteConfig } from "@/config/site";
 import { services } from "@/data/services";
+import { hasGalleryPhotos } from "@/lib/gallery";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = siteConfig.url;
@@ -50,6 +51,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.3,
     },
   ];
+
+  if (hasGalleryPhotos()) {
+    staticRoutes.splice(3, 0, {
+      url: `${baseUrl}/gallery`,
+      lastModified,
+      changeFrequency: "weekly",
+      priority: 0.7,
+    });
+  }
 
   const serviceRoutes: MetadataRoute.Sitemap = services.map((service) => ({
     url: `${baseUrl}/services/${service.slug}`,

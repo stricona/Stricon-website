@@ -4,6 +4,24 @@
  * No external dependencies (uses native Node.js fetch).
  */
 
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const ROOT_DIR = path.resolve(__dirname, "..");
+
+let hasPhotos = false;
+try {
+  const genJson = JSON.parse(
+    fs.readFileSync(path.join(ROOT_DIR, "src/data/gallery.generated.json"), "utf-8")
+  );
+  hasPhotos = Array.isArray(genJson) && genJson.length > 0;
+} catch {
+  hasPhotos = false;
+}
+
 const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
 
 const serviceSlugs = [
@@ -28,11 +46,12 @@ const explicitUrls = [
   "/privacy-policy",
   "/terms",
   "/opengraph-image",
+  ...(hasPhotos ? ["/gallery"] : []),
   ...serviceSlugs.map((s) => `/services/${s}`),
   ...serviceSlugs.map((s) => `/contact?service=${s}`),
 ];
 
-const notFoundTestUrl = "/services/does-not-exist";
+const notFoundUrls = ["/services/does-not-exist", ...(!hasPhotos ? ["/gallery"] : [])];
 
 async function main() {
   console.log(`\n🔍 Starting STRICON link verification against ${BASE_URL}\n`);
@@ -103,33 +122,35 @@ async function main() {
     }
   }
 
-  // Test 404 not found route
-  try {
-    let nfRes = await fetch(`${BASE_URL}${notFoundTestUrl}`);
-    await nfRes.text();
-    // Next.js PPR stream resolution: ensure status check reflects settled 404
-    if (nfRes.status === 200) {
-      nfRes = await fetch(`${BASE_URL}${notFoundTestUrl}`);
+  // Test 404 not found routes
+  for (const notFoundUrl of notFoundUrls) {
+    try {
+      let nfRes = await fetch(`${BASE_URL}${notFoundUrl}`);
       await nfRes.text();
-    }
-    const nfStatus = nfRes.status;
-    const isNfOk = nfStatus === 404;
-    if (!isNfOk) hasFailure = true;
+      // Next.js PPR stream resolution: ensure status check reflects settled 404
+      if (nfRes.status === 200 && notFoundUrl.includes("does-not-exist")) {
+        nfRes = await fetch(`${BASE_URL}${notFoundUrl}`);
+        await nfRes.text();
+      }
+      const nfStatus = nfRes.status;
+      const isNfOk = nfStatus === 404;
+      if (!isNfOk) hasFailure = true;
 
-    results.push({
-      url: notFoundTestUrl,
-      status: nfStatus,
-      expected: 404,
-      result: isNfOk ? "PASS (404 as expected)" : "FAIL (Expected 404)",
-    });
-  } catch (err) {
-    hasFailure = true;
-    results.push({
-      url: notFoundTestUrl,
-      status: "ERROR",
-      expected: 404,
-      result: "FAIL (" + err.message + ")",
-    });
+      results.push({
+        url: notFoundUrl,
+        status: nfStatus,
+        expected: 404,
+        result: isNfOk ? "PASS (404 as expected)" : "FAIL (Expected 404)",
+      });
+    } catch (err) {
+      hasFailure = true;
+      results.push({
+        url: notFoundUrl,
+        status: "ERROR",
+        expected: 404,
+        result: "FAIL (" + err.message + ")",
+      });
+    }
   }
 
   // Print Formatted Table

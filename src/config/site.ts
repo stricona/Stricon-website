@@ -39,7 +39,9 @@ export const siteConfig = {
   },
   address: company.registeredOffice.fullAddress,
   workingHours: company.workingHours.display,
-  mainNav: navigation.mainNav,
+  get mainNav() {
+    return navigation.mainNav;
+  },
   cta: navigation.cta,
 };
 

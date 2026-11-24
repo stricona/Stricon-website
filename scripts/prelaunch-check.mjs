@@ -202,10 +202,21 @@ async function fetchWithTimeout(url, timeoutMs = 8000) {
 }
 
 async function runContentChecks() {
+  let hasPhotos = false;
+  try {
+    const genJson = JSON.parse(
+      fs.readFileSync(path.join(ROOT_DIR, "src", "data", "gallery.generated.json"), "utf-8")
+    );
+    hasPhotos = Array.isArray(genJson) && genJson.length > 0;
+  } catch {
+    hasPhotos = false;
+  }
+
   const routes = [
     "/",
     "/about",
     "/services",
+    ...(hasPhotos ? ["/gallery"] : []),
     "/careers",
     "/contact",
     "/privacy-policy",
@@ -321,7 +332,7 @@ const PENDING_ITEMS = [
   { item: "Legal Registration (CIN)", field: "company.legal.cin" },
   { item: "Tax Registration (GSTIN)", field: "company.legal.gstin" },
   { item: "PSARA Validity Expiry Date", field: "company.legal.psaraValidUntil" },
-  { item: "Real Facility Gallery Photos", field: "gallery[0..7].src" },
+  { item: "Real Facility Gallery Photos", field: "public/images/gallery/<category>/*.webp" },
   { item: "Active Job Openings", field: "careers.openings" },
 ];
 

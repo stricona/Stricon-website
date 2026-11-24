@@ -16,8 +16,10 @@ Official corporate website for **STRICON PEOPLE & SECURITY SERVICES PVT LTD** (B
 | `npm run check:links` | Automated crawler validating all 25 internal routes (status 200) and 404 handler. |
 | `npm run test:contact` | Automated 7-case test suite for `/api/contact` enquiry submission. |
 | `npm run test:careers` | Automated 10-case test suite for `/api/careers` application and file upload. |
-| `npm run check:contrast` | Computes WCAG contrast ratios for all 20 theme token pairs (light & dark). |
+| `npm run check:contrast` | Computes WCAG contrast ratios for all 22 theme token pairs (light & dark). |
 | `npm run prelaunch` | Prelaunch verification checking environment variables and live HTML/SEO integrity. |
+| `npm run gallery:import` | Imports raw photos from `gallery-inbox/`, strips EXIF/GPS, resizes to <=1800px, converts to WebP, and syncs data. |
+| `npm run gallery:sync` | Scans `public/images/gallery/` and regenerates `src/data/gallery.generated.json` with blur data URLs. |
 
 ---
 
@@ -92,3 +94,32 @@ When configuring DNS records for Resend:
 - **Rate Limiting**: The in-memory sliding-window rate limiter protects individual serverless and container instances. For distributed multi-region serverless clusters (e.g. edge deployments), an external key-value store (such as Upstash Redis or Cloudflare KV) or Cloudflare Turnstile bot verification can be added.
 - **Analytics & Cookies**: No third-party tracking or advertising cookies are loaded on this website. Adding analytics tools (such as Google Analytics) that store tracking cookies will require adding a cookie consent banner and updating the Privacy Policy accordingly.
 - **Content Security Policy (CSP)**: Strict security headers are active in `next.config.ts`. Full CSP can be configured in future revisions once nonces or script hashes for Turbopack inline scripts are defined.
+
+---
+
+## 8. Adding Real Gallery Photos
+
+To add real field photos to the website:
+
+1. **Add Raw Images**: Place raw photo files (`.jpg`, `.jpeg`, `.png`, `.webp`) in the corresponding category inbox folder:
+   - `gallery-inbox/security/`
+   - `gallery-inbox/housekeeping/`
+   - `gallery-inbox/facility/`
+   - `gallery-inbox/training/`
+2. **Run Import Pipeline**:
+   ```bash
+   npm run gallery:import
+   ```
+   The script auto-rotates by EXIF orientation, **strips all metadata (EXIF, GPS, camera, and location data)**, resizes so the long edge is at most 1800px, converts to WebP (~80 quality), saves to `public/images/gallery/<category>/`, and automatically runs `gallery:sync`.
+3. **Add Captions & Alt Text**:
+   - Open `src/data/gallery-meta.ts`.
+   - Add descriptive alt text and optional captions for your photos.
+   - Flag up to 6 photos with `featured: true` to display on the Home page bento grid.
+4. **Rebuild & Deploy**:
+   ```bash
+   npm run build
+   ```
+   The website will now automatically display the Gallery page, Home gallery preview, and Header/Footer navigation links.
+
+> [!NOTE]
+> Ensure written permission is obtained from any individuals photographed and from clients whose facilities or premises appear in photos. Location metadata is automatically stripped by the import pipeline to protect client site privacy.
