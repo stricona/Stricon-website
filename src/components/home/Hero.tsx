@@ -118,7 +118,7 @@ export function Hero() {
           <div className="lg:col-span-5 flex justify-center">
             <Reveal delay={0.3} className="w-full max-w-md">
               <div className="relative rounded-2xl p-1 bg-gradient-to-br from-[var(--primary)]/20 via-transparent to-[var(--accent-gold)]/30 shadow-xl">
-                <div className="relative rounded-[calc(1rem-1px)] bg-[var(--logo-surface)] p-8 sm:p-10 text-[var(--logo-surface-foreground)] border border-[var(--border)]">
+                <div className="relative rounded-[calc(1rem-1px)] bg-[var(--logo-surface)] p-6 sm:p-10 text-[var(--logo-surface-foreground)] border border-[var(--border)]">
                   {/* Subtle geometric framing lines */}
                   <div className="pointer-events-none absolute top-3 left-3 h-6 w-6 border-t-2 border-l-2 border-[var(--primary)]/40 rounded-tl" />
                   <div className="pointer-events-none absolute top-3 right-3 h-6 w-6 border-t-2 border-r-2 border-[var(--accent-gold)] rounded-tr" />
@@ -126,14 +126,14 @@ export function Hero() {
                   <div className="pointer-events-none absolute bottom-3 right-3 h-6 w-6 border-b-2 border-r-2 border-[var(--primary)]/40 rounded-br" />
 
                   <div className="flex flex-col items-center text-center space-y-6">
-                    <div className="relative h-64 w-64 sm:h-72 sm:w-72">
+                    <div className="relative h-48 w-48 sm:h-72 sm:w-72 max-w-full aspect-square">
                       <Image
                         src="/images/logo/emblem.jpg"
                         alt="STRICON People & Security Services Shield Emblem"
                         fill
                         priority
                         className="object-contain"
-                        sizes="(max-width: 640px) 256px, 288px"
+                        sizes="(max-width: 640px) 192px, 288px"
                       />
                     </div>
 
@@ -141,10 +141,10 @@ export function Hero() {
                       <p className="text-xs font-semibold uppercase tracking-widest text-[var(--primary)]">
                         STRICON
                       </p>
-                      <p className="text-sm font-bold text-[#29283A]">
+                      <p className="text-sm font-bold text-[var(--logo-surface-foreground)]">
                         PEOPLE & SECURITY SERVICES PVT LTD
                       </p>
-                      <p className="text-xs text-[#686879]">
+                      <p className="text-xs text-[var(--muted-foreground)]">
                         Corporate Facility & Security Partner • Hyderabad
                       </p>
                     </div>

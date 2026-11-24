@@ -70,7 +70,7 @@ export function RecruitmentStepper() {
                   <div className="relative">
                     {/* Circle badge absolute on the vertical border */}
                     <div
-                      className="absolute -left-[35px] top-1 flex h-8 w-8 items-center justify-center rounded-full border-2 border-[var(--primary)] bg-[var(--surface)] text-xs font-bold text-[var(--primary)] shadow-xs"
+                      className="absolute -left-6 -translate-x-1/2 top-1 flex h-8 w-8 items-center justify-center rounded-full border-2 border-[var(--primary)] bg-[var(--surface)] text-xs font-bold text-[var(--primary)] shadow-xs"
                       aria-hidden="true"
                     >
                       {stepNumber}

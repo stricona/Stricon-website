@@ -120,7 +120,7 @@ export default function RootLayout({
         </a>
         <ThemeProvider>
           <Header />
-          <main id="main-content" className="flex-1">
+          <main id="main-content" className="flex-1 min-w-0 w-full">
             {children}
           </main>
           <Footer />

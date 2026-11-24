@@ -34,7 +34,7 @@ export function ClientsMarquee({
 
   return (
     <section
-      className={`relative overflow-hidden py-16 sm:py-20 bg-[var(--surface)]/50 border-y border-[var(--border)] ${className}`}
+      className={`relative w-full max-w-full overflow-hidden py-16 sm:py-20 bg-[var(--surface)]/50 border-y border-[var(--border)] ${className}`}
     >
       <Container className="mb-10">
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
@@ -89,7 +89,7 @@ export function ClientsMarquee({
       </Container>
 
       {/* Marquee Track Container with Edge Fade Masks */}
-      <div className="relative w-full overflow-hidden group">
+      <div className="relative w-full max-w-full overflow-hidden group">
         {/* Left & Right gradient fade masks */}
         <div
           aria-hidden="true"
@@ -124,7 +124,7 @@ export function ClientsMarquee({
                     />
                   </div>
                 ) : (
-                  <span className="font-heading font-semibold text-xs text-center text-[#29283A] px-2 line-clamp-2">
+                  <span className="font-heading font-semibold text-xs text-center text-[var(--logo-surface-foreground)] px-2 line-clamp-2">
                     {client.name}
                   </span>
                 )}
@@ -155,7 +155,7 @@ export function ClientsMarquee({
                     />
                   </div>
                 ) : (
-                  <span className="font-heading font-semibold text-xs text-center text-[#29283A] px-2 line-clamp-2">
+                  <span className="font-heading font-semibold text-xs text-center text-[var(--logo-surface-foreground)] px-2 line-clamp-2">
                     {client.name}
                   </span>
                 )}

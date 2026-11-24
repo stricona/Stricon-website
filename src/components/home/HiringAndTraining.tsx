@@ -14,6 +14,7 @@ import {
   Reveal,
 } from "@/components/common";
 import { profile } from "@/data/profile";
+import { cn } from "@/lib/utils";
 
 export function HiringAndTraining() {
   const hiringStrength = profile.strengths.find((s) => s.category === "Hiring");
@@ -134,7 +135,10 @@ export function HiringAndTraining() {
               {profile.recruitmentProcess.map((step, idx) => (
                 <div
                   key={step}
-                  className="flex flex-col rounded-xl border border-[var(--border)] bg-[var(--background)] p-3.5 text-center relative"
+                  className={cn(
+                    "flex flex-col rounded-xl border border-[var(--border)] bg-[var(--background)] p-3.5 text-center relative",
+                    idx === profile.recruitmentProcess.length - 1 && "sm:col-span-2 lg:col-span-1"
+                  )}
                 >
                   <span className="text-xs font-bold text-[var(--primary)] mb-1">
                     Step {idx + 1}

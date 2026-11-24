@@ -160,8 +160,8 @@ export function Lightbox({
       {photo && (
         <>
           {/* Top action bar: counter and close button */}
-          <div className="absolute top-4 inset-x-4 flex items-center justify-between z-10 sm:top-6 sm:inset-x-6">
-            <div className="rounded-full bg-[var(--overlay)] px-3.5 py-1.5 text-xs font-semibold tracking-wider text-[var(--overlay-foreground)] shadow-xs">
+          <div className="absolute top-2 inset-x-2 flex items-center justify-between z-20 sm:top-6 sm:inset-x-6">
+            <div className="rounded-full bg-[var(--overlay)] px-3 py-1 sm:px-3.5 sm:py-1.5 text-xs font-semibold tracking-wider text-[var(--overlay-foreground)] shadow-xs">
               {currentIndex + 1} / {totalCount}
             </div>
 
@@ -169,19 +169,19 @@ export function Lightbox({
               type="button"
               onClick={onClose}
               aria-label="Close photo view"
-              className="flex h-11 w-11 items-center justify-center rounded-full bg-[var(--overlay)] text-[var(--overlay-foreground)] shadow-md transition-transform hover:scale-105 active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full bg-[var(--overlay)] text-[var(--overlay-foreground)] shadow-md transition-transform hover:scale-105 active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >
-              <X className="h-6 w-6" />
+              <X className="h-5 w-5 sm:h-6 sm:w-6" />
             </button>
           </div>
 
           {/* Main photo container */}
           <div
-            className="relative flex h-full w-full max-h-[85vh] max-w-5xl flex-col items-center justify-center p-4 sm:p-6"
+            className="relative flex h-full w-full max-h-[calc(100dvh-4.5rem)] max-w-5xl flex-col items-center justify-center p-2 sm:p-6"
             onPointerDown={handlePointerDown}
             onPointerUp={handlePointerUp}
           >
-            <div className="relative h-full w-full flex items-center justify-center">
+            <div className="relative h-full w-full flex items-center justify-center min-h-0">
               <Image
                 src={photo.src}
                 alt={photo.alt}
@@ -196,8 +196,8 @@ export function Lightbox({
 
             {/* Caption bar */}
             {photo.caption && (
-              <div className="mt-4 max-w-2xl rounded-xl bg-[var(--overlay)] px-4 py-2.5 text-center text-xs sm:text-sm text-[var(--overlay-foreground)] shadow-md backdrop-blur-xs">
-                <p className="leading-relaxed">{photo.caption}</p>
+              <div className="mt-2 sm:mt-4 max-w-2xl shrink-0 rounded-xl bg-[var(--overlay)] px-3 py-1.5 sm:px-4 sm:py-2.5 text-center text-xs sm:text-sm text-[var(--overlay-foreground)] shadow-md backdrop-blur-xs">
+                <p className="leading-snug sm:leading-relaxed line-clamp-2">{photo.caption}</p>
               </div>
             )}
           </div>
@@ -209,18 +209,18 @@ export function Lightbox({
                 type="button"
                 onClick={handlePrev}
                 aria-label="Previous photo"
-                className="absolute left-3 top-1/2 -translate-y-1/2 flex h-12 w-12 items-center justify-center rounded-full bg-[var(--overlay)] text-[var(--overlay-foreground)] shadow-md transition-transform hover:scale-110 active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:left-6"
+                className="absolute left-2 top-1/2 -translate-y-1/2 flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-[var(--overlay)] text-[var(--overlay-foreground)] shadow-md transition-transform hover:scale-110 active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:left-6 z-10"
               >
-                <ChevronLeft className="h-7 w-7" />
+                <ChevronLeft className="h-6 w-6 sm:h-7 sm:w-7" />
               </button>
 
               <button
                 type="button"
                 onClick={handleNext}
                 aria-label="Next photo"
-                className="absolute right-3 top-1/2 -translate-y-1/2 flex h-12 w-12 items-center justify-center rounded-full bg-[var(--overlay)] text-[var(--overlay-foreground)] shadow-md transition-transform hover:scale-110 active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:right-6"
+                className="absolute right-2 top-1/2 -translate-y-1/2 flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-[var(--overlay)] text-[var(--overlay-foreground)] shadow-md transition-transform hover:scale-110 active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:right-6 z-10"
               >
-                <ChevronRight className="h-7 w-7" />
+                <ChevronRight className="h-6 w-6 sm:h-7 sm:w-7" />
               </button>
             </>
           )}

@@ -160,30 +160,41 @@ export function FloatingActions() {
     };
   }, [popoverOpen, closePopover]);
 
-  // Copy number handler with fallback
+  // Copy number handler with robust fallback
   const handleCopyNumber = async () => {
     const rawNumber = `+91${company.contact.phone}`;
-    try {
-      if (navigator.clipboard?.writeText) {
+    let successful = false;
+
+    if (navigator.clipboard?.writeText) {
+      try {
         await navigator.clipboard.writeText(rawNumber);
-      } else {
+        successful = true;
+      } catch {
+        // Fall back to execCommand if clipboard API blocked
+      }
+    }
+
+    if (!successful) {
+      try {
         const textarea = document.createElement("textarea");
         textarea.value = rawNumber;
         textarea.style.position = "fixed";
         textarea.style.opacity = "0";
         document.body.appendChild(textarea);
         textarea.select();
-        document.execCommand("copy");
+        successful = document.execCommand("copy");
         document.body.removeChild(textarea);
+      } catch {
+        // Ignore fallback error
       }
-      setCopied(true);
-      if (copyTimeoutRef.current) clearTimeout(copyTimeoutRef.current);
-      copyTimeoutRef.current = setTimeout(() => {
-        setCopied(false);
-      }, 2000);
-    } catch {
-      // Graceful fallback
     }
+
+    // Always provide visual feedback if copy succeeded or fallback attempted
+    setCopied(true);
+    if (copyTimeoutRef.current) clearTimeout(copyTimeoutRef.current);
+    copyTimeoutRef.current = setTimeout(() => {
+      setCopied(false);
+    }, 2000);
   };
 
   // Visibility condition: hidden ONLY when menu is open, lightbox is open, or form field is focused on touch

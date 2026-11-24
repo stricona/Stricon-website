@@ -71,7 +71,7 @@ export function AboutHero() {
           <div className="lg:col-span-5 flex justify-center">
             <Reveal delay={0.25} className="w-full max-w-sm sm:max-w-md">
               <div className="relative rounded-2xl p-1 bg-gradient-to-br from-[var(--primary)]/20 via-transparent to-[var(--accent-gold)]/30 shadow-xl">
-                <div className="relative rounded-[calc(1rem-1px)] bg-[var(--logo-surface)] p-8 sm:p-10 text-[var(--logo-surface-foreground)] border border-[var(--border)]">
+                <div className="relative rounded-[calc(1rem-1px)] bg-[var(--logo-surface)] p-6 sm:p-10 text-[var(--logo-surface-foreground)] border border-[var(--border)]">
                   {/* Subtle geometric framing lines */}
                   <div className="pointer-events-none absolute top-3 left-3 h-6 w-6 border-t-2 border-l-2 border-[var(--primary)]/40 rounded-tl" />
                   <div className="pointer-events-none absolute top-3 right-3 h-6 w-6 border-t-2 border-r-2 border-[var(--accent-gold)] rounded-tr" />
@@ -79,14 +79,14 @@ export function AboutHero() {
                   <div className="pointer-events-none absolute bottom-3 right-3 h-6 w-6 border-b-2 border-r-2 border-[var(--primary)]/40 rounded-br" />
 
                   <div className="flex flex-col items-center text-center space-y-5">
-                    <div className="relative h-60 w-60 sm:h-64 sm:w-64">
+                    <div className="relative h-48 w-48 sm:h-64 sm:w-64 max-w-full aspect-square">
                       <Image
                         src="/images/logo/emblem.jpg"
                         alt="STRICON People & Security Services Shield Emblem"
                         fill
                         priority
                         className="object-contain"
-                        sizes="(max-width: 640px) 240px, 256px"
+                        sizes="(max-width: 640px) 192px, 256px"
                       />
                     </div>
 
