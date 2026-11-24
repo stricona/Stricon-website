@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { m, type HTMLMotionProps } from "motion/react";
+import { motion, type HTMLMotionProps } from "motion/react";
 
 interface RevealProps extends HTMLMotionProps<"div"> {
   children: React.ReactNode;
@@ -18,7 +18,7 @@ export function Reveal({
   ...props
 }: RevealProps) {
   return (
-    <m.div
+    <motion.div
       initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
@@ -31,6 +31,6 @@ export function Reveal({
       {...props}
     >
       {children}
-    </m.div>
+    </motion.div>
   );
 }

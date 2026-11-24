@@ -1,6 +1,6 @@
 "use client";
 
-import { m } from "motion/react";
+import { motion } from "motion/react";
 import { Compass, Eye } from "lucide-react";
 import { Container, SectionHeading } from "@/components/common";
 import { profile } from "@/data/profile";
@@ -18,7 +18,7 @@ export function MissionVision() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
           {/* Left Card: Mission (slides from left) */}
-          <m.div
+          <motion.div
             initial={{ opacity: 0, x: -24 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-60px" }}
@@ -36,10 +36,10 @@ export function MissionVision() {
             <p className="text-base sm:text-lg leading-relaxed text-[var(--muted-foreground)]">
               {profile.mission}
             </p>
-          </m.div>
+          </motion.div>
 
           {/* Right Card: Vision (slides from right) */}
-          <m.div
+          <motion.div
             initial={{ opacity: 0, x: 24 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-60px" }}
@@ -57,7 +57,7 @@ export function MissionVision() {
             <p className="text-base sm:text-lg leading-relaxed text-[var(--muted-foreground)]">
               {profile.vision}
             </p>
-          </m.div>
+          </motion.div>
         </div>
       </Container>
     </section>
