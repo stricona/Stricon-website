@@ -111,6 +111,16 @@ export default function RootLayout({
       data-scroll-behavior="smooth"
       className={`${inter.variable} ${poppins.variable}`}
     >
+      <head>
+        <noscript>
+          <style>{`
+            [style*="opacity:0"], [style*="opacity: 0"] {
+              opacity: 1 !important;
+              transform: none !important;
+            }
+          `}</style>
+        </noscript>
+      </head>
       <body className="min-h-screen flex flex-col font-sans bg-[var(--color-background)] text-[var(--color-foreground)] transition-colors antialiased">
         <a
           href="#main-content"
