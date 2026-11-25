@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -52,10 +53,19 @@ export function ApplicationForm({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const successHeadingRef = useRef<HTMLHeadingElement>(null);
 
+  const searchParams = useSearchParams();
+  const queryArea = searchParams ? searchParams.get("area") : null;
+
+  const validQueryArea =
+    queryArea && careerAreaOptions.some((c) => c.value === queryArea)
+      ? (queryArea as CareerAreaSlug)
+      : undefined;
+
   const initialArea: CareerAreaSlug =
-    defaultArea && careerAreaOptions.some((c) => c.value === defaultArea)
+    validQueryArea ||
+    (defaultArea && careerAreaOptions.some((c) => c.value === defaultArea)
       ? (defaultArea as CareerAreaSlug)
-      : "security-services";
+      : "security-services");
 
   const {
     register,
@@ -92,6 +102,13 @@ export function ApplicationForm({
   useEffect(() => {
     setValue("startedAt", Date.now());
   }, [setValue]);
+
+  // Sync preselected query param area when provided
+  useEffect(() => {
+    if (validQueryArea) {
+      setValue("area", validQueryArea);
+    }
+  }, [validQueryArea, setValue]);
 
   // Focus success heading on submission
   useEffect(() => {

@@ -6,7 +6,6 @@ import { siteConfig } from "@/config/site";
 import { company } from "@/data/company";
 import { profile } from "@/data/profile";
 import { openings } from "@/data/careers";
-import { CAREER_AREA_SLUGS, CareerAreaSlug } from "@/lib/validations";
 import { canForwardAttachments } from "@/lib/delivery";
 import { constructMetadata } from "@/lib/seo";
 import { Container, MotionProvider, Reveal } from "@/components/common";
@@ -23,10 +22,6 @@ export const metadata: Metadata = constructMetadata({
   description: "Careers at STRICON People & Security Services, Hyderabad.",
   path: "/careers",
 });
-
-interface CareersPageProps {
-  searchParams: Promise<{ area?: string }>;
-}
 
 function CareersJsonLd() {
   const schema = {
@@ -51,29 +46,7 @@ function CareersJsonLd() {
   );
 }
 
-async function ApplicationFormSection({
-  searchParams,
-  resumeUploadEnabled,
-}: {
-  searchParams: Promise<{ area?: string }>;
-  resumeUploadEnabled: boolean;
-}) {
-  const { area: queryArea } = await searchParams;
-
-  // Validate area against known slugs silently
-  const isValidArea =
-    queryArea && CAREER_AREA_SLUGS.includes(queryArea as CareerAreaSlug);
-  const validatedArea = isValidArea ? queryArea : undefined;
-
-  return (
-    <ApplicationForm
-      defaultArea={validatedArea}
-      resumeUploadEnabled={resumeUploadEnabled}
-    />
-  );
-}
-
-export default async function CareersPage({ searchParams }: CareersPageProps) {
+export default function CareersPage() {
   // Compute resume upload feature flag on server
   const resumeUploadEnabled =
     process.env.CAREERS_RESUME_UPLOAD === "on" && canForwardAttachments();
@@ -202,8 +175,7 @@ export default async function CareersPage({ searchParams }: CareersPageProps) {
                 </div>
               }
             >
-              <ApplicationFormSection
-                searchParams={searchParams}
+              <ApplicationForm
                 resumeUploadEnabled={resumeUploadEnabled}
               />
             </Suspense>
