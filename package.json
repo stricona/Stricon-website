@@ -2,11 +2,15 @@
   "name": "stricon-website",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=20.9.0"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "verify": "tsc --noEmit && npm run lint && npm run check:copy && npm run check:contrast && npm run build",
     "check:links": "node scripts/check-links.mjs",
     "check:copy": "node scripts/check-copy.mjs",
     "test:contact": "node scripts/test-contact.mjs",
