@@ -225,25 +225,25 @@ export const IndustryFocusSection: React.FC<IndustryFocusSectionProps> = ({
           transform-origin: center;
           animation: striconSpinAnticlockwise 22s linear infinite;
         }
-        @keyframes striconCenterPop {
+        @keyframes striconPureHubPop {
           0%, 100% {
-            transform: translate(-50%, -50%) scale(1);
-            filter: drop-shadow(0 4px 10px rgba(13, 148, 136, 0.25));
+            transform: scale(1);
+            box-shadow: 0 10px 25px -5px rgba(13, 148, 136, 0.25), 0 0 15px rgba(13, 148, 136, 0.15);
           }
           50% {
-            transform: translate(-50%, -50%) scale(1.09);
-            filter: drop-shadow(0 14px 28px rgba(13, 148, 136, 0.45));
+            transform: scale(1.08);
+            box-shadow: 0 20px 35px -5px rgba(13, 148, 136, 0.45), 0 0 28px 6px rgba(13, 148, 136, 0.35);
           }
         }
-        @keyframes striconShieldPop {
+        @keyframes striconPureShieldZoom {
           0%, 100% {
             transform: scale(1);
           }
           50% {
-            transform: scale(1.05);
+            transform: scale(1.06);
           }
         }
-        @keyframes striconHaloPulse {
+        @keyframes striconPureHaloPop {
           0%, 100% {
             transform: scale(0.96);
             opacity: 0.45;
@@ -253,23 +253,28 @@ export const IndustryFocusSection: React.FC<IndustryFocusSectionProps> = ({
             opacity: 0.85;
           }
         }
-        .stricon-center-pop {
+        .stricon-hub-pop {
           transform-origin: center center;
-          animation: striconCenterPop 3.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+          animation: striconPureHubPop 3.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+          transition: transform 0.3s ease;
         }
-        .stricon-shield-pop {
+        .stricon-hub-pop:hover {
+          transform: scale(1.12);
+        }
+        .stricon-shield-zoom {
           transform-origin: center center;
-          animation: striconShieldPop 3.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+          animation: striconPureShieldZoom 3.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
         }
-        .stricon-halo-pulse {
-          animation: striconHaloPulse 3.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        .stricon-halo-pop {
+          transform-origin: center center;
+          animation: striconPureHaloPop 3.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
         }
         @media (prefers-reduced-motion: reduce) {
           .stricon-orbit-cw,
           .stricon-orbit-ccw,
-          .stricon-center-pop,
-          .stricon-shield-pop,
-          .stricon-halo-pulse {
+          .stricon-hub-pop,
+          .stricon-shield-zoom,
+          .stricon-halo-pop {
             animation: none;
           }
         }
@@ -455,32 +460,35 @@ export const IndustryFocusSection: React.FC<IndustryFocusSectionProps> = ({
                 })}
               </svg>
 
-              {/* Central STRICON Shield Hub with Centered Pop-Up Zoom Animation */}
-              <div
-                aria-label="STRICON Security Hub"
-                className="
-                  absolute left-1/2 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2
-                  flex h-28 w-28 sm:h-32 sm:w-32 md:h-36 md:w-36
-                  items-center justify-center rounded-full
-                  bg-white dark:bg-slate-900
-                  border-2 border-teal-600/80 dark:border-teal-400/80
-                  shadow-lg ring-4 ring-teal-500/15 dark:ring-teal-400/10
-                  p-3 sm:p-3.5 stricon-center-pop hover:scale-110 transition-transform duration-300 cursor-pointer
-                "
-              >
-                {/* Glowing halo behind the hub */}
-                <div className="absolute -inset-2.5 rounded-full bg-gradient-to-tr from-teal-500/25 via-sky-400/20 to-teal-400/25 blur-md -z-10 stricon-halo-pulse pointer-events-none" />
+              {/* Central STRICON Shield Hub - Mathematically Centered Pop-Up */}
+              <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
+                <div
+                  aria-label="STRICON Security Hub"
+                  className="
+                    pointer-events-auto relative
+                    flex h-28 w-28 sm:h-32 sm:w-32 md:h-36 md:w-36
+                    items-center justify-center rounded-full
+                    bg-white dark:bg-slate-900
+                    border-2 border-teal-600/80 dark:border-teal-400/80
+                    shadow-xl ring-4 ring-teal-500/20 dark:ring-teal-400/15
+                    p-2.5 sm:p-3
+                    stricon-hub-pop cursor-pointer
+                  "
+                >
+                  {/* Glowing halo behind the hub */}
+                  <div className="absolute -inset-2.5 rounded-full bg-gradient-to-tr from-teal-500/25 via-sky-400/20 to-teal-400/25 blur-md -z-10 stricon-halo-pop pointer-events-none" />
 
-                {/* Shield Emblem - Uncut, complete, unclipped with proper aspect ratio */}
-                <div className="relative w-full h-full flex items-center justify-center stricon-shield-pop">
-                  <Image
-                    src="/images/logo/stricon-emblem-shield.jpg"
-                    alt="STRICON Corporate Shield Emblem"
-                    width={120}
-                    height={134}
-                    className="w-auto h-full max-h-full max-w-full object-contain drop-shadow-md select-none"
-                    priority
-                  />
+                  {/* Shield Emblem - Uncut, complete, transparent PNG from uploaded logo */}
+                  <div className="relative w-full h-full flex items-center justify-center stricon-shield-zoom">
+                    <Image
+                      src="/images/logo/stricon-shield-logo.png"
+                      alt="STRICON Corporate Shield Emblem"
+                      width={128}
+                      height={128}
+                      className="w-full h-full object-contain drop-shadow-md select-none"
+                      priority
+                    />
+                  </div>
                 </div>
               </div>
 
