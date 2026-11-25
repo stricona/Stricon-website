@@ -25,6 +25,7 @@ export function Footer() {
                   alt={`${siteConfig.legalName} Wordmark`}
                   fill
                   sizes="(max-width: 640px) 192px, 224px"
+                  loading="lazy"
                   className="object-contain"
                 />
               </div>

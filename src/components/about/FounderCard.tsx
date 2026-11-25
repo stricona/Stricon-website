@@ -33,6 +33,7 @@ export function FounderCard() {
                     src={founder.photo}
                     alt={founder.name}
                     fill
+                    sizes="(max-width: 640px) 112px, 128px"
                     className="object-cover"
                   />
                 </div>

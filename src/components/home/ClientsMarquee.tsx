@@ -120,6 +120,8 @@ export function ClientsMarquee({
                       alt={`${client.name} logo`}
                       fill
                       sizes="208px"
+                      loading="lazy"
+                      decoding="async"
                       className="object-contain"
                     />
                   </div>
@@ -151,6 +153,8 @@ export function ClientsMarquee({
                       alt={`${client.name} logo`}
                       fill
                       sizes="208px"
+                      loading="lazy"
+                      decoding="async"
                       className="object-contain"
                     />
                   </div>

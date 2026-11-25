@@ -22,7 +22,7 @@ export function Header() {
               alt={`${siteConfig.legalName} Logo`}
               fill
               sizes="(max-width: 640px) 160px, (max-width: 1024px) 192px, 224px"
-              priority
+              loading="eager"
               className="object-contain"
             />
           </div>
