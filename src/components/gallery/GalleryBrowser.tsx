@@ -2,9 +2,18 @@
 
 import React, { useState, useEffect, useRef, useTransition } from "react";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import { Container } from "@/components/common";
-import { Lightbox } from "./Lightbox";
 import type { GalleryPhoto, GalleryCategory } from "@/types/gallery";
+
+const Lightbox = dynamic(
+  () => import("./Lightbox").then((mod) => mod.Lightbox),
+  { ssr: false }
+);
+
+const preloadLightbox = () => {
+  import("./Lightbox");
+};
 
 interface GalleryBrowserProps {
   initialPhotos: GalleryPhoto[];
@@ -54,6 +63,22 @@ export function GalleryBrowser({
     activeCategory === "all"
       ? initialPhotos
       : initialPhotos.filter((p) => p.category === activeCategory);
+
+  // Idle preload of Lightbox modal bundle
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if ("requestIdleCallback" in window) {
+      const id = (window as unknown as { requestIdleCallback: (cb: () => void) => number }).requestIdleCallback(preloadLightbox);
+      return () => {
+        if ("cancelIdleCallback" in window) {
+          (window as unknown as { cancelIdleCallback: (id: number) => void }).cancelIdleCallback(id);
+        }
+      };
+    } else {
+      const timer = setTimeout(preloadLightbox, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, []);
 
   // Listen for hash changes (e.g. browser back/forward or external deep links)
   useEffect(() => {
@@ -197,6 +222,8 @@ export function GalleryBrowser({
                 }}
                 type="button"
                 onClick={(e) => handleOpenPhoto(photo, e.currentTarget)}
+                onMouseEnter={preloadLightbox}
+                onFocus={preloadLightbox}
                 aria-label={`View photo: ${photo.alt}`}
                 className="group relative flex aspect-4/3 w-full overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-2xs transition-all hover:border-[var(--primary)]/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary)] text-left cursor-pointer"
               >
