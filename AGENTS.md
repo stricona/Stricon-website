@@ -158,7 +158,7 @@ Original files reside in `public/images/logo/`:
 - Static grid fallback on reduced motion.
 
 ### Client Logos (Slide 7 Extraction)
-- Client logos extracted directly from Slide 7 of `docs/STRICON_Profile.pptx`.
+- Client logos extracted from enterprise client roster.
 - Stored as WebP/PNG in `public/images/clients/<kebab-case>.png`.
 - 17 approved enterprise clients with `displayApproved: true`.
 - **Special Rule**: "Crown Brewing" MUST remain `displayApproved: false` until explicit stakeholder confirmation.
@@ -211,16 +211,16 @@ Original files reside in `public/images/logo/`:
 ## 9. Phase 4: About Page & Deck Alignment Standards
 
 ### Exact-Copy Rule
-- Every sentence or list item of body text on the About page (`/about`) and shared profile text MUST be the presentation deck's own words (`docs/STRICON_Profile.pptx`).
+- Every sentence or list item of body text on the About page (`/about`) and shared profile text MUST be the company profile deck's own words (preserved in `src/data/profile.ts`).
 - Allowed edits only: fix double spaces, normalize straight vs curly apostrophes, and fix the obvious typo `"where ever"` to `"wherever"`.
 - Short UI labels (section headings, "At a glance", button text) are permitted and must use the deck's own heading words wherever one exists.
 - Forbidden words: `"leading"`, `"largest"`, `"No.1"`, `"premier"`, `"award"` (as a superlative/claim), `"ISO"`, `"24/7"`, `"24x7"`, `"100%"` (and `"best"` outside deck text).
 - "Crown Brewing" MUST remain hidden (`displayApproved: false`) until explicit approval.
 
-### Copy Audit Script (`scripts/audit-copy.mjs`)
-- Automated verification script runnable via `npm run audit:copy`.
-- Extracts all text runs from PPTX slide XMLs (`docs/.tmp`), normalizes whitespace/apostrophes/entities, and checks all 75 deck-derived strings in `src/data/profile.ts`.
-- Exits with code 1 if any string is missing from the presentation deck corpus.
+### Copy Safeguard Script (`scripts/check-copy.mjs`)
+- Automated verification script runnable via `npm run check:copy`.
+- Scans user-facing strings across `src/` for forbidden words, "Lorem", and "TODO".
+- Exits with code 1 if any forbidden superlative or placeholder is found.
 
 ### Client Logo Display Rule
 - All 18 client logos stored in `public/images/clients/` must be displayed in **FULL COLOUR** at all times.
@@ -373,7 +373,7 @@ Original files reside in `public/images/logo/`:
 ### Strict Content & Operational Rules
 - **No Response-Time Promises**: Never promise response times (e.g., "within 24 hours" is strictly forbidden). Copy only promises that STRICON will review and get in touch.
 - **No Hardcoded Hex**: All colors must use CSS variables mapped in `globals.css`.
-- **Deck-Verbatim Copy Audit Rule**: `scripts/audit-copy.mjs` tags text strings as `text` (must match PPTX XML runs verbatim) and image-only slides (Slide 9 recruitment steps, Slide 11 strengths) as `image` ("IMAGE (Slide X manual check)").
+- **Copy Safeguard Rule**: Automated scan runnable via `npm run check:copy` enforces zero forbidden words and zero placeholders across codebase.
 - **Background Server Rule**: Development (`next dev -p 3200`) and production (`next start -p 3100`) servers must ALWAYS run in the background (hidden processes), polled via HTTP until ready (max 60s), tested, and terminated immediately after test suites finish. Never run servers in the foreground.
 
 

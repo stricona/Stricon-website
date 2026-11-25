@@ -65,8 +65,8 @@ npm run lint
 # 2. WCAG Contrast Audit (All 20 token pairs must PASS >= 4.5:1)
 npm run check:contrast
 
-# 3. Verbatim Copy Audit (44/44 deck text runs verified)
-npm run audit:copy
+# 3. Copy Safeguard Audit (Zero forbidden words, placeholders, or TODOs)
+npm run check:copy
 
 # 4. Production Build (Next.js Turbopack)
 npm run build

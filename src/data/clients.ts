@@ -2,7 +2,7 @@ import { Client } from "@/types/client";
 
 /**
  * CLIENT DATA:
- * Logos extracted from slide 7 of STRICON_Profile.pptx.
+ * Logos from corporate client profile.
  * Crown Brewing is kept as displayApproved: false until confirmed by user.
  */
 export const clients: Client[] = [

@@ -12,7 +12,7 @@ Official corporate website for **STRICON PEOPLE & SECURITY SERVICES PVT LTD** (B
 | `npm run build` | Build optimized production bundle using Turbopack compiler. |
 | `npm run start` | Run production server locally after running `build`. |
 | `npm run lint` | Run ESLint across all codebase files (0 errors, 0 warnings enforced). |
-| `npm run audit:copy` | Verbatim text audit matching all 44 slide text runs against the official deck. |
+| `npm run check:copy` | Copy safeguard audit ensuring no forbidden superlatives, lorem ipsum, or TODO placeholders. |
 | `npm run check:links` | Automated crawler validating all 25 internal routes (status 200) and 404 handler. |
 | `npm run test:contact` | Automated 7-case test suite for `/api/contact` enquiry submission. |
 | `npm run test:careers` | Automated 10-case test suite for `/api/careers` application and file upload. |

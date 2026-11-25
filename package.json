@@ -8,7 +8,6 @@
     "start": "next start",
     "lint": "eslint",
     "check:links": "node scripts/check-links.mjs",
-    "audit:copy": "node scripts/audit-copy.mjs",
     "test:contact": "node scripts/test-contact.mjs",
     "test:careers": "node scripts/test-careers.mjs",
     "check:contrast": "node scripts/check-contrast.mjs",
