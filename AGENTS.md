@@ -565,6 +565,61 @@ Original files reside in `public/images/logo/`:
     2. Lightbox modal is open (`data-lightbox-open="true"` on `body`).
     3. Any text input/textarea has focus on coarse-pointer mobile devices (`(hover: none) and (pointer: coarse)`) to prevent obscuring software keyboards.
 
+---
+
+## 15. Phase 10: Codebase Cleanup, Performance Hardening, and CI Standards
+
+### Safe Cleanup & Safeguards
+- **Removal of Legacy Deck & Audit Script**:
+  - `docs/STRICON_Profile.pptx` was backed up to an external backup directory (`%USERPROFILE%/stricon-backup/`) and deleted from the repository.
+  - `scripts/audit-copy.mjs` was removed.
+- **Copy Safeguard Script (`npm run check:copy`)**:
+  - Added continuous automated safeguard script `scripts/check-copy.mjs`.
+  - Scans `src/` for forbidden terms (e.g. "24/7", "24x7", "round-the-clock", "all-round", "comprehensive protection", "certified guards", "AI agents", "guarantee").
+  - Maintains strict allowlist for legitimate occurrences (e.g. `pendingConfirmation` in `company.ts`, the verified team sentence in `clients.ts`, and Tailwind line-height classes like `leading-snug`).
+- **Template & Framework Cleanup**:
+  - Default framework SVGs (`file.svg`, `globe.svg`, `next.svg`, `vercel.svg`, `window.svg`) and default Next.js `favicon.ico` were removed.
+  - Favicon and touch icons strictly resolve to `/images/logo/symbol.jpg`.
+  - Empty placeholder folders with dummy `.gitkeep` files (`public/documents`, `public/fonts`, `public/images/banners`, `public/images/facility`, `public/images/industries`, `public/images/security`) were removed.
+- **Dead Code & Unused Modules**:
+  - Removed unreferenced `src/lib/constants.ts`.
+  - Pruned unused functions and types (`validateCareerApplication`, `ValidationResult`, `getServicesByCategory`, `getPhotosByCategory`, `industriesStatement`).
+
+### Performance Architecture Rules
+- **Lazy Motion**:
+  - Use `<LazyMotion features={domAnimation}>` in `MotionProvider.tsx` to load Framer Motion animation features asynchronously.
+  - Standard animated wrappers (`Reveal.tsx`, `RevealGroup.tsx`, `MissionVision.tsx`) use `m.div` instead of `motion.div`.
+  - Self-contained interactive components with specific layout requirements (such as the Industry Focus circular ecosystem) preserve their verified custom implementations.
+- **Dynamic Lightbox Loading**:
+  - The gallery `Lightbox` modal is dynamically imported with `next/dynamic` (`ssr: false`).
+  - Preloaded on browser idle via `requestIdleCallback` (or fallback timer) and on hover/focus of gallery thumbnail buttons (`onMouseEnter`, `onFocus`).
+- **Static Page Prerendering (`○ Static`)**:
+  - `/contact` and `/careers` are 100% statically pre-rendered routes.
+  - Client search parameter reading (`useSearchParams`) is quarantined inside `<Suspense>` within dedicated client boundary components (`ContactFormWrapper.tsx` and `ApplicationForm.tsx`), preventing runtime server streaming overhead.
+- **Image Optimization & Priority Allocation**:
+  - All `next/image` components must specify explicit responsive `sizes` matching their container layout.
+  - `priority` is strictly reserved for above-the-fold LCP image elements (hero badges and emblems). Below-the-fold images must use `loading="lazy"` and `decoding="async"`.
+- **Static Asset & Image Caching**:
+  - Configured `images.minimumCacheTTL: 2678400` (31 days) in `next.config.ts`.
+  - Custom `headers()` rule in `next.config.ts` sets `Cache-Control: public, max-age=86400, stale-while-revalidate=604800` for `/images/:path*` and `/fonts/:path*`.
+- **Font Optimization**:
+  - Unused weights must not be requested in `next/font`. Poppins is loaded with weights `600` and `700` only (`font-heading`), removing unused weight `500`.
+- **NoScript Accessibility & Fallback**:
+  - A `<noscript>` style block in `src/app/layout.tsx` guarantees that when JavaScript is disabled, elements wrapped in `Reveal` motion containers immediately default to `opacity: 1 !important; transform: none !important;` so content remains 100% accessible to web crawlers and JS-disabled browsers.
+
+### Engine, Verification, and CI Standards
+- **Node.js Engine Pinning**:
+  - `package.json` enforces `"engines": { "node": ">=20.9.0" }`.
+  - Root `.nvmrc` specifies Node 22 (`22`).
+- **Pre-Commit Verification Script (`npm run verify`)**:
+  - Unified verification script: `npx tsc --noEmit && npm run lint && npm run check:copy && npm run check:contrast && npm run build`.
+  - Must pass with 0 errors and 0 lint warnings before any release or commit checkpoint.
+- **GitHub Actions CI Workflow**:
+  - Continuous integration workflow defined at `.github/workflows/ci.yml`.
+  - Runs on push to `main` and pull requests.
+  - Executes clean install (`npm ci`) on Node 22 and runs `npm run verify` without external secrets.
+
+
 
 
 
