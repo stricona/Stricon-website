@@ -2,7 +2,6 @@ export type {
   EnquiryInput,
   EnquiryOutput,
   ServiceSlugOption,
-  ValidationResult,
 } from "@/lib/validations";
 
 export interface ContactApiResponse {

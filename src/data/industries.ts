@@ -17,6 +17,3 @@ export const industries: Industry[] = [
     location: "Hyderabad",
   },
 ];
-
-export const industriesStatement =
-  "We have well-trained personnel deployed at Health care centers, IT, ITES, Hotels, Commercial, Manufacturing and large residential apartments and villa complexes in Hyderabad.";

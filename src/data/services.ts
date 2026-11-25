@@ -1,4 +1,4 @@
-import { ServiceItem, ServiceGroupCategory } from "@/types/service";
+import { ServiceItem } from "@/types/service";
 
 export const serviceCategories = {
   security: {
@@ -287,12 +287,6 @@ export const services: ServiceItem[] = [
 
 export function getServiceBySlug(slug: string): ServiceItem | undefined {
   return services.find((service) => service.slug === slug);
-}
-
-export function getServicesByCategory(
-  category: ServiceGroupCategory
-): ServiceItem[] {
-  return services.filter((service) => service.category === category);
 }
 
 export function getRelatedServices(service: ServiceItem): ServiceItem[] {

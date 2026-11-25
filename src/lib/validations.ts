@@ -1,5 +1,4 @@
 import { z } from "zod";
-import type { CareerApplication } from "@/types/enquiry";
 
 export const SERVICE_SLUGS = [
   "security-services",
@@ -190,28 +189,3 @@ export const careerSchema = z.object({
 
 export type CareerInput = z.input<typeof careerSchema>;
 export type CareerOutput = z.output<typeof careerSchema>;
-
-// Backwards compatibility for /api/careers stub
-export interface ValidationResult {
-  valid: boolean;
-  errors: Record<string, string[]>;
-}
-
-export function validateCareerApplication(
-  data: Partial<CareerApplication>
-): ValidationResult {
-  const errors: Record<string, string[]> = {};
-  if (!data.name || data.name.trim().length === 0) {
-    errors.name = ["Name is required."];
-  }
-  if (!data.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
-    errors.email = ["A valid email address is required."];
-  }
-  if (!data.phone || data.phone.trim().length === 0) {
-    errors.phone = ["Phone number is required."];
-  }
-  return {
-    valid: Object.keys(errors).length === 0,
-    errors,
-  };
-}

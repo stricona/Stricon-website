@@ -17,13 +17,6 @@ export function getGalleryPhotos(): GalleryPhoto[] {
 }
 
 /**
- * Returns gallery photos for a specific category id.
- */
-export function getPhotosByCategory(id: GalleryCategoryId): GalleryPhoto[] {
-  return getGalleryPhotos().filter((photo) => photo.category === id);
-}
-
-/**
  * Returns up to n featured photos for home preview:
  * Photos flagged as featured first (sorted by order), then filled round-robin
  * across available categories until n photos are collected.
