@@ -619,6 +619,30 @@ Original files reside in `public/images/logo/`:
   - Runs on push to `main` and pull requests.
   - Executes clean install (`npm ci`) on Node 22 and runs `npm run verify` without external secrets.
 
+---
+
+## 16. Founder & Leadership Profile Architecture
+
+### Component & Data Architecture
+- **Component Path**: `src/components/about/FounderProfile.tsx` (re-exported via `src/components/about/index.ts`).
+- **Data File Path**: `src/data/founder.ts` (typed interfaces: `FounderProfileData`, `FounderHighlight`, `FounderImageData`, `FounderPhilosophy`).
+- **Photograph Path**: `public/images/founder/r-vishnu-murthy.webp` (332 × 490 natural dimensions, cropped from owner-supplied portrait).
+
+### Owner-Supplied Text & Content Scope Rules
+- **Owner-Supplied Exception**: The founder biography, qualification highlights, and leadership philosophy text are strictly owner-supplied for the About page leadership section.
+- **Experience Statements Quarantine**: The statements `"16+"` and `"over 16 years"` are strictly restricted to this owner-supplied founder profile. **Do NOT repeat or generalize them elsewhere across the website**, in metadata, hero sections, marketing claims, or other service pages.
+- **`company.founder` Backward Compatibility**: `company.founder` in `src/data/company.ts` must remain intact and functional for existing structured data and components.
+
+### Photograph Specification & Recommendations
+- **Current Image**: WebP image at 332 × 490 (aspect ratio approx. 3:4), cropped to strip outer decorative borders and white margins, with metadata stripped.
+- **Future Image Recommendation**: When replacing the photograph, use a professional portrait at least 1000px wide, without any frame or borders, and with a neutral plain background.
+
+### Graceful Fallback Behavior
+- The About page (`src/app/about/page.tsx`) dynamically verifies `public/images/founder/r-vishnu-murthy.webp` at build time using `fs.existsSync`.
+- If the photograph exists: renders the premium `FounderProfile` at Position 3 (between `AboutStory` and `MissionVision`).
+- If the photograph does not exist: gracefully renders the fallback typographic `FounderCard` component to prevent broken images. Neither component is deleted.
+
+
 
 
 

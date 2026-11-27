@@ -1,6 +1,7 @@
 export * from "./AboutHero";
 export * from "./AboutStory";
 export * from "./FounderCard";
+export * from "./FounderProfile";
 export * from "./MissionVision";
 export * from "./CoreValues";
 export * from "./IfmVertical";

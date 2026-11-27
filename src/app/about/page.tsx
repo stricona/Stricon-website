@@ -1,3 +1,5 @@
+import fs from "fs";
+import path from "path";
 import type { Metadata } from "next";
 import { constructMetadata } from "@/lib/seo";
 import { profile } from "@/data/profile";
@@ -6,6 +8,7 @@ import {
   AboutHero,
   AboutStory,
   FounderCard,
+  FounderProfile,
   MissionVision,
   CoreValues,
   IfmVertical,
@@ -23,6 +26,15 @@ export const metadata: Metadata = constructMetadata({
 });
 
 export default function AboutPage() {
+  const photoPath = path.join(
+    process.cwd(),
+    "public",
+    "images",
+    "founder",
+    "r-vishnu-murthy.webp"
+  );
+  const hasFounderPhoto = fs.existsSync(photoPath);
+
   return (
     <MotionProvider>
       <OrganizationJsonLd />
@@ -34,7 +46,7 @@ export default function AboutPage() {
         <AboutStory />
 
         {/* 3. Founder and Managing Director */}
-        <FounderCard />
+        {hasFounderPhoto ? <FounderProfile /> : <FounderCard />}
 
         {/* 4. Our Mission and Our Vision */}
         <MissionVision />
